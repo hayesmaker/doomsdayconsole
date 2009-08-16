@@ -1,6 +1,5 @@
 ﻿package no.doomsday.aronning.debug.console.objectwatching
 {
-	import away3d.loaders.Obj;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
