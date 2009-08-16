@@ -44,6 +44,8 @@ package
 }
 }}}
 
+Try the commands "help" and "commands" to get a look at the built-in functionality, which includes methods for listing available embedded fonts, measuring sizes and distances and the like.
+
 ConsoleUtil is a way to get at the most common console features quickly. Explore DebugConsole.as (as messy as it is) to get a sense of the different available commands.
 
 The api is very verbose with lots of imports. An IDE with good autocomplete is highly recommended.
