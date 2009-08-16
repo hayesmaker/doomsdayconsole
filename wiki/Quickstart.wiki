@@ -43,3 +43,7 @@ package
 	
 }
 }}}
+
+ConsoleUtil is a way to get at the most common console features quickly. Explore DebugConsole.as (as messy as it is) to get a sense of the different available commands.
+
+The api is very verbose with lots of imports. An IDE with good autocomplete is highly recommended.
