@@ -6,15 +6,15 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class IntrospectionContext
+	public class IntrospectionScope
 	{
 		public var autoCompleteDict:AutocompleteDictionary = new AutocompleteDictionary();
-		public var children:Vector.<ChildContextDesc>;
+		public var children:Vector.<ChildScopeDesc>;
 		public var accessors:Vector.<AccessorDesc>;
 		public var methods:Vector.<MethodDesc>;
 		public var variables:Vector.<VariableDesc>;
 		public var obj:Object;
-		public function IntrospectionContext() 
+		public function IntrospectionScope() 
 		{
 			
 		}

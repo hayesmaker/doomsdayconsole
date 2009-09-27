@@ -13,17 +13,17 @@
 		{
 			
 		}
-		public static function getChildren(o:*):Vector.<ChildContextDesc> {
-			var out:Vector.<ChildContextDesc> = new Vector.<ChildContextDesc>();
+		public static function getChildren(o:*):Vector.<ChildScopeDesc> {
+			var out:Vector.<ChildScopeDesc> = new Vector.<ChildScopeDesc>();
 			//if we're in a DisplayObjectContainer, add first level children
-			var c:ChildContextDesc;
+			var c:ChildScopeDesc;
 			if (o is DisplayObjectContainer) {
 				var d:DisplayObjectContainer = o as DisplayObjectContainer;
 				var cd:DisplayObject;
 				var n:int = d.numChildren;
 				for (n > 0; n--; ) {
 					cd = d.getChildAt(n);
-					c = new ChildContextDesc();
+					c = new ChildScopeDesc();
 					c.name = cd.name;
 					c.type = cd.toString();
 					out.push(c);

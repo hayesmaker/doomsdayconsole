@@ -6,8 +6,8 @@
 	import no.doomsday.console.controller.ControllerManager;
 	import no.doomsday.console.gui.ScaleHandle;
 	import no.doomsday.console.introspection.AccessorDesc;
-	import no.doomsday.console.introspection.ChildContextDesc;
-	import no.doomsday.console.introspection.ContextManager;
+	import no.doomsday.console.introspection.ChildScopeDesc;
+	import no.doomsday.console.introspection.ScopeManager;
 	import no.doomsday.console.introspection.InspectionUtils;
 	import no.doomsday.console.introspection.MethodDesc;
 	import no.doomsday.console.introspection.VariableDesc;
@@ -97,7 +97,7 @@
 		
 		private var menu:ContextMenu;
 		
-		private var contextManager:ContextManager;
+		private var scopeManager:ScopeManager;
 		
 		private var scaleHandle:ScaleHandle;
 		
@@ -149,7 +149,7 @@
 			autoCompleteManager = new AutocompleteManager(inputTextField);
 			autoCompleteManager.setDictionary(globalDictionary);
 			
-			contextManager = new ContextManager();
+			scopeManager = new ScopeManager();
 			
 			infoField = new TextField();
 			infoField.background = true;
@@ -217,19 +217,20 @@
 			addCommand(new FunctionCallCommand("showMouse", Mouse.show, "UI", "Shows the mouse cursor"));
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
 			
-			addCommand(new FunctionCallCommand("call", callMethodOnObject, "Introspection", "Calls a method with args within the current introspection context"));
-			addCommand(new FunctionCallCommand("set", setAccessorOnObject, "Introspection", "Sets a variable within the current introspection context"));
-			addCommand(new FunctionCallCommand("get", getAccessorOnObject, "Introspection", "Prints a variable within the current introspection context"));
-			addCommand(new FunctionCallCommand("root", selectBaseContext, "Introspection", "Selects the stage as the current introspection context"));
-			addCommand(new FunctionCallCommand("select", setContextByName, "Introspection", "Selects the specified object as the current introspection context"));
-			addCommand(new FunctionCallCommand("back", up, "Introspection", "(if the current context is a display object) changes context to the parent object"));
-			addCommand(new FunctionCallCommand("children", printChildren, "Introspection", "Get available children in the current context"));
-			addCommand(new FunctionCallCommand("variables", printVariables, "Introspection", "Get available variables in the current context"));
-			addCommand(new FunctionCallCommand("complex", printComplexObjects, "Introspection", "Get available complex variables in the current context"));
-			addCommand(new FunctionCallCommand("contexts", printDownPath, "Introspection", "List available contexts in the current context"));
-			addCommand(new FunctionCallCommand("methods", printMethods, "Introspection", "Get available methods in the current context"));
+			addCommand(new FunctionCallCommand("call", callMethodOnObject, "Introspection", "Calls a method with args within the current introspection scope"));
+			addCommand(new FunctionCallCommand("set", setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope"));
+			addCommand(new FunctionCallCommand("get", getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope"));
+			addCommand(new FunctionCallCommand("root", selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
+			addCommand(new FunctionCallCommand("select", setScopeByName, "Introspection", "Selects the specified object as the current introspection scope"));
+			addCommand(new FunctionCallCommand("back", up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
+			addCommand(new FunctionCallCommand("children", printChildren, "Introspection", "Get available children in the current scope"));
+			addCommand(new FunctionCallCommand("variables", printVariables, "Introspection", "Get available variables in the current scope"));
+			addCommand(new FunctionCallCommand("complex", printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
+			addCommand(new FunctionCallCommand("scopes", printDownPath, "Introspection", "List available scopes in the current scope"));
+			addCommand(new FunctionCallCommand("methods", printMethods, "Introspection", "Get available methods in the current scope"));
+			addCommand(new FunctionCallCommand("alias", alias, "Introspection", "'alias methodName triggerWord' Create a new command shortcut to the specified function"));
 			
-			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current context (createController width height for instance)"));
+			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
 			
 			if(ExternalInterface.available){
 				print("	Externalinterface available, commands added", MessageTypes.SYSTEM);
@@ -266,7 +267,7 @@
 		
 		private function createController(...properties:Array):void
 		{
-			controllerManager.createController(contextManager.currentContext.obj, properties);
+			controllerManager.createController(scopeManager.currentScope.obj, properties);
 		}
 		
 		private function onScaleHandleDrag(e:Event):void 
@@ -618,8 +619,8 @@
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			//context menu test
-			var selectionMenuItem:ContextMenuItem = new ContextMenuItem("Set console context", true);
+			//scope menu test
+			var selectionMenuItem:ContextMenuItem = new ContextMenuItem("Set console scope", true);
 			selectionMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onSelectionMenu,false,0,true);
 			var controllerMenuItem:ContextMenuItem = new ContextMenuItem("Create controller");
 			controllerMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onControllerMenu,false,0,true);
@@ -650,22 +651,22 @@
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			stage.addEventListener(Event.RESIZE, onStageResize);
-			setContext(parent);
+			setScope(parent);
 		}
 		
 		private function onControllerMenu(e:ContextMenuEvent):void 
 		{
 			if (e.mouseTarget is DisplayObject) {
-				setContext(e.mouseTarget);
+				setScope(e.mouseTarget);
 				var properties:Array = ["name","x", "y", "width", "height", "rotation", "scaleX", "scaleY"];
-				controllerManager.createController(contextManager.currentContext.obj, properties, e.mouseTarget.x, e.mouseTarget.y);
+				controllerManager.createController(scopeManager.currentScope.obj, properties, e.mouseTarget.x, e.mouseTarget.y);
 				print("Controller created. Type values to alter, or use the mousewheel on numbers.");
 			}
 		}
 		
 		private function onSelectionMenu(e:ContextMenuEvent):void 
 		{
-			setContext(e.mouseTarget);
+			setScope(e.mouseTarget);
 		}
 		
 		private function onStageResize(e:Event):void 
@@ -961,33 +962,33 @@
 		
 		//introspection stuff, wip
 		private function up():void {
-			contextManager.up();
-			printContext();
+			scopeManager.up();
+			printScope();
 			printDownPath();
 		}
-		private function setContextByName(str:String):void {
+		private function setScopeByName(str:String):void {
 			try {
-				setContext(contextManager.currentContext.obj[str]);
+				setScope(scopeManager.currentScope.obj[str]);
 			}catch (e:Error) {
 				try {
-					setContext(contextManager.currentContext.obj.getChildByName(str));
+					setScope(scopeManager.currentScope.obj.getChildByName(str));
 				}catch (e:Error) {
-					print("No such context "+e.message, MessageTypes.ERROR);
+					print("No such scope "+e.message, MessageTypes.ERROR);
 				}
 			}
 		}
-		private function setContext(o:*):void {
-			if (contextManager.currentContext.obj === o) return;
-			contextManager.setContext(o);
+		private function setScope(o:*):void {
+			if (scopeManager.currentScope.obj === o) return;
+			scopeManager.setScope(o);
 			try{
-				autoCompleteManager.contextDict = contextManager.currentContext.autoCompleteDict;
+				autoCompleteManager.scopeDict = scopeManager.currentScope.autoCompleteDict;
 			}catch (e:Error) {
 			}
-			printContext();
+			printScope();
 			printDownPath();
 		}
 		private function printMethods():void {
-			var m:Vector.<MethodDesc> = contextManager.currentContext.methods;
+			var m:Vector.<MethodDesc> = scopeManager.currentScope.methods;
 			print("	methods:");
 			var i:int
 			for (i = 0; i < m.length; i++) 
@@ -997,7 +998,7 @@
 			}
 		}
 		private function printVariables():void {
-			var a:Vector.<VariableDesc> = contextManager.currentContext.variables;
+			var a:Vector.<VariableDesc> = scopeManager.currentScope.variables;
 			var cv:*;
 			print("	variables:");
 			var i:int
@@ -1006,19 +1007,19 @@
 				var vd:VariableDesc = a[i];
 				print("		" + vd.name + ": " + vd.type);
 				try{
-					cv = contextManager.currentContext.obj[vd.name];
+					cv = scopeManager.currentScope.obj[vd.name];
 					print("			value: " + cv.toString());
 				}catch (e:Error) {
 					
 				}
 			}
-			var b:Vector.<AccessorDesc> = contextManager.currentContext.accessors;
+			var b:Vector.<AccessorDesc> = scopeManager.currentScope.accessors;
 			for (i = 0; i < b.length; i++) 
 			{
 				var ad:AccessorDesc = b[i];
 				print("		" + ad.name + ": " + ad.type);
 				try{
-					cv = contextManager.currentContext.obj[ad.name];
+					cv = scopeManager.currentScope.obj[ad.name];
 					print("			value: " + cv.toString());
 				}catch (e:Error) {
 					
@@ -1026,12 +1027,12 @@
 			}
 		}
 		private function printChildren():void {
-			var c:Vector.<ChildContextDesc> = contextManager.currentContext.children;
+			var c:Vector.<ChildScopeDesc> = scopeManager.currentScope.children;
 			if (c.length < 1) return;
 			print("	children:");
 			for (var i:int = 0; i < c.length; i++) 
 			{
-				var cc:ChildContextDesc = c[i];
+				var cc:ChildScopeDesc = c[i];
 				print("		" + cc.name + " : " + cc.type);
 			}
 		}
@@ -1043,7 +1044,7 @@
 		
 		private function printComplexObjects():void
 		{
-			var a:Vector.<VariableDesc> = contextManager.currentContext.variables;
+			var a:Vector.<VariableDesc> = scopeManager.currentScope.variables;
 			var cv:*;
 			if (a.length < 1) return;
 			print("	complex types:");
@@ -1067,29 +1068,40 @@
 			}
 		}
 		
-		private function printContext():void {
-			print("context : " + contextManager.currentContext.obj.toString());
+		private function printScope():void {
+			print("scope : " + scopeManager.currentScope.obj.toString());
 		}
 		private function setAccessorOnObject(accessorName:String, arg:*):*
 		{
-			contextManager.currentContext.obj[accessorName] = arg;
-			return accessorName + ": " + contextManager.currentContext.obj[accessorName];
+			scopeManager.currentScope.obj[accessorName] = arg;
+			return accessorName + ": " + scopeManager.currentScope.obj[accessorName];
 		}
 		private function getAccessorOnObject(accessorName:String):String{
-			return contextManager.currentContext.obj[accessorName].toString();
+			return scopeManager.currentScope.obj[accessorName].toString();
 		}
-		private function selectBaseContext():void {
-			setContext(stage);
+		private function selectBaseScope():void {
+			setScope(stage);
 		}
-		private function clearContext():void {
-			selectBaseContext(); //temp
+		private function clearScope():void {
+			selectBaseScope(); //temp
 		}
 		private function callMethodOnObject(commandstring:String):* {
 			var split:Array = commandstring.split(" ");
 			var cmd:String = split.shift();
-			var func:Function = contextManager.currentContext.obj[cmd];
-			return func.apply(contextManager.currentContext.obj, split);
+			var func:Function = scopeManager.currentScope.obj[cmd];
+			return func.apply(scopeManager.currentScope.obj, split);
 		}
+		private function alias(methodName:String, commandString:String):void {
+			var ob:* = scopeManager.currentScope.obj;
+			if (!ob[methodName]) throw new ArgumentError("No such method on current scope");
+			if (ob[methodName]is Function) {
+				var func:Function = ob[methodName] as Function;
+				addCommand(new FunctionCallCommand(commandString, func, "Aliases", "Calls the function " + methodName + " on the object " + ob.toString()));
+				return;
+			}
+			throw new ArgumentError("Identifier is not a method");
+		}
+		
 	}
 	
 }

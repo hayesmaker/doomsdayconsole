@@ -4,11 +4,11 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class ChildContextDesc
+	public class ChildScopeDesc
 	{
 		public var type:String;
 		public var name:String;
-		public function ChildContextDesc() 
+		public function ChildScopeDesc() 
 		{
 			
 		}

@@ -16,7 +16,7 @@
 		
         private var txt:String;
         public var dict:AutocompleteDictionary;
-		public var contextDict:AutocompleteDictionary;
+		public var scopeDict:AutocompleteDictionary;
         private var paused:Boolean = false;
 		private var _targetTextField:TextField;
 		public var suggestionActive:Boolean = false;
@@ -52,10 +52,10 @@
 			
             var strParts:Array = str.split("");
 			var suggestion:String;
-			if (!contextDict || firstIndex < 1) {
+			if (!scopeDict || firstIndex < 1) {
 				suggestion = dict.getSuggestion(strParts);
 			}else {
-				suggestion = contextDict.getSuggestion(strParts);
+				suggestion = scopeDict.getSuggestion(strParts);
 			}
 			suggestionActive = false;
 			if(suggestion.length>0){
