@@ -1,0 +1,41 @@
+#summary A quick look at introspection
+
+= Introduction =
+While not the primary consern, the console has some rudimentary commands for navigating the structure of your application at runtime. This includes objects, DisplayObjects, variables and methods. 
+
+==The context==
+Internally, the console currently refers to the object it is currently looking at as its "context". For instance, the initial "context" of the console is the object it is parented to, say, your Main class {{{object [Main]}}}. 
+
+===Changing the context===
+There are a few ways to change the current context.
+If you are familiar with a disk system tree structure, imagine it as going up or down a tree. Going up means choosing one of the available branches and moving to it. Going down means returning to the parent branch of the branch you're currently on.
+
+An up-branch can be any child object of the current context, such as a display object, variable, function, you name it. A down-branch is only accessible if the current context is a DisplayObject, and points to the parent display object.
+
+===Inspection commands===
+*select _name_*
+Sets the named property or child of the current context as the new context
+*back*
+If the current context is a DisplayObject, set the current context to its parent
+*root*
+Sets the current context to the stage the console is on
+*children*
+List the available displaylist children of the current context
+*contexts*
+List the available contexts within the current context (includes display children and complex types)
+*complex*
+List the complex types (objects, classes) held in variables on the current context
+*variables*
+List the variables of the current context, as well as their values
+
+===Context interaction commands===
+*set _property_ _newvalue_*
+If the current context is a sprite, {{{set scaleX 1.5}}} will do exactly what you expect.
+*call _methodname_ _...args_*
+Will attempt to call _methodName_ on the current context with the supplied arguments
+
+===Controllers===
+A controller is a specialised GUI window that contains a table of property names and their values. The value fields are editable, and work like setters in that changing them changes the property they target instantly. Typically, controllers are used to make it easier to change DisplayObject properties on the fly for testing different visual adjustments, but can also target other objects.
+
+To create a controller, use the {{{createController}}} command, and append any propertynames of the current context you want to adjust. For instance, being in a displayobject context, try {{{createController scaleX width}}}. 
+
