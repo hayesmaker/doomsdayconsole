@@ -221,7 +221,7 @@
 			addCommand(new FunctionCallCommand("contexts", printDownPath, "Introspection", "List available contexts in the current context"));
 			addCommand(new FunctionCallCommand("methods", printMethods, "Introspection", "Get available methods in the current context"));
 			
-			addCommand(new FunctionCallCommand("createController", createController, "Test", "Create a widget for changing properties on the current context (createController width height for instance)"));
+			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current context (createController width height for instance)"));
 			
 			if(ExternalInterface.available){
 				print("	Externalinterface available, commands added", MessageTypes.SYSTEM);
