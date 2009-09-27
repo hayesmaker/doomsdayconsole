@@ -10,7 +10,7 @@
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import no.doomsday.aronning.debug.console.ConsoleUtil;
+	import no.doomsday.console.ConsoleUtil;
 	
 	/**
 	 * ...
@@ -52,13 +52,6 @@
 			
 			//add the console instance using ConsoleUtil
 			addChild(ConsoleUtil.instance);
-			
-			//add a console command that will call mathTest
-			ConsoleUtil.addCallbackCommand("mathAdd", mathTest);
-			
-			//add a few buttons for running methods
-			ConsoleUtil.instance.addTestButton("Causeerror", failingFunction);
-			ConsoleUtil.instance.addTestButton("Click", buttonClick);
 		}
 		//demonstrates how console commands handle arguments. In the console, type "mathAdd 3 1" for instance
 		//also demonstrates how the console prints return values

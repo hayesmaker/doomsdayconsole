@@ -7,6 +7,7 @@
     <source-path append="true">
       <path-element>D:\dev\googlecode\doomsdayconsole\examples\ConsoleDemo\src</path-element>
       <path-element>D:\dev\googlecode\doomsdayconsole\src</path-element>
+      <path-element>D:\dev\as3libs</path-element>
       <path-element>C:\Program Files\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
   </compiler>
