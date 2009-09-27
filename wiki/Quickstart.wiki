@@ -23,7 +23,7 @@ package
 			//add the console instance to the stage or the root layer of your application
 			addChild(ConsoleUtil.instance);
 			
-			//by default, the console toggles on control-tab, but can also be shown with ConsoleUtil.show and ConsoleUtil.hide
+			//by default, the console toggles on shift-tab, but can also be shown with ConsoleUtil.show and ConsoleUtil.hide
 			ConsoleUtil.show();
 			
 			//to link a command to a method, do as follows
