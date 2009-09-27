@@ -744,7 +744,7 @@
 				disableTab();
 				if (visible&&stage.focus!=inputTextField) stage.focus = inputTextField;
 				if (autoCompleteManager.suggestionActive) {
-					if (inputTextField.text.charAt(inputTextField.text.length-1) == " " || inputTextField.text.length<1) return;
+					//TODO: Make tab only append a space if there isn't already one
 					inputTextField.appendText(" ");
 					inputTextField.setSelection(inputTextField.length, inputTextField.length);
 				}else {
