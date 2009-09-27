@@ -55,6 +55,9 @@
 	 */
 	public class DConsole extends Sprite
 	{
+		public static const BUILD:int = 90;
+		
+		
 		private static var INSTANCE:DConsole;
 		
 		private var consoleBg:Shape;
@@ -198,6 +201,7 @@
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
 			
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
+			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
 			addCommand(new FunctionCallCommand("commands", listCommands, "Utility", "Output a list of available commands"));
 			addCommand(new FunctionCallCommand("help", getHelp, "Utility", "Output basic instructions"));
 			addCommand(new FunctionCallCommand("clear", clear, "View", "Clear the console"));
@@ -257,6 +261,12 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function printVersion():void
+		{
+			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
+			print("Console build number " + BUILD, MessageTypes.SYSTEM);
 		}
 		
 		private function toggleMeasureBracket():void
@@ -927,7 +937,7 @@
 			}
 		}
 		
-		private function redraw(e:Event = null ):Rectangle
+		private function redraw(e:Event = null):Rectangle
 		{
 			var w:Number = stage.stageWidth;
 			var h:Number = stage.stageHeight;

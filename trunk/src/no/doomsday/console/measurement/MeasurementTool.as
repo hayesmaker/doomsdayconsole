@@ -37,7 +37,7 @@ package no.doomsday.console.measurement
 		
 		private function onRemovedFromStage(e:Event):void 
 		{
-			stage.removeEventListener(Event.RESIZE, getValues);
+			//stage.removeEventListener(Event.RESIZE, getValues);
 		}
 		private function roundTo(num:Number, target:Number):Number {
 			return Math.round(num / target) * target;
@@ -88,7 +88,7 @@ package no.doomsday.console.measurement
 			
 			blendMode = BlendMode.INVERT;
 			render();
-			stage.addEventListener(Event.RESIZE, getValues, false, 0, true);
+			//stage.addEventListener(Event.RESIZE, getValues, false, 0, true);
 		}
 		
 		private function startGettingValues(e:MouseEvent):void 
@@ -152,19 +152,22 @@ package no.doomsday.console.measurement
 				rect.height= roundTo(rect.height, increment);
 			}
 		}
-		private function getValues(e:MouseEvent = null):void
+		private function getValues(e:Event = null):void
 		{
 			increment = 1
-			if (e.shiftKey) {
-				increment = 10;
-			}else if (e.ctrlKey) {
-				increment = 5;
-			}else {
-				increment = 1;
+			if (e is MouseEvent) {
+				var me:MouseEvent = e as MouseEvent
+				if (me.shiftKey) {
+					increment = 10;
+				}else if (me.ctrlKey) {
+					increment = 5;
+				}else {
+					increment = 1;
+				}
+				try { 
+					me.updateAfterEvent();
+				}catch (err:Error) { };
 			}
-			try { 
-				e.updateAfterEvent();
-			}catch (err:Error) { };
 			
 			switch(currentlyChecking) {
 				case topLeftCornerHandle:
