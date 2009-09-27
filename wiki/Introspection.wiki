@@ -50,4 +50,4 @@ Will attempt to call _methodName_ on the current scope with the supplied argumen
 A controller is a specialised GUI window that contains a table of property names and their values. The value fields are editable, and work like setters in that changing them changes the property they target instantly. Typically, controllers are used to make it easier to change DisplayObject properties on the fly for testing different visual adjustments, but can also target other objects.
 
 To create a controller, use the {{{createController}}} command, and append any propertynames of the current scope you want to adjust. 
-For instance, being in a displayobject context, try {{{createController scaleX width}}}. 
+For instance, being in a displayobject scope, try {{{createController scaleX width}}}. 
