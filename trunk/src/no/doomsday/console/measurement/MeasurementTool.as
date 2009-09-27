@@ -33,7 +33,6 @@ package no.doomsday.console.measurement
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			visible = false;
 		}
 		
 		private function onRemovedFromStage(e:Event):void 
@@ -46,7 +45,6 @@ package no.doomsday.console.measurement
 		private function onAddedToStage(e:Event):void 
 		{
 			if (!initialized) {
-				
 				fmt = new TextFormat("_sans", 10, 0);
 				widthField = new TextField();
 				heightField = new TextField();
@@ -156,9 +154,17 @@ package no.doomsday.console.measurement
 		}
 		private function getValues(e:MouseEvent = null):void
 		{
+			increment = 1
+			if (e.shiftKey) {
+				increment = 10;
+			}else if (e.ctrlKey) {
+				increment = 5;
+			}else {
+				increment = 1;
+			}
 			try { 
 				e.updateAfterEvent();
-			}catch (e:Error) { };
+			}catch (err:Error) { };
 			
 			switch(currentlyChecking) {
 				case topLeftCornerHandle:
@@ -205,7 +211,7 @@ package no.doomsday.console.measurement
 			
 			widthField.text = String(rect.width);
 			widthField.x = rect.x+rect.width/2-widthField.textWidth/2;
-			widthField.y = rect.y+rect.height;
+			widthField.y = rect.y + rect.height;
 			
 		}
 		

@@ -11,6 +11,7 @@
 	import no.doomsday.console.introspection.InspectionUtils;
 	import no.doomsday.console.introspection.MethodDesc;
 	import no.doomsday.console.introspection.VariableDesc;
+	import no.doomsday.console.measurement.MeasurementTool;
 	import no.doomsday.console.messages.Message;
 	import no.doomsday.console.messages.MessageTypes;
 	import no.doomsday.console.text.autocomplete.AutocompleteDictionary;
@@ -82,6 +83,8 @@
 		private var timeStamp:Boolean = false;
 		private var prevHeight:int;
 		
+		private var measureBracket:MeasurementTool = new MeasurementTool();
+		
 		private var parentTabEnabled:Boolean = true;
 		private var parentTabChildren:Boolean = true;
 		private var tabTimer:Timer;
@@ -119,6 +122,9 @@
 		public function DConsole() 
 		{
 			visible = false;
+			
+			addChild(measureBracket);
+			measureBracket.visible = false;
 			
 			historySO = SharedObject.getLocal("consoleHistory");
 			if (!historySO.data.history) historySO.data.history = [];
@@ -198,6 +204,7 @@
 			addCommand(new FunctionCallCommand("echo", toggleEcho, "View", "Toggle display of user commands"));
 			addCommand(new FunctionCallCommand("timestampDisplay", toggleTimestamp, "View", "Toggle display of message timestamp"));
 			addCommand(new FunctionCallCommand("log", log, "Utility", "Save the complete console log for this session to an xml document"));
+			addCommand(new FunctionCallCommand("measure", toggleMeasureBracket, "Utility", "Creates a scalable measurement bracket widget. Hold shift to snap to 10s."));
 			addCommand(new FunctionCallCommand("screenshot", screenshot, "Utility", "Save a png screenshot (sans console)"));
 			addCommand(new FunctionCallCommand("toggleTrace", toggleTrace, "Trace", "Toggle reception of trace values"));
 			addCommand(new FunctionCallCommand("toggleTraceDisplay", toggleTraceDisplay, "Trace", "Toggle display of trace values"));
@@ -212,6 +219,7 @@
 			
 			addCommand(new FunctionCallCommand("call", callMethodOnObject, "Introspection", "Calls a method with args within the current introspection context"));
 			addCommand(new FunctionCallCommand("set", setAccessorOnObject, "Introspection", "Sets a variable within the current introspection context"));
+			addCommand(new FunctionCallCommand("get", getAccessorOnObject, "Introspection", "Prints a variable within the current introspection context"));
 			addCommand(new FunctionCallCommand("root", selectBaseContext, "Introspection", "Selects the stage as the current introspection context"));
 			addCommand(new FunctionCallCommand("select", setContextByName, "Introspection", "Selects the specified object as the current introspection context"));
 			addCommand(new FunctionCallCommand("back", up, "Introspection", "(if the current context is a display object) changes context to the parent object"));
@@ -248,6 +256,12 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function toggleMeasureBracket():void
+		{
+			measureBracket.visible = !measureBracket.visible;
+			print("Measuring bracket active: " + measureBracket.visible, MessageTypes.SYSTEM);
 		}
 		
 		private function createController(...properties:Array):void
@@ -1060,6 +1074,9 @@
 		{
 			contextManager.currentContext.obj[accessorName] = arg;
 			return accessorName + ": " + contextManager.currentContext.obj[accessorName];
+		}
+		private function getAccessorOnObject(accessorName:String):String{
+			return contextManager.currentContext.obj[accessorName].toString();
 		}
 		private function selectBaseContext():void {
 			setContext(stage);
