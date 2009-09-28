@@ -55,8 +55,9 @@
 	 */
 	public class DConsole extends Sprite
 	{
-		public static const BUILD:int = 90;
-		
+		//[Embed(source='../../../buildnumber.txt', mimeType='application/octet-stream')]
+		//public static var BuildNumberFile:Class;
+		private static var BUILD:int = 1;
 		
 		private static var INSTANCE:DConsole;
 		
@@ -124,6 +125,8 @@
 		 */
 		public function DConsole() 
 		{
+			//var ob:ByteArray = new BuildNumberFile as ByteArray;
+			
 			visible = false;
 			
 			addChild(measureBracket);
@@ -261,6 +264,7 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			
 		}
 		
 		private function printVersion():void
@@ -1083,6 +1087,11 @@
 		}
 		private function setAccessorOnObject(accessorName:String, arg:*):*
 		{
+			if (arg == "true") {
+				arg = true;
+			}else if (arg == "false") {
+				arg = false;
+			}
 			scopeManager.currentScope.obj[accessorName] = arg;
 			return accessorName + ": " + scopeManager.currentScope.obj[accessorName];
 		}
