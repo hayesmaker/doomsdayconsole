@@ -1,0 +1,23 @@
+#summary Using object references in commands
+
+= Introduction =
+
+While arguments are typically parsed from the command string to numbers and so forth, often you want to pass an object into a function as an argument. The console offers the {{{getReference _name_}}} command, which lets you associate a string value with a reference to a scope by wrapping it in <angle brackets>
+
+=== Usage ===
+{{{ 
+select mySprite
+getReference myReferenceName
+back
+select myOtherSprite
+call addChild <myReferenceName>
+}}}
+
+=== Further commands ===
+*listReferences* Print available references and their names
+
+*clearReferences* Clear all references
+
+=== Upcoming ===
+
+A syntax override letting you get a reference by its scope name, rather than having to enter that scope and getting it from there, for instance {{{getReference scopeName myReferenceName}}}
