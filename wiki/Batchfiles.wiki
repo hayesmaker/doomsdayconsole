@@ -1,0 +1,5 @@
+#summary Using batch txt files to automate commands
+
+The console currently has two public methods for running batch files; {{{runBatch}}} and {{{runBatchFromUrl}}}. The former takes a string, splits it into commands based on \r\n and attempts to call them all in top-down sequence. The latter takes a url to an UTF-8 encoded txt file, loads that file and then runs runBatch on its contents.
+
+The usefulness of this feature is entirely dependent on your application. I'm currently imagining a sort of soft patch, where fairly substantial changes to the application can be made based on a string of console commands. For expo situations where you need to make changes and don't have an IDE or can't afford to recompile, i imagine this can be quite useful.
