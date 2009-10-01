@@ -16,6 +16,7 @@
 			
 		}
 		public function setScope(o:*):IntrospectionScope {
+			if (!o) throw new ArgumentError("Invalid scope");
 			var c:IntrospectionScope = new IntrospectionScope();
 			c.autoCompleteDict = InspectionUtils.getAutoCompleteDictionary(o);
 			c.children = TreeUtils.getChildren(o);

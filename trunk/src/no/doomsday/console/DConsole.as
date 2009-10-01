@@ -76,6 +76,8 @@
 		private var autoCompleteManager:AutocompleteManager;
 		private var historySO:SharedObject;
 		
+		private var referenceDict:Dictionary = new Dictionary(true);
+		
 		private var messageLog:Vector.<Message>;
 		private var commands:Vector.<ConsoleCommand>;
 		
@@ -106,6 +108,11 @@
 		private var scaleHandle:ScaleHandle;
 		
 		private var controllerManager:ControllerManager;
+		private var password:String = "";
+		private var authenticated:Boolean = true;
+		private var authCommand:FunctionCallCommand = new FunctionCallCommand("authorize", authenticate, "System", "Input password to gain console access");
+		private var deAuthCommand:FunctionCallCommand = new FunctionCallCommand("deauthorize", lock, "System", "Lock the console from unauthorized user access");
+		private var authenticationSetup:Boolean;
 		
 		/**
 		 * Get the singleton instance of DConsole
@@ -126,7 +133,6 @@
 		public function DConsole() 
 		{
 			//var ob:ByteArray = new BuildNumberFile as ByteArray;
-			
 			visible = false;
 			
 			addChild(measureBracket);
@@ -205,6 +211,7 @@
 			
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
+			addCommand(new FunctionCallCommand("clearhistory", clearHistory, "System", "Clears the stored command history"));
 			addCommand(new FunctionCallCommand("commands", listCommands, "Utility", "Output a list of available commands"));
 			addCommand(new FunctionCallCommand("help", getHelp, "Utility", "Output basic instructions"));
 			addCommand(new FunctionCallCommand("clear", clear, "View", "Clear the console"));
@@ -223,22 +230,30 @@
 			addCommand(new FunctionCallCommand("setFrameRate", setFramerate, "Stage", "Sets stage.frameRate"));
 			addCommand(new FunctionCallCommand("showMouse", Mouse.show, "UI", "Shows the mouse cursor"));
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
-			
+						
 			addCommand(new FunctionCallCommand("call", callMethodOnObject, "Introspection", "Calls a method with args within the current introspection scope"));
 			addCommand(new FunctionCallCommand("set", setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope"));
 			addCommand(new FunctionCallCommand("get", getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope"));
 			addCommand(new FunctionCallCommand("root", selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
 			addCommand(new FunctionCallCommand("select", setScopeByName, "Introspection", "Selects the specified object as the current introspection scope"));
+			addCommand(new FunctionCallCommand("selectByReference", setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
 			addCommand(new FunctionCallCommand("back", up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
 			addCommand(new FunctionCallCommand("children", printChildren, "Introspection", "Get available children in the current scope"));
 			addCommand(new FunctionCallCommand("variables", printVariables, "Introspection", "Get available variables in the current scope"));
 			addCommand(new FunctionCallCommand("complex", printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
 			addCommand(new FunctionCallCommand("scopes", printDownPath, "Introspection", "List available scopes in the current scope"));
 			addCommand(new FunctionCallCommand("methods", printMethods, "Introspection", "Get available methods in the current scope"));
+			addCommand(new FunctionCallCommand("updateScope", updateScope, "Introspection", "Gets changes to the current scope tree"));
 			addCommand(new FunctionCallCommand("alias", alias, "Introspection", "'alias methodName triggerWord' Create a new command shortcut to the specified function"));
 			
-			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
+			//experimental stuff
+			addCommand(new FunctionCallCommand("getReference", getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (getReference 1)"));
+			addCommand(new FunctionCallCommand("listReferences", printReferences, "Referencing", "Lists all stored references and their IDs"));
+			addCommand(new FunctionCallCommand("clearReferences", clearReferences, "Referencing", "Clears all stored references"));
 			
+			
+			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
+				
 			if(ExternalInterface.available){
 				print("	Externalinterface available, commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("routeToJS", routeToJS, "ExternalInterface", "Toggle output to JS console"));
@@ -264,7 +279,32 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			
+		}
+		
+		private function updateScope():void
+		{
+			setScope(scopeManager.currentScope.obj, true);
+		}
+		
+		private function getReference(id:String):void
+		{
+			referenceDict[id] = scopeManager.currentScope.obj;
+			printReferences();
+		}
+		private function clearReferences():void {
+			referenceDict = new Dictionary(true);
+			print("References cleared", MessageTypes.SYSTEM);
+		}
+		private function printReferences():void {
+			print("Stored references: ");
+			for (var b:* in referenceDict) {
+				print("	"+b.toString() + " : " + referenceDict[b].toString());
+			}
+		}
+		
+		private function clearHistory():void
+		{
+			historySO.data.history = [];
 		}
 		
 		private function printVersion():void
@@ -546,9 +586,15 @@
 		 * The string to be added. A timestamp is automaticaly prefixed
 		 */
 		public function print(str:String, type:uint = MessageTypes.OUTPUT):void {
-			var msg:Message = new Message(str, String(new Date().getTime()), type);
-			messageLog.push(msg);
-			scrollIndex = Math.max(0, messageLog.length - numLines);
+			var split:Array = str.split("\n").join("\r").split("\r");
+			var date:String = String(new Date().getTime());
+			var msg:Message;
+			for (var i:int = 0; i < split.length; i++) 
+			{
+				msg = new Message(split[i], date, type);
+				messageLog.push(msg);
+				scrollIndex = Math.max(0, messageLog.length - numLines);
+			}			
 			if (type == MessageTypes.ERROR&&alertingErrors) {
 				ExternalInterface.call("alert", str);
 			}
@@ -838,14 +884,18 @@
 		private function tryCommand():Boolean
 		{
 			var cmdStr:String = stripWhitespace(inputTextField.text);
-			if (previousCommands[previousCommands.length - 1] != cmdStr) {
-				previousCommands.push(cmdStr);
+			var str:String = cmdStr.toLowerCase().split(" ")[0];
+			if (!authenticated&&str!=authCommand.trigger) {
+				print("Not authenticated", MessageTypes.ERROR);
+				return false;
 			}
-			if (previousCommands.length > 10) {
-				previousCommands.shift();
+			if (previousCommands[previousCommands.length - 1] != cmdStr && str!=authCommand.trigger) {
+				previousCommands.push(cmdStr);
+				if (previousCommands.length > 10) {
+					previousCommands.shift();
+				}
 			}
 			commandIndex = previousCommands.length;
-			var str:String = cmdStr.toLowerCase().split(" ")[0];
 			for (var i:int = 0; i < commands.length; i++) 
 			{
 				if (commands[i].trigger.toLowerCase() == str) {
@@ -867,6 +917,7 @@
 		{
 			var args:Array = stripWhitespace(inputTextField.text).split(" ");
 			args.shift();
+			args = parseForReferences(args);
 			var val:*;
 			if (command is FunctionCallCommand) {
 				try {
@@ -980,6 +1031,11 @@
 			printScope();
 			printDownPath();
 		}
+		private function setScopeByReferenceKey(key:String):void {
+			if (referenceDict[key]) {
+				setScope(referenceDict[key]);
+			}
+		}
 		private function setScopeByName(str:String):void {
 			try {
 				setScope(scopeManager.currentScope.obj[str]);
@@ -991,12 +1047,13 @@
 				}
 			}
 		}
-		private function setScope(o:*):void {
-			if (scopeManager.currentScope.obj === o) return;
-			scopeManager.setScope(o);
+		private function setScope(o:*,force:Boolean = false):void {
+			if (!force&&scopeManager.currentScope.obj === o) return;
 			try{
+				scopeManager.setScope(o);
 				autoCompleteManager.scopeDict = scopeManager.currentScope.autoCompleteDict;
 			}catch (e:Error) {
+				print("No such scope",MessageTypes.ERROR);
 			}
 			printScope();
 			printDownPath();
@@ -1104,11 +1161,28 @@
 		private function clearScope():void {
 			selectBaseScope(); //temp
 		}
-		private function callMethodOnObject(commandstring:String):* {
-			var split:Array = commandstring.split(" ");
-			var cmd:String = split.shift();
+		private function parseForReferences(args:Array):Array {
+			for (var i:int = 0; i < args.length; i++) 
+			{
+				if (args[i].indexOf("<") > -1) {
+					//contains a reference
+					var s:Array = args[i].split("<").join(">").split(">");
+					var key:String = s[1];
+					args[i] = referenceDict[key];
+				}
+			}
+			return args;
+		}
+		private function callMethodOnObject(...args:Array):* {
+			//var split:Array = stripWhitespace(commandstring).split(" ");
+			//for (var i:int = 0; i < split.length; i++) 
+			//{
+				//trace(split[i]);
+			//}
+			var cmd:String = args.shift();
+			//split = parseForReferences(split);
 			var func:Function = scopeManager.currentScope.obj[cmd];
-			return func.apply(scopeManager.currentScope.obj, split);
+			return func.apply(scopeManager.currentScope.obj, args);
 		}
 		private function alias(methodName:String, commandString:String):void {
 			var ob:* = scopeManager.currentScope.obj;
@@ -1119,6 +1193,32 @@
 				return;
 			}
 			throw new ArgumentError("Identifier is not a method");
+		}
+		
+		
+		
+		//authentication
+		public function setupAuthentication(password:String):void {
+			this.password = password;
+			authenticated = false;
+			if (authenticationSetup) return;
+			authenticationSetup = true;
+			addCommand(authCommand);
+			addCommand(deAuthCommand);
+		}
+		
+		private function lock():void
+		{
+			authenticated = false;
+			print("Deauthorized", MessageTypes.SYSTEM);
+		}
+		public function authenticate(password:String):void {
+			if (password == this.password) {
+				authenticated = true;
+				print("Authorized", MessageTypes.SYSTEM);
+			}else {
+				print("Not authorized", MessageTypes.ERROR);
+			}
 		}
 		
 	}
