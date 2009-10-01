@@ -13,11 +13,16 @@ select myOtherSprite
 call addChild <myReferenceName>
 }}}
 
+{{{
+getReferenceByName mySprite myReferenceName
+call addChild <myReferenceName>
+}}}
+
 === Further commands ===
 *listReferences* Print available references and their names
 
 *clearReferences* Clear all references
 
-=== Upcoming ===
+*selectByReference _name_* Sets the current scope to the specified reference
 
-A syntax override letting you get a reference by its scope name, rather than having to enter that scope and getting it from there, for instance {{{getReference scopeName myReferenceName}}}
+*clearReference _name_* Removes the specified reference
