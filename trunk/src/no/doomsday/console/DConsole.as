@@ -1,5 +1,7 @@
 ﻿package no.doomsday.console
 {
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
 	import no.doomsday.console.bitmap.PNGEncoder;
 	import no.doomsday.console.commands.ConsoleCommand;
 	import no.doomsday.console.commands.FunctionCallCommand;
@@ -113,6 +115,8 @@
 		private var authCommand:FunctionCallCommand = new FunctionCallCommand("authorize", authenticate, "System", "Input password to gain console access");
 		private var deAuthCommand:FunctionCallCommand = new FunctionCallCommand("deauthorize", lock, "System", "Lock the console from unauthorized user access");
 		private var authenticationSetup:Boolean;
+		
+		private var locked:Boolean = false;
 		
 		/**
 		 * Get the singleton instance of DConsole
@@ -645,7 +649,7 @@
 			/*+"	"+commands[i].grouping+"	"+commands[i].helpText*/
 		}
 		private function drawMessages():void {
-			if (!visible) return;
+			if (!visible||locked) return;
 			textOutput.text = "";
 			textOutput.defaultTextFormat = TextFormats.debugTformatOld;
 			scrollRange = Math.min(messageLog.length, scrollIndex + numLines);
@@ -903,9 +907,14 @@
 			tabTimer.start();
 		}
 		
-		private function tryCommand():Boolean
+		private function tryCommand(input:String = null):Boolean
 		{
-			var cmdStr:String = stripWhitespace(inputTextField.text);
+			var cmdStr:String;
+			if (input) {
+				cmdStr = stripWhitespace(input);
+			}else {
+				cmdStr = stripWhitespace(inputTextField.text);
+			}
 			var str:String = cmdStr.toLowerCase().split(" ")[0];
 			if (!authenticated&&str!=authCommand.trigger) {
 				print("Not authenticated", MessageTypes.ERROR);
@@ -1224,7 +1233,33 @@
 			throw new ArgumentError("Identifier is not a method");
 		}
 		
-		
+		//batch
+		public function runBatch(batch:String):Boolean {
+			locked = true;
+			print("Starting batch", MessageTypes.SYSTEM);
+			var split:Array = batch.split("\n").join("\r").split("\r");
+			var result:Boolean = false;
+			for (var i:int = 0; i < split.length; i++) 
+			{
+				result = tryCommand(split[i])
+			}
+			if (result) {
+				print("Batch completed", MessageTypes.SYSTEM);
+			}else {
+				print("Batch completed with errors", MessageTypes.ERROR);
+			}
+			locked = false;
+			drawMessages();
+			return result;
+		}
+		public function runBatchFromUrl(url:String):void {
+			var batchLoader:URLLoader = new URLLoader(new URLRequest(url));
+			batchLoader.addEventListener(Event.COMPLETE, onBatchLoaded, false, 0, true);
+		}
+		private function onBatchLoaded(e:Event):void 
+		{
+			runBatch(e.target.data);
+		}
 		
 		//authentication
 		public function setupAuthentication(password:String):void {
