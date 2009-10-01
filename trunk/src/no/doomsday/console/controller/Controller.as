@@ -51,8 +51,8 @@
 			paramsField.text = o.toString();
 			for (var i:int = 0; i < params.length; i++) 
 			{
-				var cf:ControlField = new ControlField(params[i]);
-				cf.addEventListener(Event.CHANGE, onCfChange,false,0,true);
+				var cf:ControlField = new ControlField(params[i],typeof targetObj[params[i]]);
+				cf.addEventListener(ControllerEvent.VALUE_CHANGE, onCfChange,false,0,true);
 				addChild(cf);
 				controlFields.push(cf);
 				cf.y = paramsField.textHeight+dragBarHeight;
@@ -63,7 +63,7 @@
 			
 			addChild(dragArea);
 			addChild(closeButton)
-			dragArea.graphics.drawRect(0, 0, 120, dragBarHeight);
+			dragArea.graphics.drawRect(0, 0, 150, dragBarHeight);
 			closeButton.x = 110;
 			var dimRect:Rectangle = getBounds(this);
 			bg.y = dragBarHeight;

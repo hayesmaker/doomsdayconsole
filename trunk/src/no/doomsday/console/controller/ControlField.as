@@ -1,5 +1,8 @@
 ﻿package no.doomsday.console.controller 
 {
+	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	import no.doomsday.console.text.TextFormats;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,7 +18,7 @@
 	{
 		private var tf:TextField;
 		public var targetProperty:String;
-		public function ControlField(property:String,type:String = "String") 
+		public function ControlField(property:String,type:String = "string") 
 		{
 			targetProperty = property;
 			tf = new TextField();
@@ -24,20 +27,39 @@
 			tf.autoSize = TextFieldAutoSize.LEFT;
 			tf.selectable = true;
 			tf.type = TextFieldType.INPUT;
+			//tf.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, onFocus);
+			tf.addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
+			tf.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 			addChild(tf);
-			switch(type) {
+			switch(type.toLowerCase()) {
 				case "uint":
 				tf.restrict = "0123456789";
 				break;
 				case "int":
 				tf.restrict = "0123456789-";
 				break;
-				case "Number":
+				case "number":
 				tf.restrict = "0123456789.-";
 				break;
 			}
-			tf.addEventListener(Event.CHANGE, onTextfieldChange, false, 0, true);
-			tf.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, true);
+			if(type.toLowerCase()!="string") tf.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, true);
+		}
+		
+		private function onFocusOut(e:FocusEvent):void 
+		{
+			removeEventListener(KeyboardEvent.KEY_DOWN, onEnter);
+		}
+		
+		private function onFocusIn(e:FocusEvent):void 
+		{
+			addEventListener(KeyboardEvent.KEY_DOWN, onEnter, false, 0, true);
+		}
+		
+		private function onEnter(e:KeyboardEvent):void 
+		{
+			if (e.keyCode == Keyboard.ENTER) {
+				onTextfieldChange();
+			}
 		}
 		
 		private function onMouseWheel(e:MouseEvent):void 
@@ -63,7 +85,7 @@
 		
 		private function onTextfieldChange(e:Event = null):void 
 		{
-			dispatchEvent(new Event(Event.CHANGE));
+			dispatchEvent(new ControllerEvent(ControllerEvent.VALUE_CHANGE));
 		}
 		
 	}
