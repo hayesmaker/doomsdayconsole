@@ -248,9 +248,10 @@
 			
 			//experimental stuff
 			addCommand(new FunctionCallCommand("getReference", getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (getReference 1)"));
+			addCommand(new FunctionCallCommand("getReferenceByName", getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReferenceByName scopename 1)"));
 			addCommand(new FunctionCallCommand("listReferences", printReferences, "Referencing", "Lists all stored references and their IDs"));
 			addCommand(new FunctionCallCommand("clearReferences", clearReferences, "Referencing", "Clears all stored references"));
-			
+			addCommand(new FunctionCallCommand("clearReference", clearReferenceByName, "Referencing", "Clears the specified reference"));
 			
 			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
 				
@@ -279,6 +280,27 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function clearReferenceByName(name:String):void
+		{
+			try{
+			delete(referenceDict[name])
+			print("Cleared reference " + name, MessageTypes.SYSTEM);
+			printReferences();
+			}catch (e:Error) {
+				print("No such reference", MessageTypes.ERROR);
+			}
+		}
+		
+		private function getReferenceByName(name:String,id:String):void
+		{
+			try{
+				referenceDict[id] = getScopeByName(name);
+				printReferences();
+			}catch (e:Error) {
+				print(e.message, MessageTypes.ERROR);
+			}
 		}
 		
 		private function updateScope():void
@@ -1038,14 +1060,21 @@
 		}
 		private function setScopeByName(str:String):void {
 			try {
-				setScope(scopeManager.currentScope.obj[str]);
+				setScope(getScopeByName(str));
+			}catch (e:Error) {
+				print(e.message, MessageTypes.ERROR);
+			}
+		}
+		private function getScopeByName(str:String):*{
+			try {
+				return scopeManager.currentScope.obj[str];
 			}catch (e:Error) {
 				try {
-					setScope(scopeManager.currentScope.obj.getChildByName(str));
+					return(scopeManager.currentScope.obj.getChildByName(str));
 				}catch (e:Error) {
-					print("No such scope "+e.message, MessageTypes.ERROR);
 				}
 			}
+			throw new Error("No such scope");
 		}
 		private function setScope(o:*,force:Boolean = false):void {
 			if (!force&&scopeManager.currentScope.obj === o) return;
