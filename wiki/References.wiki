@@ -5,7 +5,7 @@
 While arguments are typically parsed from the command string to numbers and so forth, often you want to pass an object into a function as an argument. The console offers commands which let you associate a string value with a reference to a scope by wrapping it in <angle brackets>.
 
 === Usage ===
-{{{getReference _name_}}} gets a reference to the current scope. 
+{{{getReference _referenceName_}}} gets a reference to the current scope. 
 {{{ 
 select mySprite
 getReference myReferenceName
@@ -13,7 +13,7 @@ back
 select myOtherSprite
 call addChild <myReferenceName>
 }}}
-In addition, {{{getReferenceByName}}} gets a reference to a named object.
+In addition, {{{getReferenceByName _scopeName_ _referenceName_}}} gets a reference to a property on the current scope.
 {{{
 getReferenceByName mySprite myReferenceName
 call addChild <myReferenceName>
