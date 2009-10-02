@@ -72,7 +72,12 @@
 				}catch (e:ArgumentError) {
 					//try again with all args as string
 					try {
-						val = (command as FunctionCallCommand).callback.call(this, args.join(" "));
+						var joint:String = args.join(" ");
+						if (joint.length>0){
+							val = (command as FunctionCallCommand).callback.call(this, joint);
+						}else {
+							val = (command as FunctionCallCommand).callback.call(this);
+						}
 						if(val) console.print("		"+val);
 					}catch (e:Error) {
 						console.print("Error: "+e.message,MessageTypes.ERROR);
