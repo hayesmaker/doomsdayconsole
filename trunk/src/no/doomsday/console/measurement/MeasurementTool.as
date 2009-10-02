@@ -10,6 +10,8 @@ package no.doomsday.console.measurement
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import no.doomsday.console.DConsole;
+	import no.doomsday.console.messages.MessageTypes;
 	
 	/**
 	 * ...
@@ -29,8 +31,10 @@ package no.doomsday.console.measurement
 		private var currentlyChecking:Sprite;
 		private var _increment:Number = -1;
 		public var clickOffset:Point;
-		public function MeasurementTool() 
+		private var console:DConsole;
+		public function MeasurementTool(console:DConsole) 
 		{
+			this.console = console;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
@@ -154,6 +158,8 @@ package no.doomsday.console.measurement
 		}
 		private function getValues(e:Event = null):void
 		{
+			var mx:Number = Math.max(0, Math.min(stage.mouseX, stage.stageWidth));
+			var my:Number = Math.max(0, Math.min(stage.mouseY, stage.stageHeight));
 			increment = 1
 			if (e is MouseEvent) {
 				var me:MouseEvent = e as MouseEvent
@@ -171,13 +177,13 @@ package no.doomsday.console.measurement
 			
 			switch(currentlyChecking) {
 				case topLeftCornerHandle:
-				setTopLeft(stage.mouseX, stage.mouseY);
+				setTopLeft(mx, my);
 				break;
 				case bottomRightCornerHandle:
-				setBotRight(stage.mouseX, stage.mouseY);
+				setBotRight(mx,my);
 				break;
 				case rectSprite:
-				setCenter(stage.mouseX, stage.mouseY);
+				setCenter(mx, my);
 				break;
 			}
 			render();
@@ -187,6 +193,7 @@ package no.doomsday.console.measurement
 		 * @param	displayObject
 		 */
 		public function bracket(displayObject:DisplayObject):void {
+			visible = true;
 			rect = displayObject.getRect(this);
 			render();
 		}
@@ -224,6 +231,12 @@ package no.doomsday.console.measurement
 		{
 			_increment = value; 
 			checkSnap();
+		}
+		
+		public function toggle():void
+		{
+			visible = !visible;
+			console.print("Measuring bracket active: " + visible, MessageTypes.SYSTEM);
 		}
 		
 	}

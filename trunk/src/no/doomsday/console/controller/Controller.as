@@ -64,7 +64,7 @@
 			addChild(dragArea);
 			addChild(closeButton)
 			dragArea.graphics.drawRect(0, 0, 150, dragBarHeight);
-			closeButton.x = 110;
+			closeButton.x = 150;
 			var dimRect:Rectangle = getBounds(this);
 			bg.y = dragBarHeight;
 			bg.graphics.lineStyle(0, 0);

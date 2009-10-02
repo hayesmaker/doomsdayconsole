@@ -27,6 +27,7 @@
 		
 		private function init(e:Event = null):void 
 		{	
+			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -52,6 +53,8 @@
 			
 			//add the console instance using ConsoleUtil
 			addChild(ConsoleUtil.instance);
+			
+			ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
 		}
 		//demonstrates how console commands handle arguments. In the console, type "mathAdd 3 1" for instance
 		//also demonstrates how the console prints return values
@@ -65,7 +68,7 @@
 			addChild(a[0]);
 		}
 		//this method is called both by the mouse click and the console command
-		private function buttonClick(e:MouseEvent = null):void 
+		public function buttonClick(e:MouseEvent = null):void 
 		{
 			var ct:ColorTransform = new ColorTransform();
 			ct.color = Math.random() * 0xFFFFFF;

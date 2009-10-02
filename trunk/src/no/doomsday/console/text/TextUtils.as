@@ -38,6 +38,14 @@
 			return str.lastIndexOf(" ", tf.caretIndex) + 1;
 		}
 		
+		public static function stripWhitespace(str:String):String {
+			while (str.charAt(str.length - 1) == " ") 
+			{
+				str = str.substr(0, str.length - 1);
+			}
+			return str;
+		}
+		
 	}
 
 }

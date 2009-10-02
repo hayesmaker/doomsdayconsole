@@ -3,9 +3,11 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import no.doomsday.console.bitmap.PNGEncoder;
+	import no.doomsday.console.commands.CommandManager;
 	import no.doomsday.console.commands.ConsoleCommand;
 	import no.doomsday.console.commands.FunctionCallCommand;
 	import no.doomsday.console.controller.ControllerManager;
+	import no.doomsday.console.gui.ContextMenuManager;
 	import no.doomsday.console.gui.ScaleHandle;
 	import no.doomsday.console.introspection.AccessorDesc;
 	import no.doomsday.console.introspection.ChildScopeDesc;
@@ -16,6 +18,8 @@
 	import no.doomsday.console.measurement.MeasurementTool;
 	import no.doomsday.console.messages.Message;
 	import no.doomsday.console.messages.MessageTypes;
+	import no.doomsday.console.persistence.PersistenceManager;
+	import no.doomsday.console.references.ReferenceManager;
 	import no.doomsday.console.text.autocomplete.AutocompleteDictionary;
 	import no.doomsday.console.text.autocomplete.AutocompleteManager;
 	import no.doomsday.console.text.TextFormats;
@@ -71,15 +75,8 @@
 		private var infoTargetY:Number;
 		private var scrollIndex:int = 0;
 		private var scrollRange:int = 0;
-		private var previousCommands:Array;
-		private var commandIndex:int = 0;
-		private var numLines:int = 10;
 		private var consoleHeight:Number = 120;
-		private var autoCompleteManager:AutocompleteManager;
-		private var historySO:SharedObject;
-		
-		private var referenceDict:Dictionary = new Dictionary(true);
-		
+			
 		private var messageLog:Vector.<Message>;
 		private var commands:Vector.<ConsoleCommand>;
 		
@@ -91,7 +88,7 @@
 		private var timeStamp:Boolean = false;
 		private var prevHeight:int;
 		
-		private var measureBracket:MeasurementTool = new MeasurementTool();
+		private var measureBracket:MeasurementTool;
 		
 		private var parentTabEnabled:Boolean = true;
 		private var parentTabChildren:Boolean = true;
@@ -101,22 +98,21 @@
 		private var routingToJS:Boolean;
 		private var alertingErrors:Boolean;
 		
+		private var autoCompleteManager:AutocompleteManager;
 		private var globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
 		
 		private var menu:ContextMenu;
 		
-		private var scopeManager:ScopeManager;
-		
 		private var scaleHandle:ScaleHandle;
 		
+		private var referenceManager:ReferenceManager;
 		private var controllerManager:ControllerManager;
-		private var password:String = "";
-		private var authenticated:Boolean = true;
-		private var authCommand:FunctionCallCommand = new FunctionCallCommand("authorize", authenticate, "System", "Input password to gain console access");
-		private var deAuthCommand:FunctionCallCommand = new FunctionCallCommand("deauthorize", lock, "System", "Lock the console from unauthorized user access");
-		private var authenticationSetup:Boolean;
+		private var scopeManager:ScopeManager;
+		private var commandManager:CommandManager;
 		
 		private var locked:Boolean = false;
+		private var contextMenuManager:ContextMenuManager;
+		private var persistence:PersistenceManager;
 		
 		/**
 		 * Get the singleton instance of DConsole
@@ -136,36 +132,35 @@
 		 */
 		public function DConsole() 
 		{
-			//var ob:ByteArray = new BuildNumberFile as ByteArray;
 			visible = false;
-			
-			addChild(measureBracket);
-			measureBracket.visible = false;
-			
-			historySO = SharedObject.getLocal("consoleHistory");
-			if (!historySO.data.history) historySO.data.history = [];
-			if (!historySO.data.numLines) historySO.data.numLines = numLines;
-			numLines = historySO.data.numLines;
-			previousCommands = historySO.data.history;
-			commandIndex = previousCommands.length;
-			
+
 			mainConsoleContainer = new Sprite();
-			addChild(mainConsoleContainer);
 			
 			consoleBg = new Shape();
 			var dropshadow:DropShadowFilter = new DropShadowFilter(4, 90, 0, 0.3, 0, 10);
-			consoleBg.filters = [dropshadow];
-			mainConsoleContainer.addChild(consoleBg);			
+			consoleBg.filters = [dropshadow];		
 			
 			textOutput = new TextField();
 			textOutput.gridFitType = GridFitType.PIXEL;
-			mainConsoleContainer.addChild(textOutput);
 			inputTextField = new TextField();
 			
 			autoCompleteManager = new AutocompleteManager(inputTextField);
 			autoCompleteManager.setDictionary(globalDictionary);
 			
-			scopeManager = new ScopeManager();
+			measureBracket = new MeasurementTool(this);
+			measureBracket.visible = false;
+			
+			persistence = new PersistenceManager(this);
+			controllerManager = new ControllerManager();
+			scopeManager = new ScopeManager(this, autoCompleteManager);
+			referenceManager = new ReferenceManager(this,scopeManager);
+			contextMenuManager = new ContextMenuManager(this, scopeManager, referenceManager, controllerManager, measureBracket);
+			commandManager = new CommandManager(this, persistence, referenceManager);
+			
+			tabTimer = new Timer(50, 1);
+			messageLog = new Vector.<Message>;
+			fileRef = new FileReference();
+			scaleHandle = new ScaleHandle();	
 			
 			infoField = new TextField();
 			infoField.background = true;
@@ -174,17 +169,6 @@
 			infoField.mouseEnabled = false;
 			infoField.selectable = false;
 			infoField.defaultTextFormat = TextFormats.debugTformatHelp;
-			mainConsoleContainer.addChild(infoField);
-			
-			menu = new ContextMenu();
-			var logItem:ContextMenuItem = new ContextMenuItem("Log");
-			logItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, log);
-			var screenshotItem:ContextMenuItem = new ContextMenuItem("Screenshot");
-			screenshotItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, screenshot);
-			var toggleDisplayItem:ContextMenuItem = new ContextMenuItem("Hide");
-			toggleDisplayItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, toggleDisplay);
-			menu.customItems.push(logItem, screenshotItem, toggleDisplayItem);
-			contextMenu = menu;
 			
 			inputTextField.defaultTextFormat = TextFormats.debugTformatInput;
 			inputTextField.multiline = false;
@@ -192,42 +176,54 @@
 			inputTextField.background = true;
 			inputTextField.backgroundColor = 0;
 			inputTextField.tabEnabled = false;
-			mainConsoleContainer.addChild(inputTextField);
-			
-			scaleHandle = new ScaleHandle();			
+					
 			scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
 			
-			mainConsoleContainer.addChild(scaleHandle);
-			
-			controllerManager = new ControllerManager();
+			addChild(measureBracket);
+			addChild(mainConsoleContainer);
 			addChild(controllerManager);
 			
-			
-			tabTimer = new Timer(50, 1);
+			mainConsoleContainer.addChild(consoleBg);	
+			mainConsoleContainer.addChild(textOutput);
+			mainConsoleContainer.addChild(infoField);
+			mainConsoleContainer.addChild(inputTextField);
+			mainConsoleContainer.addChild(scaleHandle);
+						
 			tabTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTab, false, 0, true);
 			
-			messageLog = new Vector.<Message>;
-			commands = new Vector.<ConsoleCommand>();
-			//default commands
+			
+			
 			print("Welcome",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
 			
+			setupDefaultCommands();
+			
+			
+			print("Ready. Type help to get started.", MessageTypes.SYSTEM);
+			
+			calcHeight();
+			
+			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		private function setupDefaultCommands():void {
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
-			addCommand(new FunctionCallCommand("clearhistory", clearHistory, "System", "Clears the stored command history"));
-			addCommand(new FunctionCallCommand("commands", listCommands, "Utility", "Output a list of available commands"));
+			addCommand(new FunctionCallCommand("clearhistory", persistence.clearHistory, "System", "Clears the stored command history"));
+			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands"));
 			addCommand(new FunctionCallCommand("help", getHelp, "Utility", "Output basic instructions"));
 			addCommand(new FunctionCallCommand("clear", clear, "View", "Clear the console"));
 			addCommand(new FunctionCallCommand("echo", toggleEcho, "View", "Toggle display of user commands"));
 			addCommand(new FunctionCallCommand("timestampDisplay", toggleTimestamp, "View", "Toggle display of message timestamp"));
 			addCommand(new FunctionCallCommand("log", log, "Utility", "Save the complete console log for this session to an xml document"));
-			addCommand(new FunctionCallCommand("measure", toggleMeasureBracket, "Utility", "Creates a scalable measurement bracket widget. Hold shift to snap to 10s."));
+			addCommand(new FunctionCallCommand("measure", measureBracket.toggle, "Utility", "Creates a scalable measurement bracket widget. Hold shift to snap to 10s."));
 			addCommand(new FunctionCallCommand("screenshot", screenshot, "Utility", "Save a png screenshot (sans console)"));
 			addCommand(new FunctionCallCommand("toggleTrace", toggleTrace, "Trace", "Toggle reception of trace values"));
 			addCommand(new FunctionCallCommand("toggleTraceDisplay", toggleTraceDisplay, "Trace", "Toggle display of trace values"));
 			addCommand(new FunctionCallCommand("clearTrace", clearTrace, "Trace", "Clear trace cache"));
-			addCommand(new FunctionCallCommand("enumerateFonts", enumerateFonts, "Utility", "Lists font names available to this swf"));
+			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
 
 			addCommand(new FunctionCallCommand("capabilities", getCapabilities, "System", "Prints the system capabilities"));
 			addCommand(new FunctionCallCommand("setupStage", setupStageAlignAndScale, "Stage", "Sets stage.align to TOP_LEFT and stage.scaleMode to NO_SCALE"));
@@ -235,27 +231,27 @@
 			addCommand(new FunctionCallCommand("showMouse", Mouse.show, "UI", "Shows the mouse cursor"));
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
 						
-			addCommand(new FunctionCallCommand("call", callMethodOnObject, "Introspection", "Calls a method with args within the current introspection scope"));
-			addCommand(new FunctionCallCommand("set", setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope"));
-			addCommand(new FunctionCallCommand("get", getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope"));
-			addCommand(new FunctionCallCommand("root", selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
-			addCommand(new FunctionCallCommand("select", setScopeByName, "Introspection", "Selects the specified object as the current introspection scope"));
-			addCommand(new FunctionCallCommand("selectByReference", setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
-			addCommand(new FunctionCallCommand("back", up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
-			addCommand(new FunctionCallCommand("children", printChildren, "Introspection", "Get available children in the current scope"));
-			addCommand(new FunctionCallCommand("variables", printVariables, "Introspection", "Get available variables in the current scope"));
-			addCommand(new FunctionCallCommand("complex", printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
-			addCommand(new FunctionCallCommand("scopes", printDownPath, "Introspection", "List available scopes in the current scope"));
-			addCommand(new FunctionCallCommand("methods", printMethods, "Introspection", "Get available methods in the current scope"));
-			addCommand(new FunctionCallCommand("updateScope", updateScope, "Introspection", "Gets changes to the current scope tree"));
+			addCommand(new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope"));
+			addCommand(new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope"));
+			addCommand(new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope"));
+			addCommand(new FunctionCallCommand("root", scopeManager.selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
+			addCommand(new FunctionCallCommand("select", scopeManager.setScopeByName, "Introspection", "Selects the specified object as the current introspection scope"));
+			addCommand(new FunctionCallCommand("selectByReference", referenceManager.setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
+			addCommand(new FunctionCallCommand("back", scopeManager.up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
+			addCommand(new FunctionCallCommand("children", scopeManager.printChildren, "Introspection", "Get available children in the current scope"));
+			addCommand(new FunctionCallCommand("variables", scopeManager.printVariables, "Introspection", "Get available variables in the current scope"));
+			addCommand(new FunctionCallCommand("complex", scopeManager.printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
+			addCommand(new FunctionCallCommand("scopes", scopeManager.printDownPath, "Introspection", "List available scopes in the current scope"));
+			addCommand(new FunctionCallCommand("methods", scopeManager.printMethods, "Introspection", "Get available methods in the current scope"));
+			addCommand(new FunctionCallCommand("updateScope", scopeManager.updateScope, "Introspection", "Gets changes to the current scope tree"));
 			addCommand(new FunctionCallCommand("alias", alias, "Introspection", "'alias methodName triggerWord' Create a new command shortcut to the specified function"));
 			
 			//experimental stuff
-			addCommand(new FunctionCallCommand("getReference", getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (getReference 1)"));
-			addCommand(new FunctionCallCommand("getReferenceByName", getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReferenceByName scopename 1)"));
-			addCommand(new FunctionCallCommand("listReferences", printReferences, "Referencing", "Lists all stored references and their IDs"));
-			addCommand(new FunctionCallCommand("clearReferences", clearReferences, "Referencing", "Clears all stored references"));
-			addCommand(new FunctionCallCommand("clearReference", clearReferenceByName, "Referencing", "Clears the specified reference"));
+			addCommand(new FunctionCallCommand("getReference", referenceManager.getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (getReference 1)"));
+			addCommand(new FunctionCallCommand("getReferenceByName", referenceManager.getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReferenceByName scopename 1)"));
+			addCommand(new FunctionCallCommand("listReferences", referenceManager.printReferences, "Referencing", "Lists all stored references and their IDs"));
+			addCommand(new FunctionCallCommand("clearReferences", referenceManager.clearReferences, "Referencing", "Clears all stored references"));
+			addCommand(new FunctionCallCommand("clearReference", referenceManager.clearReferenceByName, "Referencing", "Clears the specified reference"));
 			
 			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
 				
@@ -274,75 +270,12 @@
 				print("	Standalone commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
 			}
-			
-			
-			fileRef = new FileReference();
-			
-			print("Ready. Type help to get started.", MessageTypes.SYSTEM);
-			
-			calcHeight();
-			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		}
-		
-		private function clearReferenceByName(name:String):void
-		{
-			try{
-			delete(referenceDict[name])
-			print("Cleared reference " + name, MessageTypes.SYSTEM);
-			printReferences();
-			}catch (e:Error) {
-				print("No such reference", MessageTypes.ERROR);
-			}
-		}
-		
-		private function getReferenceByName(name:String,id:String):void
-		{
-			try{
-				referenceDict[id] = getScopeByName(name);
-				printReferences();
-			}catch (e:Error) {
-				print(e.message, MessageTypes.ERROR);
-			}
-		}
-		
-		private function updateScope():void
-		{
-			setScope(scopeManager.currentScope.obj, true);
-		}
-		
-		private function getReference(id:String):void
-		{
-			referenceDict[id] = scopeManager.currentScope.obj;
-			printReferences();
-		}
-		private function clearReferences():void {
-			referenceDict = new Dictionary(true);
-			print("References cleared", MessageTypes.SYSTEM);
-		}
-		private function printReferences():void {
-			print("Stored references: ");
-			for (var b:* in referenceDict) {
-				print("	"+b.toString() + " : " + referenceDict[b].toString());
-			}
-		}
-		
-		private function clearHistory():void
-		{
-			historySO.data.history = [];
 		}
 		
 		private function printVersion():void
 		{
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
 			print("Console build number " + BUILD, MessageTypes.SYSTEM);
-		}
-		
-		private function toggleMeasureBracket():void
-		{
-			measureBracket.visible = !measureBracket.visible;
-			print("Measuring bracket active: " + measureBracket.visible, MessageTypes.SYSTEM);
 		}
 		
 		private function createController(...properties:Array):void
@@ -394,7 +327,7 @@
 				print("ExternalInterface not available", MessageTypes.ERROR);
 			}
 		}
-		private function screenshot(e:Event = null):void
+		public function screenshot(e:Event = null):void
 		{
 			var bmd:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, true, 0);
 			visible = false;
@@ -442,11 +375,6 @@
 			print("	Capabilities.screenResolutionX : "+Capabilities.screenResolutionX);
 			print("	Capabilities.screenResolutionY : "+Capabilities.screenResolutionY);
 			print("	Capabilities.version : "+Capabilities.version);
-		}
-		
-		private function enumerateFonts():void
-		{
-			TextUtils.listFonts(this);
 		}
 		/**
 		 * Alternative trace method
@@ -516,14 +444,14 @@
 		private function onInputFieldChange(e:Event = null):void 
 		{
 			var cmd:ConsoleCommand;
-			for (var i:int = commands.length; i--; ) 
-			{
-				if (commands[i].trigger.toLowerCase() == inputTextField.text.split(" ")[0].toLowerCase()) {
-					cmd = commands[i];
-					break;
-				}
+			try {
+				cmd = commandManager.parseForCommand(inputTextField.text);
+			}catch (e:Error) {
+				infoTargetY = inputTextField.y;
+				addEventListener(Event.ENTER_FRAME, updateInfoMotion);
+				return;
 			}
-			if (cmd && cmd.helpText != "") {
+			if (cmd.helpText != "") {
 				infoTargetY = inputTextField.y+18;
 				infoField.text = "?	" + cmd.trigger + ": " + cmd.helpText;
 				addEventListener(Event.ENTER_FRAME, updateInfoMotion);
@@ -537,9 +465,8 @@
 		 * @param	lines
 		 */
 		public function setHeight(lines:Number = 6):void {
-			numLines = int(Math.max(1, lines));
-			historySO.data.numLines = numLines;
-			scrollIndex = Math.max(0, messageLog.length - numLines);
+			persistence.numLines = int(Math.max(1, lines));
+			scrollIndex = Math.max(0, messageLog.length - persistence.numLines);
 			if (calcHeight()>stage.stageHeight) {
 				setHeight(3);
 				return print("Out of bounds, setting to safe range");
@@ -547,7 +474,7 @@
 			redraw();
 		}
 		private function calcHeight():Number {
-			return consoleHeight = numLines * 14+22;
+			return consoleHeight = persistence.numLines * 14+22;
 		}
 		/**
 		 * Toggle echo (command confirmation) on and off
@@ -590,15 +517,9 @@
 		 */
 		public function addCommand(command:ConsoleCommand):void {
 			globalDictionary.addToDictionary(command.trigger);
-			commands.push(command);
-			commands.sort(sortCommands);
+			commandManager.addCommand(command);
 		}
 		
-		private function sortCommands(a:ConsoleCommand,b:ConsoleCommand):int
-		{
-			if (a.grouping == b.grouping) return -1;
-			return 1;
-		}
 		/**
 		 * A generic function to add as listener to events you want logged
 		 * @param	e
@@ -619,7 +540,7 @@
 			{
 				msg = new Message(split[i], date, type);
 				messageLog.push(msg);
-				scrollIndex = Math.max(0, messageLog.length - numLines);
+				scrollIndex = Math.max(0, messageLog.length - persistence.numLines);
 			}			
 			if (type == MessageTypes.ERROR&&alertingErrors) {
 				ExternalInterface.call("alert", str);
@@ -636,23 +557,11 @@
 			messageLog = new Vector.<Message>;
 			drawMessages();
 		}
-		/**
-		 * List available command phrases
-		 */
-		public function listCommands():void {
-			var str:String = "Available commands: ";
-			print(str,MessageTypes.SYSTEM);
-			for (var i:int = 0; i < commands.length; i++) 
-			{
-				print("	--> "+commands[i].grouping+" : "+commands[i].trigger,MessageTypes.SYSTEM);
-			}
-			/*+"	"+commands[i].grouping+"	"+commands[i].helpText*/
-		}
 		private function drawMessages():void {
 			if (!visible||locked) return;
 			textOutput.text = "";
 			textOutput.defaultTextFormat = TextFormats.debugTformatOld;
-			scrollRange = Math.min(messageLog.length, scrollIndex + numLines);
+			scrollRange = Math.min(messageLog.length, scrollIndex + persistence.numLines);
 			
 			for (var i:int = scrollIndex; i < scrollRange; i++) 
 			{
@@ -705,16 +614,9 @@
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			//scope menu test
-			var selectionMenuItem:ContextMenuItem = new ContextMenuItem("Set console scope", true);
-			selectionMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onSelectionMenu,false,0,true);
-			var controllerMenuItem:ContextMenuItem = new ContextMenuItem("Create controller");
-			controllerMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onControllerMenu,false,0,true);
-			if (!parent.contextMenu) {
-				parent.contextMenu = new ContextMenu();
-			}
-			parent.contextMenu.customItems.push(selectionMenuItem);
-			parent.contextMenu.customItems.push(controllerMenuItem);
+			
+			contextMenuManager.setUpMenuItems(true);
+			//scope menu test	
 			
 			try{
 				parentTabChildren = parent.tabChildren;
@@ -737,23 +639,8 @@
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			stage.addEventListener(Event.RESIZE, onStageResize);
-			setScope(parent);
-		}
-		
-		private function onControllerMenu(e:ContextMenuEvent):void 
-		{
-			if (e.mouseTarget is DisplayObject) {
-				setScope(e.mouseTarget);
-				var properties:Array = ["name","x", "y", "width", "height", "rotation", "scaleX", "scaleY"];
-				controllerManager.createController(scopeManager.currentScope.obj, properties, e.mouseTarget.x, e.mouseTarget.y);
-				print("Controller created. Type values to alter, or use the mousewheel on numbers.");
-			}
-		}
-		
-		private function onSelectionMenu(e:ContextMenuEvent):void 
-		{
-			setScope(e.mouseTarget);
-		}
+			scopeManager.selectBaseScope();
+		}	
 		
 		private function onStageResize(e:Event):void 
 		{
@@ -806,38 +693,29 @@
 		private function onKeyUp(e:KeyboardEvent):void 
 		{
 			if (visible) {
-				var cmd:String;
+				var cmd:String = "";
 				if (e.keyCode == Keyboard.UP) {
-					if(previousCommands.length>0){
-						commandIndex = Math.max(commandIndex-=1,0);
-						cmd = previousCommands[commandIndex];
-					}
+					cmd = persistence.historyUp();
 					
 				}else if (e.keyCode == Keyboard.DOWN) {
-					if(commandIndex<previousCommands.length-1){
-						commandIndex = Math.min(commandIndex += 1, previousCommands.length - 1);
-						cmd = previousCommands[commandIndex];
-					}
+					cmd = persistence.historyDown();
 				}
-				if (cmd) {
-					if(cmd){
-						inputTextField.text = cmd;
-						stage.focus = inputTextField;
-						var spaceIndex:int = inputTextField.text.indexOf(" ");
-						//TODO: strip trailing whitespace when adding to command history
-						if (spaceIndex>-1) {
-							inputTextField.setSelection(inputTextField.text.indexOf(" ") + 1, inputTextField.text.length);
-						}else{
-							inputTextField.setSelection(0, inputTextField.text.length);
-						}
+				if (cmd.length>0) {
+					inputTextField.text = cmd;
+					stage.focus = inputTextField;
+					var spaceIndex:int = inputTextField.text.indexOf(" ");
+					
+					if (spaceIndex>-1) {
+						inputTextField.setSelection(inputTextField.text.indexOf(" ") + 1, inputTextField.text.length);
+					}else{
+						inputTextField.setSelection(0, inputTextField.text.length);
 					}
 				}
 			}
 		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
-			
-			//if (e.charCode == 124) {
+			//TODO: Customizable invocation keystroke
 			if (e.keyCode == Keyboard.TAB && e.shiftKey) {
 				disableTab();
 				toggleDisplay();
@@ -845,7 +723,7 @@
 				disableTab();
 				if (visible&&stage.focus!=inputTextField) stage.focus = inputTextField;
 				if (autoCompleteManager.suggestionActive) {
-					//TODO: Make tab only append a space if there isn't already one
+					//TODO: Intelligent tabbing
 					inputTextField.appendText(" ");
 					inputTextField.setSelection(inputTextField.length, inputTextField.length);
 				}else {
@@ -863,7 +741,7 @@
 					}
 					var success:Boolean = false;
 					if (echo) print("'"+inputTextField.text+"'",MessageTypes.USER);
-					if (tryCommand()) {
+					if (commandManager.tryCommand(inputTextField.text)) {
 						success = true;
 					}else {
 						print("Invalid command " + inputTextField.text,MessageTypes.ERROR);
@@ -871,18 +749,17 @@
 					inputTextField.text = "";
 					onInputFieldChange();
 				}else if (e.keyCode == Keyboard.PAGE_DOWN) {
-					scroll(-numLines);
+					scroll(-persistence.numLines);
 				}else if (e.keyCode == Keyboard.PAGE_UP) {
-					scroll(numLines);
+					scroll(persistence.numLines);
 				}
 				
 			}
 		}
 		private function scroll(delta:int):void {
 			
-			if (delta < 0 && messageLog.length < numLines) return;
-			scrollIndex = delta < 0 ? Math.min(messageLog.length - numLines, scrollIndex - delta) : Math.max(0, scrollIndex - delta);
-			//scrollIndex = delta < 0 ? Math.min(messageLog.length - numLines, scrollIndex + numLines) : Math.max(0, scrollIndex - numLines);
+			if (delta < 0 && messageLog.length < persistence.numLines) return;
+			scrollIndex = delta < 0 ? Math.min(messageLog.length - persistence.numLines, scrollIndex - delta) : Math.max(0, scrollIndex - delta);
 			drawMessages();
 		}
 		private function resetTab(e:TimerEvent):void 
@@ -907,68 +784,7 @@
 			tabTimer.start();
 		}
 		
-		private function tryCommand(input:String = null):Boolean
-		{
-			var cmdStr:String;
-			if (input) {
-				cmdStr = stripWhitespace(input);
-			}else {
-				cmdStr = stripWhitespace(inputTextField.text);
-			}
-			var str:String = cmdStr.toLowerCase().split(" ")[0];
-			if (!authenticated&&str!=authCommand.trigger) {
-				print("Not authenticated", MessageTypes.ERROR);
-				return false;
-			}
-			if (previousCommands[previousCommands.length - 1] != cmdStr && str!=authCommand.trigger) {
-				previousCommands.push(cmdStr);
-				if (previousCommands.length > 10) {
-					previousCommands.shift();
-				}
-			}
-			commandIndex = previousCommands.length;
-			for (var i:int = 0; i < commands.length; i++) 
-			{
-				if (commands[i].trigger.toLowerCase() == str) {
-					doCommand(commands[i]);
-					return true;
-				}
-			}
-			return false;
-		}
-		private function stripWhitespace(str:String):String {
-			while (str.charAt(str.length - 1) == " ") 
-			{
-				str = str.substr(0, str.length - 1);
-			}
-			return str;
-		}
 		
-		private function doCommand(command:ConsoleCommand):void
-		{
-			var args:Array = stripWhitespace(inputTextField.text).split(" ");
-			args.shift();
-			args = parseForReferences(args);
-			var val:*;
-			if (command is FunctionCallCommand) {
-				try {
-					val = (command as FunctionCallCommand).callback.apply(this, args);
-					if(val) print("		"+val);
-				}catch (e:ArgumentError) {
-					//try again with all args as string
-					try {
-						val = (command as FunctionCallCommand).callback.call(this, args.join(" "));
-						if(val) print("		"+val);
-					}catch (e:Error) {
-						print("Error: "+e.message,MessageTypes.ERROR);
-					}
-				}catch (e:Error) {
-					print("Error: "+e.message,MessageTypes.ERROR);
-				}
-			}else {
-				print("Abstract command, no action",MessageTypes.ERROR);
-			}
-		}
 		public function getApproxMessagesSize():int {
 			var totalText:String = "";
 			for (var i:int = messageLog.length; i--; ) 
@@ -1055,173 +871,6 @@
 			return new Rectangle(0, 0, w, h);
 		}
 		
-		
-		//introspection stuff, wip
-		private function up():void {
-			scopeManager.up();
-			printScope();
-			printDownPath();
-		}
-		private function setScopeByReferenceKey(key:String):void {
-			if (referenceDict[key]) {
-				setScope(referenceDict[key]);
-			}
-		}
-		private function setScopeByName(str:String):void {
-			try {
-				setScope(getScopeByName(str));
-			}catch (e:Error) {
-				print(e.message, MessageTypes.ERROR);
-			}
-		}
-		private function getScopeByName(str:String):*{
-			try {
-				return scopeManager.currentScope.obj[str];
-			}catch (e:Error) {
-				try {
-					return(scopeManager.currentScope.obj.getChildByName(str));
-				}catch (e:Error) {
-				}
-			}
-			throw new Error("No such scope");
-		}
-		private function setScope(o:*,force:Boolean = false):void {
-			if (!force&&scopeManager.currentScope.obj === o) return;
-			try{
-				scopeManager.setScope(o);
-				autoCompleteManager.scopeDict = scopeManager.currentScope.autoCompleteDict;
-			}catch (e:Error) {
-				print("No such scope",MessageTypes.ERROR);
-			}
-			printScope();
-			printDownPath();
-		}
-		private function printMethods():void {
-			var m:Vector.<MethodDesc> = scopeManager.currentScope.methods;
-			print("	methods:");
-			var i:int
-			for (i = 0; i < m.length; i++) 
-			{
-				var md:MethodDesc = m[i];
-				print("		" + md.name + " : " + md.returnType);
-			}
-		}
-		private function printVariables():void {
-			var a:Vector.<VariableDesc> = scopeManager.currentScope.variables;
-			var cv:*;
-			print("	variables:");
-			var i:int
-			for (i = 0; i < a.length; i++) 
-			{
-				var vd:VariableDesc = a[i];
-				print("		" + vd.name + ": " + vd.type);
-				try{
-					cv = scopeManager.currentScope.obj[vd.name];
-					print("			value: " + cv.toString());
-				}catch (e:Error) {
-					
-				}
-			}
-			var b:Vector.<AccessorDesc> = scopeManager.currentScope.accessors;
-			for (i = 0; i < b.length; i++) 
-			{
-				var ad:AccessorDesc = b[i];
-				print("		" + ad.name + ": " + ad.type);
-				try{
-					cv = scopeManager.currentScope.obj[ad.name];
-					print("			value: " + cv.toString());
-				}catch (e:Error) {
-					
-				}
-			}
-		}
-		private function printChildren():void {
-			var c:Vector.<ChildScopeDesc> = scopeManager.currentScope.children;
-			if (c.length < 1) return;
-			print("	children:");
-			for (var i:int = 0; i < c.length; i++) 
-			{
-				var cc:ChildScopeDesc = c[i];
-				print("		" + cc.name + " : " + cc.type);
-			}
-		}
-		
-		private function printDownPath():void {
-			printChildren();
-			printComplexObjects();
-		}
-		
-		private function printComplexObjects():void
-		{
-			var a:Vector.<VariableDesc> = scopeManager.currentScope.variables;
-			var cv:*;
-			if (a.length < 1) return;
-			print("	complex types:");
-			var i:int
-			for (i = 0; i < a.length; i++) 
-			{
-				var vd:VariableDesc = a[i];
-				switch(vd.type) {
-					case "Number":
-					case "Boolean":
-					case "String":
-					case "int":
-					case "uint":
-					case "Array":
-					continue;
-					break;
-					default:
-					break;
-				}
-				print("		" + vd.name + ": " + vd.type);
-			}
-		}
-		
-		private function printScope():void {
-			print("scope : " + scopeManager.currentScope.obj.toString());
-		}
-		private function setAccessorOnObject(accessorName:String, arg:*):*
-		{
-			if (arg == "true") {
-				arg = true;
-			}else if (arg == "false") {
-				arg = false;
-			}
-			scopeManager.currentScope.obj[accessorName] = arg;
-			return accessorName + ": " + scopeManager.currentScope.obj[accessorName];
-		}
-		private function getAccessorOnObject(accessorName:String):String{
-			return scopeManager.currentScope.obj[accessorName].toString();
-		}
-		private function selectBaseScope():void {
-			setScope(stage);
-		}
-		private function clearScope():void {
-			selectBaseScope(); //temp
-		}
-		private function parseForReferences(args:Array):Array {
-			for (var i:int = 0; i < args.length; i++) 
-			{
-				if (args[i].indexOf("<") > -1) {
-					//contains a reference
-					var s:Array = args[i].split("<").join(">").split(">");
-					var key:String = s[1];
-					args[i] = referenceDict[key];
-				}
-			}
-			return args;
-		}
-		private function callMethodOnObject(...args:Array):* {
-			//var split:Array = stripWhitespace(commandstring).split(" ");
-			//for (var i:int = 0; i < split.length; i++) 
-			//{
-				//trace(split[i]);
-			//}
-			var cmd:String = args.shift();
-			//split = parseForReferences(split);
-			var func:Function = scopeManager.currentScope.obj[cmd];
-			return func.apply(scopeManager.currentScope.obj, args);
-		}
 		private function alias(methodName:String, commandString:String):void {
 			var ob:* = scopeManager.currentScope.obj;
 			if (!ob[methodName]) throw new ArgumentError("No such method on current scope");
@@ -1233,6 +882,11 @@
 			throw new ArgumentError("Identifier is not a method");
 		}
 		
+		public function setPassword(pwd:String):void {
+			commandManager.setupAuthentication(pwd);
+		}
+		
+		
 		//batch
 		public function runBatch(batch:String):Boolean {
 			locked = true;
@@ -1241,7 +895,7 @@
 			var result:Boolean = false;
 			for (var i:int = 0; i < split.length; i++) 
 			{
-				result = tryCommand(split[i])
+				result = commandManager.tryCommand(split[i])
 			}
 			if (result) {
 				print("Batch completed", MessageTypes.SYSTEM);
@@ -1261,29 +915,7 @@
 			runBatch(e.target.data);
 		}
 		
-		//authentication
-		public function setupAuthentication(password:String):void {
-			this.password = password;
-			authenticated = false;
-			if (authenticationSetup) return;
-			authenticationSetup = true;
-			addCommand(authCommand);
-			addCommand(deAuthCommand);
-		}
 		
-		private function lock():void
-		{
-			authenticated = false;
-			print("Deauthorized", MessageTypes.SYSTEM);
-		}
-		public function authenticate(password:String):void {
-			if (password == this.password) {
-				authenticated = true;
-				print("Authorized", MessageTypes.SYSTEM);
-			}else {
-				print("Not authorized", MessageTypes.ERROR);
-			}
-		}
 		
 	}
 	
