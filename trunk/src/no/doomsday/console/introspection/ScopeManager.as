@@ -59,6 +59,7 @@
 			}
 			throw new Error("No such scope");
 		}
+		
 		public function get currentScope():IntrospectionScope { return _currentScope; }
 		
 		public function up():void {

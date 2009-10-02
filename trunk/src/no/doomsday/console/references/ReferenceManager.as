@@ -78,7 +78,17 @@
 					//contains a reference
 					var s:Array = args[i].split("<").join(">").split(">");
 					var key:String = s[1];
-					args[i] = referenceDict[key];
+					if (referenceDict[key] != null) {
+						args[i] = referenceDict[key];
+					}else {
+						try {
+							args[i] = scopeManager.getScopeByName(key);
+						}catch (e:Error) {
+							args[i] = null;
+						}
+					}
+					
+					
 				}
 			}
 			return args;
