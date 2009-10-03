@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -10,7 +11,9 @@
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.ByteArray;
 	import no.doomsday.console.ConsoleUtil;
+	import no.doomsday.console.introspection.IntrospectionScope;
 	
 	/**
 	 * ...
@@ -54,7 +57,15 @@
 			//add the console instance using ConsoleUtil
 			addChild(ConsoleUtil.instance);
 			
+			var enc:ByteArray = new ByteArray();
+			var enc2:ByteArray = new ByteArray();
+			enc2.writeFloat(20);
+			
+			trace(enc.toString() == enc2.toString());
+			
+			
 			ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
+			ConsoleUtil.linkFunction("say", say);
 		}
 		//demonstrates how console commands handle arguments. In the console, type "mathAdd 3 1" for instance
 		//also demonstrates how the console prints return values
@@ -73,6 +84,9 @@
 			var ct:ColorTransform = new ColorTransform();
 			ct.color = Math.random() * 0xFFFFFF;
 			testButton.transform.colorTransform = ct;
+		}
+		public function say(s:String):String {
+			return "Hey " + s;
 		}
 		
 	}
