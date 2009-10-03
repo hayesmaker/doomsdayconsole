@@ -113,6 +113,7 @@
 		private var locked:Boolean = false;
 		private var contextMenuManager:ContextMenuManager;
 		private var persistence:PersistenceManager;
+		private var callCommand:FunctionCallCommand;
 		
 		/**
 		 * Get the singleton instance of DConsole
@@ -191,7 +192,7 @@
 						
 			tabTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTab, false, 0, true);
 			
-			
+			callCommand = new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
 			
 			print("Welcome",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
@@ -231,7 +232,7 @@
 			addCommand(new FunctionCallCommand("showMouse", Mouse.show, "UI", "Shows the mouse cursor"));
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
 						
-			addCommand(new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope"));
+			addCommand(callCommand);
 			addCommand(new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope"));
 			addCommand(new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope"));
 			addCommand(new FunctionCallCommand("root", scopeManager.selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
@@ -451,9 +452,19 @@
 				addEventListener(Event.ENTER_FRAME, updateInfoMotion);
 				return;
 			}
-			if (cmd.helpText != "") {
+			var helpText:String = cmd.helpText;
+			if (cmd == callCommand) {
+				//arrgh
+				var secondElement:String = TextUtils.parseForSecondElement(inputTextField.text);
+				try{
+					helpText = InspectionUtils.getMethodTooltip(scopeManager.currentScope.obj, secondElement);
+				}catch (e:Error) {
+					helpText = cmd.helpText;
+				}
+			}
+			if (helpText != "") {
 				infoTargetY = inputTextField.y+18;
-				infoField.text = "?	" + cmd.trigger + ": " + cmd.helpText;
+				infoField.text = "?	" + cmd.trigger + ": " + helpText;
 				addEventListener(Event.ENTER_FRAME, updateInfoMotion);
 			}else {
 				infoTargetY = inputTextField.y;

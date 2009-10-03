@@ -77,6 +77,28 @@
 			return vec;
 		}
 		
+		//thanks Paulo Fierro :)
+		public static function getMethodTooltip(scope:Object, methodName:String):String {
+			var tip:String = methodName+"( "; 
+			var desc:XMLList = describeType(scope)..method.(attribute("name") == methodName);
+			if (desc.length() == 0) {
+				throw new Error("No description for method " + methodName);
+			}
+			//<parameter index="1" type="String" optional="false"/>
+			var first:Boolean = true;
+			for each(var attrib:XML in desc..parameter) {
+				if(!first) tip += ", ";
+				tip += attrib.@type.toString().toLowerCase();
+				if (attrib.@optional == "true") {
+					tip += "[optional]";
+				}				
+				first = false;
+			}
+			tip += " ):"+desc.@returnType;
+			return tip;
+		}
+		
+		
 	}
 
 }

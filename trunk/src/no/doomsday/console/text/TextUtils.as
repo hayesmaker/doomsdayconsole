@@ -45,6 +45,13 @@
 			}
 			return str;
 		}
+		public static function parseForSecondElement(str:String):String {
+			var split:Array = str.split(" ");
+			if (split.length > 1) {
+				return split[1];
+			}
+			return "";
+		}
 		
 	}
 
