@@ -39,8 +39,8 @@
 		public function tryCommand(input:String):Boolean
 		{
 			var cmdStr:String = TextUtils.stripWhitespace(input);
+			var args:Array = ArgumentSplitterUtil.slice(cmdStr);
 			
-			var args:Array = cmdStr.split(" ");
 			var str:String = args.shift().toLowerCase();
 			if (!authenticated&&str!=authCommand.trigger) {
 				console.print("Not authenticated", MessageTypes.ERROR);
