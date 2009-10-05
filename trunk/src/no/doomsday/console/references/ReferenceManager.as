@@ -79,7 +79,11 @@
 					var s:Array = args[i].split("<").join(">").split(">");
 					var key:String = s[1];
 					if (referenceDict[key] != null) {
-						args[i] = referenceDict[key];
+						if (referenceDict[key] is Function) {
+							args[i] = referenceDict[key]();
+						}else {
+							args[i] = referenceDict[key];
+						}
 					}else {
 						try {
 							args[i] = scopeManager.getScopeByName(key);
@@ -93,6 +97,7 @@
 			}
 			return args;
 		}
+		
 		
 	}
 

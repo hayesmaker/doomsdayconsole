@@ -4,6 +4,7 @@
 	import no.doomsday.console.messages.MessageTypes;
 	import no.doomsday.console.persistence.PersistenceManager;
 	import no.doomsday.console.references.ReferenceManager;
+	import no.doomsday.console.text.ParseUtils;
 	import no.doomsday.console.text.TextUtils;
 	/**
 	 * ...
@@ -36,7 +37,7 @@
 			if (a.grouping == b.grouping) return -1;
 			return 1;
 		}
-		public function tryCommand(input:String):Boolean
+		public function tryCommand(input:String, sub:Boolean = false ):*
 		{
 			var cmdStr:String = TextUtils.stripWhitespace(input);
 			var args:Array;
@@ -46,37 +47,50 @@
 				console.print(e.message, MessageTypes.ERROR);
 				return false;
 			}
-			
 			var str:String = args.shift().toLowerCase();
 			if (!authenticated&&str!=authCommand.trigger) {
-				console.print("Not authenticated", MessageTypes.ERROR);
+				if(!sub) console.print("Not authenticated", MessageTypes.ERROR);
 				return false;
 			}
-			if (str != authCommand.trigger) {
+			if (str != authCommand.trigger&&!sub) {
 				persistence.addtoHistory(input);
 			}
 			
-			for (var i:int = 0; i < commands.length; i++) 
+			var commandArgs:Vector.<CommandArgument> = new Vector.<CommandArgument>();
+			for (var i:int = 0; i < args.length; i++) 
+			{
+				commandArgs.push(new CommandArgument(args[i],this,referenceManager));
+			}
+			
+			for (i = 0; i < commands.length; i++) 
 			{
 				if (commands[i].trigger.toLowerCase() == str) {
-					doCommand(commands[i],args);
-					return true;
+					return doCommand(commands[i], commandArgs, sub);
 				}
 			}
 			return false;
 		}
 		
-		public function doCommand(command:ConsoleCommand,args:Array = null):void
+		public function doCommand(command:ConsoleCommand,commandArgs:Vector.<CommandArgument> = null,sub:Boolean = false):*
 		{
-			if (!args) args = [];
-			args = referenceManager.parseForReferences(args);
+			if (!commandArgs) commandArgs = new Vector.<CommandArgument>();
+			var args:Array = [];
+			for (var i:int = 0; i < commandArgs.length; i++) 
+			{
+				args.push(commandArgs[i].data);
+			}
+			
 			var val:*;
 			if (command is FunctionCallCommand) {
 				try {
 					val = (command as FunctionCallCommand).callback.apply(this, args);
-					if(val||isNaN(val)) console.print("		"+val);
+					if ((val || isNaN(val)) && val != undefined) { 
+						if (!sub) console.print(val);
+					}
+					return val == undefined ? true : val;
 				}catch (e:ArgumentError) {
 					//try again with all args as string
+					//return;
 					try {
 						var joint:String = args.join(" ");
 						if (joint.length>0){
@@ -84,15 +98,21 @@
 						}else {
 							val = (command as FunctionCallCommand).callback.call(this);
 						}
-						if(val||isNaN(val)) console.print("		"+val);
+						if (val || isNaN(val)) {
+							if(!sub) console.print(val);
+						}
+						return val;
 					}catch (e:Error) {
-						console.print("Error: "+e.message,MessageTypes.ERROR);
+						console.print("Error: " + e.message, MessageTypes.ERROR);
+						return;
 					}
 				}catch (e:Error) {
-					console.print("Error: "+e.message,MessageTypes.ERROR);
+					console.print("Error: " + e.message, MessageTypes.ERROR);
+					return;
 				}
 			}else {
-				console.print("Abstract command, no action",MessageTypes.ERROR);
+				console.print("Abstract command, no action", MessageTypes.ERROR);
+				return;
 			}
 		}
 		
@@ -115,6 +135,10 @@
 				}
 			}
 			throw new Error("No command found");
+		}
+		public function parseForSubCommand(arg:String):* {
+			
+			return arg;
 		}
 		
 		//authentication

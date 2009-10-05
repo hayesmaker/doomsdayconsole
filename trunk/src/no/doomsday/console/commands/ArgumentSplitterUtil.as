@@ -12,6 +12,8 @@
 		private static const objectCloser:int = "}".charCodeAt(0);
 		private static const arrayOpener:int = "[".charCodeAt(0);
 		private static const arrayCloser:int = "]".charCodeAt(0);
+		private static const subCommandOpener:int = "(".charCodeAt(0);
+		private static const subCommandCloser:int = ")".charCodeAt(0);
 		private static const space:int = " ".charCodeAt(0);
 		
 		public static function slice(a:String):Array {
@@ -37,6 +39,9 @@
 					case arrayOpener:
 					position = findArray(a, position);
 					break;
+					case subCommandOpener:
+					position = findSubCommand(a, position);
+					break;
 				}
 			}
 			var out:Array = a.split("|");
@@ -50,6 +55,32 @@
 				}
 			}
 			return out;
+		}
+		private static function findSubCommand(input:String,start:int):int {
+			//var t:Token = new Token();
+			//t.type = "Object";
+			var score:int = 0;
+			//var opener:int = input.charCodeAt(start);
+			var l:int = input.length;
+			var char:int;
+			var end:int;
+			for (var i:int = start; i < l; i++) 
+			{
+				char = input.charCodeAt(i);
+				if (char == subCommandOpener) {
+					score++;
+				}else if (char == subCommandCloser) {
+					score--;
+					if (score <= 0) {
+						end = i;
+						break;
+					}
+				}
+			}
+			if (score > 0) {
+				throw(new ArgumentError("Subcommand argument not properly terminated"));
+			}
+			return end;
 		}
 		private static function findObject(input:String,start:int):int {
 			//var t:Token = new Token();

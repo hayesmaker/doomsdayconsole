@@ -2,7 +2,8 @@
 {
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import no.doomsday.console.bitmap.PNGEncoder;
+	import com.adobe.images.PNGEncoder;
+	import flash.utils.getTimer;
 	import no.doomsday.console.commands.CommandManager;
 	import no.doomsday.console.commands.ConsoleCommand;
 	import no.doomsday.console.commands.FunctionCallCommand;
@@ -15,6 +16,7 @@
 	import no.doomsday.console.introspection.InspectionUtils;
 	import no.doomsday.console.introspection.MethodDesc;
 	import no.doomsday.console.introspection.VariableDesc;
+	import no.doomsday.console.math.MathUtils;
 	import no.doomsday.console.measurement.MeasurementTool;
 	import no.doomsday.console.messages.Message;
 	import no.doomsday.console.messages.MessageTypes;
@@ -209,7 +211,7 @@
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
-		private function setupDefaultCommands():void {
+		private function setupDefaultCommands(addMath:Boolean = true):void {
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
 			addCommand(new FunctionCallCommand("clearhistory", persistence.clearHistory, "System", "Clears the stored command history"));
@@ -226,9 +228,21 @@
 			addCommand(new FunctionCallCommand("clearTrace", clearTrace, "Trace", "Clear trace cache"));
 			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
 
+			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. Defaults to 0 -> 1"));
+			
+			if(addMath){	
+				addCommand(new FunctionCallCommand("sin", Math.sin, "Math", "Returns the sine of an angle measured in radians"));
+				addCommand(new FunctionCallCommand("cos", Math.cos, "Math", "Returns the cosine of an angle measured in radians"));
+				addCommand(new FunctionCallCommand("add", MathUtils.add, "Math", "Returns X + Y"));
+				addCommand(new FunctionCallCommand("subtract", MathUtils.subtract, "Math", "Returns X - Y"));
+				addCommand(new FunctionCallCommand("divide", MathUtils.divide, "Math", "Returns X / Y"));
+				addCommand(new FunctionCallCommand("multiply", MathUtils.multiply, "Math", "Returns X * Y"));
+			}
+
 			addCommand(new FunctionCallCommand("capabilities", getCapabilities, "System", "Prints the system capabilities"));
 			addCommand(new FunctionCallCommand("setupStage", setupStageAlignAndScale, "Stage", "Sets stage.align to TOP_LEFT and stage.scaleMode to NO_SCALE"));
 			addCommand(new FunctionCallCommand("setFrameRate", setFramerate, "Stage", "Sets stage.frameRate"));
+			
 			addCommand(new FunctionCallCommand("showMouse", Mouse.show, "UI", "Shows the mouse cursor"));
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
 						
@@ -925,9 +939,6 @@
 		{
 			runBatch(e.target.data);
 		}
-		
-		
-		
 	}
 	
 }
