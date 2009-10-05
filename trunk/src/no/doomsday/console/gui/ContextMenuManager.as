@@ -48,7 +48,7 @@
 			controllerMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onControllerMenu,false,0,true);
 			var referenceMenuItem:ContextMenuItem = new ContextMenuItem("Create reference");
 			referenceMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onReferenceMenu,false,0,true);
-			var measureMenuItem:ContextMenuItem = new ContextMenuItem("Get measures");
+			var measureMenuItem:ContextMenuItem = new ContextMenuItem("Get measurements");
 			measureMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMeasureMenu,false,0,true);
 			if (!console.parent.contextMenu) {
 				console.parent.contextMenu = new ContextMenu();
