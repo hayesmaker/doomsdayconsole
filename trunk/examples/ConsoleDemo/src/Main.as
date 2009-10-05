@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import flash.display.Loader;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -9,11 +10,13 @@
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.ByteArray;
 	import no.doomsday.console.ConsoleUtil;
 	import no.doomsday.console.introspection.IntrospectionScope;
+	import no.doomsday.console.math.MathUtils;
 	
 	/**
 	 * ...
@@ -36,7 +39,6 @@
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
-			
 			//some stage elements
 			testButton = new Sprite();
 			testButton.graphics.beginFill(0xFF0000);
@@ -57,27 +59,12 @@
 			//add the console instance using ConsoleUtil
 			addChild(ConsoleUtil.instance);
 			
-			var enc:ByteArray = new ByteArray();
-			var enc2:ByteArray = new ByteArray();
-			enc2.writeFloat(20);
-			
-			trace(enc.toString() == enc2.toString());
-			
-			
-			ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
-			ConsoleUtil.linkFunction("say", say);
+			ConsoleUtil.linkFunction("greet", greet);
+			ConsoleUtil.linkFunction("objectTest", objectTest);
+			ConsoleUtil.linkFunction("buttonClick", buttonClick);
+			ConsoleUtil.linkFunction("test", test);
 		}
-		//demonstrates how console commands handle arguments. In the console, type "mathAdd 3 1" for instance
-		//also demonstrates how the console prints return values
-		private function mathTest(a:Number, b:Number):Number {
-			return a + b;
-		}
-		//demonstrates how the console handles method calls that fail
-		private function failingFunction():void
-		{
-			var a:Array = [10];
-			addChild(a[0]);
-		}
+		
 		//this method is called both by the mouse click and the console command
 		public function buttonClick(e:MouseEvent = null):void 
 		{
@@ -85,9 +72,16 @@
 			ct.color = Math.random() * 0xFFFFFF;
 			testButton.transform.colorTransform = ct;
 		}
-		public function say(s:String):String {
+		public function greet(s:String):String {
 			return "Hey " + s;
 		}
+		public function objectTest(ob:Object, ar:Array):Object {
+			return ob+" "+ar;
+		}
+		private function test():void {
+			
+		}
+		
 		
 	}
 	
