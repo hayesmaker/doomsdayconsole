@@ -39,7 +39,13 @@
 		public function tryCommand(input:String):Boolean
 		{
 			var cmdStr:String = TextUtils.stripWhitespace(input);
-			var args:Array = ArgumentSplitterUtil.slice(cmdStr);
+			var args:Array;
+			try{
+				args = ArgumentSplitterUtil.slice(cmdStr);
+			}catch (e:Error) {
+				console.print(e.message, MessageTypes.ERROR);
+				return false;
+			}
 			
 			var str:String = args.shift().toLowerCase();
 			if (!authenticated&&str!=authCommand.trigger) {
@@ -68,7 +74,7 @@
 			if (command is FunctionCallCommand) {
 				try {
 					val = (command as FunctionCallCommand).callback.apply(this, args);
-					if(val) console.print("		"+val);
+					if(val||isNaN(val)) console.print("		"+val);
 				}catch (e:ArgumentError) {
 					//try again with all args as string
 					try {
@@ -78,7 +84,7 @@
 						}else {
 							val = (command as FunctionCallCommand).callback.call(this);
 						}
-						if(val) console.print("		"+val);
+						if(val||isNaN(val)) console.print("		"+val);
 					}catch (e:Error) {
 						console.print("Error: "+e.message,MessageTypes.ERROR);
 					}

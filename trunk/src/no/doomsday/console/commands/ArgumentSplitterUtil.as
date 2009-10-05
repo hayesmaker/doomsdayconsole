@@ -17,7 +17,6 @@
 		public static function slice(a:String):Array {
 			var position:int = 0;
 			
-			//worst, parser, ever
 			while (position < a.length) {
 				position++;
 				var char:int = a.charCodeAt(position);
@@ -41,7 +40,7 @@
 				}
 			}
 			var out:Array = a.split("|");
-			//embarassing string cleanup, need to mend this
+			//TODO: embarassing string cleanup, need to mend this
 			var str:String = "";
 			for (var i:int = 0; i < out.length; i++) 
 			{
@@ -75,7 +74,7 @@
 				}
 			}
 			if (score > 0) {
-				throw("Object not properly terminated");
+				throw(new ArgumentError("Object argument not properly terminated"));
 			}
 			//t.start = start+1;
 			return end;
@@ -103,12 +102,14 @@
 				}
 			}
 			if (score > 0) {
-				throw("Array not properly terminated");
+				throw(new ArgumentError("Array argument not properly terminated"));
 			}
 			return end;
 		}
-		private static function findString(input:String,start:int):int {
-			return input.indexOf(input.charAt(start), start+1);
+		private static function findString(input:String, start:int):int {
+			var out:int = input.indexOf(input.charAt(start), start + 1);
+			if (out < start) throw(new ArgumentError("String argument not properly terminated"));
+			return out;
 		}
 		private static function findCommand(input:String):int {
 			//var t:Token = new Token();
