@@ -24,6 +24,11 @@
 				break;
 			}
 			if (tmp is String) {
+				if (tmp == "false") {
+					tmp = false;
+				}else if (tmp == "true") {
+					tmp = true;
+				}
 				try{
 					tmp = referenceManager.parseForReferences([tmp])[0];
 				}catch (e:Error) {

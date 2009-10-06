@@ -228,7 +228,7 @@
 			addCommand(new FunctionCallCommand("clearTrace", clearTrace, "Trace", "Clear trace cache"));
 			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
 
-			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. Defaults to 0 -> 1"));
+			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
 			
 			if(addMath){	
 				addCommand(new FunctionCallCommand("sin", Math.sin, "Math", "Returns the sine of an angle measured in radians"));

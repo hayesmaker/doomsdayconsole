@@ -65,12 +65,13 @@
 			for (i = 0; i < commands.length; i++) 
 			{
 				if (commands[i].trigger.toLowerCase() == str) {
-					return doCommand(commands[i], commandArgs, sub);
+					var val:* = doCommand(commands[i], commandArgs, sub);
+					if(!sub) console.print(val);
+					return val;
 				}
 			}
 			return false;
 		}
-		
 		public function doCommand(command:ConsoleCommand,commandArgs:Vector.<CommandArgument> = null,sub:Boolean = false):*
 		{
 			if (!commandArgs) commandArgs = new Vector.<CommandArgument>();
@@ -79,14 +80,13 @@
 			{
 				args.push(commandArgs[i].data);
 			}
-			
 			var val:*;
 			if (command is FunctionCallCommand) {
 				try {
 					val = (command as FunctionCallCommand).callback.apply(this, args);
-					if ((val || isNaN(val)) && val != undefined) { 
-						if (!sub) console.print(val);
-					}
+					//if ((val || isNaN(val)) && val != undefined) { 
+						//if (!sub) console.print(val);
+					//}
 					return val == undefined ? true : val;
 				}catch (e:ArgumentError) {
 					//try again with all args as string
@@ -98,24 +98,39 @@
 						}else {
 							val = (command as FunctionCallCommand).callback.call(this);
 						}
-						if (val || isNaN(val)) {
-							if(!sub) console.print(val);
-						}
-						return val;
+						//if (val || isNaN(val)) {
+							//if(!sub) console.print(val);
+						//}
+						return val == undefined ? true : val;
 					}catch (e:Error) {
 						console.print("Error: " + e.message, MessageTypes.ERROR);
-						return;
+						return null;
 					}
 				}catch (e:Error) {
 					console.print("Error: " + e.message, MessageTypes.ERROR);
-					return;
+					return null;
 				}
 			}else {
 				console.print("Abstract command, no action", MessageTypes.ERROR);
-				return;
+				return null;
 			}
 		}
 		
+		private function parseForSubCommands(args:Array):Array
+		{
+			for (var i:int = 0; i < args.length; i++) 
+			{
+				if (args[i].charAt(0) == "%") {
+					trace("subcommand!");
+					var split:Array = args[i].split("");
+					split.pop();
+					split.shift();
+					var cmdStr:String = split.join("");
+					args[i] = tryCommand(cmdStr,true);
+				}
+			}
+			return args;
+		}
 		/**
 		 * List available command phrases
 		 */

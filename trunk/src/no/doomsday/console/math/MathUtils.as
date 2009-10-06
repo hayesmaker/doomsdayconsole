@@ -11,8 +11,9 @@
 		{
 			
 		}
-		public static function random(from:Number = 0, to:Number = 1):Number {
-			return from + Math.random() * (to - from);
+		public static function random(from:Number = 0, to:Number = 1, round:Boolean = false):Number {
+			var v:Number = from + Math.random() * (to - from);
+			return round ? Math.round(v) : v;
 		}
 		public static function add(a:Number, b:Number):Number {
 			return a + b;
