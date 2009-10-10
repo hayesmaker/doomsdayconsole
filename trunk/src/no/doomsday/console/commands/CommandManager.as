@@ -71,7 +71,7 @@
 					}catch (e:Error) {
 						throw(new Error(e.message));
 					}
-					if(!sub && val) console.print(val);
+					if(!sub && val!=null && val!=undefined) console.print(val);
 					return val;
 				}
 			}

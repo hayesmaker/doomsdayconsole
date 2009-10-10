@@ -169,7 +169,7 @@
 				arg = false;
 			}
 			currentScope.obj[accessorName] = arg;
-			return accessorName + ": " + currentScope.obj[accessorName];
+			return currentScope.obj[accessorName];
 		}
 		public function getAccessorOnObject(accessorName:String):String{
 			return currentScope.obj[accessorName].toString();
