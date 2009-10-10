@@ -38,7 +38,9 @@
 			screenshotItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, console.screenshot);
 			var toggleDisplayItem:ContextMenuItem = new ContextMenuItem("Hide");
 			toggleDisplayItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, console.toggleDisplay);
-			consoleMenu.customItems.push(logItem, screenshotItem, toggleDisplayItem);
+			var toggleStatsItem:ContextMenuItem = new ContextMenuItem("Performance stats");
+			toggleStatsItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, console.toggleStats);
+			consoleMenu.customItems.push(logItem, screenshotItem, toggleStatsItem, toggleDisplayItem);
 			console.contextMenu = consoleMenu;
 			
 			if (!shortcuts) return;
