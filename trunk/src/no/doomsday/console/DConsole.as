@@ -4,6 +4,7 @@
 	import flash.net.URLRequest;
 	import com.adobe.images.PNGEncoder;
 	import flash.utils.getTimer;
+	import net.hires.debug.ConsoleStats;
 	import no.doomsday.console.commands.CommandManager;
 	import no.doomsday.console.commands.ConsoleCommand;
 	import no.doomsday.console.commands.FunctionCallCommand;
@@ -117,6 +118,8 @@
 		private var persistence:PersistenceManager;
 		private var callCommand:FunctionCallCommand;
 		
+		private var stats:ConsoleStats;
+		
 		/**
 		 * Get the singleton instance of DConsole
 		 * @return
@@ -192,6 +195,8 @@
 			mainConsoleContainer.addChild(inputTextField);
 			mainConsoleContainer.addChild(scaleHandle);
 						
+			stats = new ConsoleStats(this);
+			
 			tabTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTab, false, 0, true);
 			
 			callCommand = new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
@@ -217,6 +222,7 @@
 			addCommand(new FunctionCallCommand("clearhistory", persistence.clearHistory, "System", "Clears the stored command history"));
 			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands"));
 			addCommand(new FunctionCallCommand("help", getHelp, "Utility", "Output basic instructions"));
+			addCommand(new FunctionCallCommand("stats", toggleStats, "Utility", "Toggles display of mrdoob Stats"));
 			addCommand(new FunctionCallCommand("clear", clear, "View", "Clear the console"));
 			addCommand(new FunctionCallCommand("echo", toggleEcho, "View", "Toggle display of user commands"));
 			addCommand(new FunctionCallCommand("timestampDisplay", toggleTimestamp, "View", "Toggle display of message timestamp"));
@@ -340,6 +346,16 @@
 				}
 			}else {
 				print("ExternalInterface not available", MessageTypes.ERROR);
+			}
+		}
+		public function toggleStats(e:Event = null):void {
+			if (mainConsoleContainer.contains(stats)) {
+				mainConsoleContainer.removeChild(stats);
+				print("Stats off", MessageTypes.SYSTEM);
+			}else {
+				mainConsoleContainer.addChild(stats);
+				stats.x = textOutput.width - stats.width;
+				print("Stats on", MessageTypes.SYSTEM);
 			}
 		}
 		public function screenshot(e:Event = null):void
@@ -498,6 +514,9 @@
 				return print("Out of bounds, setting to safe range");
 			}
 			redraw();
+			var rect:Rectangle = textOutput.getRect(this);
+			rect.width = stats.width;
+			stats.scrollRect = rect;
 		}
 		private function calcHeight():Number {
 			return consoleHeight = persistence.numLines * 14+22;
@@ -668,9 +687,10 @@
 			scopeManager.selectBaseScope();
 		}	
 		
-		private function onStageResize(e:Event):void 
+		private function onStageResize(e:Event = null):void 
 		{
 			redraw();
+			if(mainConsoleContainer.contains(stats)) stats.x = textOutput.width - stats.width;
 		}
 		
 		
