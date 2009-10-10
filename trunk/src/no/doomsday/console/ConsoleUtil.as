@@ -28,8 +28,8 @@
 		 * Add a message
 		 * @param	msg
 		 */
-		public static function print(msg:String):void {
-			instance.print(msg);
+		public static function print(input:Object):void {
+			instance.print(input.toString());
 		}
 		/**
 		 * Add a message with system color coding
