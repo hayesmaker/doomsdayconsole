@@ -1,6 +1,7 @@
 ﻿package no.doomsday.console.commands 
 {
 	import no.doomsday.console.DConsole;
+	import no.doomsday.console.introspection.InspectionUtils;
 	import no.doomsday.console.messages.MessageTypes;
 	import no.doomsday.console.persistence.PersistenceManager;
 	import no.doomsday.console.references.ReferenceManager;
@@ -45,12 +46,12 @@
 				args = ArgumentSplitterUtil.slice(cmdStr);
 			}catch (e:Error) {
 				console.print(e.message, MessageTypes.ERROR);
-				return false;
+				throw new Error(e.message);
 			}
 			var str:String = args.shift().toLowerCase();
 			if (!authenticated&&str!=authCommand.trigger) {
 				if(!sub) console.print("Not authenticated", MessageTypes.ERROR);
-				return false;
+				throw new Error("Not authenticated");
 			}
 			if (str != authCommand.trigger&&!sub) {
 				persistence.addtoHistory(input);
@@ -65,12 +66,16 @@
 			for (i = 0; i < commands.length; i++) 
 			{
 				if (commands[i].trigger.toLowerCase() == str) {
-					var val:* = doCommand(commands[i], commandArgs, sub);
-					if(!sub) console.print(val);
+					try{
+						var val:* = doCommand(commands[i], commandArgs, sub);
+					}catch (e:Error) {
+						throw(new Error(e.message));
+					}
+					if(!sub && val) console.print(val);
 					return val;
 				}
 			}
-			return false;
+			throw new Error("No such command");
 		}
 		public function doCommand(command:ConsoleCommand,commandArgs:Vector.<CommandArgument> = null,sub:Boolean = false):*
 		{
@@ -82,30 +87,26 @@
 			}
 			var val:*;
 			if (command is FunctionCallCommand) {
+				var func:FunctionCallCommand = (command as FunctionCallCommand);
 				try {
-					val = (command as FunctionCallCommand).callback.apply(this, args);
-					//if ((val || isNaN(val)) && val != undefined) { 
-						//if (!sub) console.print(val);
-					//}
-					return val == undefined ? true : val;
-				}catch (e:ArgumentError) {
+					val = func.callback.apply(null, args);
+					if (isNaN(val) && val != undefined && val != null) return "NaN";
+					return val;
+				}catch (e:Error) {
 					//try again with all args as string
-					//return;
 					try {
 						var joint:String = args.join(" ");
 						if (joint.length>0){
-							val = (command as FunctionCallCommand).callback.call(this, joint);
+							val = func.callback.call(null, joint);
 						}else {
-							val = (command as FunctionCallCommand).callback.call(this);
+							val = func.callback.call(null);
 						}
-						//if (val || isNaN(val)) {
-							//if(!sub) console.print(val);
-						//}
-						return val == undefined ? true : val;
+						return val;
 					}catch (e:Error) {
 						console.print("Error: " + e.message, MessageTypes.ERROR);
 						return null;
 					}
+					throw new Error(e.message);
 				}catch (e:Error) {
 					console.print("Error: " + e.message, MessageTypes.ERROR);
 					return null;

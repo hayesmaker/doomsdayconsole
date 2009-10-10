@@ -427,7 +427,7 @@
 			drawMessages();
 		}
 		
-		private function clearTrace():void
+		public function clearTrace():void
 		{
 			for (var i:int = messageLog.length; i--; ) 
 			{
@@ -448,6 +448,7 @@
 			print("		Page up/Page down -> Vertical scroll by page", MessageTypes.SYSTEM);
 			print("		Arrow up -> Recall the previous executed line", MessageTypes.SYSTEM);
 			print("		Arrow down -> Recall the more recent executed line", MessageTypes.SYSTEM);
+			print("		Ctrl + Arrow keys -> Scroll", MessageTypes.SYSTEM);
 			print("		Shift+backspace -> Clear the input field", MessageTypes.SYSTEM);
 			print("	Mouse functions", MessageTypes.SYSTEM);
 			print("		Mousewheel -> Scroll line by line", MessageTypes.SYSTEM);
@@ -720,10 +721,12 @@
 			if (visible) {
 				var cmd:String = "";
 				if (e.keyCode == Keyboard.UP) {
-					cmd = persistence.historyUp();
+					if (!e.ctrlKey) cmd = persistence.historyUp();
+					else return;
 					
 				}else if (e.keyCode == Keyboard.DOWN) {
-					cmd = persistence.historyDown();
+					if (!e.ctrlKey) cmd = persistence.historyDown();
+					else return;
 				}
 				if (cmd.length>0) {
 					inputTextField.text = cmd;
@@ -740,10 +743,30 @@
 		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
+			
+			if (e.ctrlKey) {
+				switch(e.keyCode) {
+					case Keyboard.UP:
+					scroll(1);
+					return
+					case Keyboard.DOWN:
+					scroll(-1);
+					return;
+					case Keyboard.LEFT:
+					scroll(0,-textOutput.width*.5);
+					return
+					case Keyboard.RIGHT:
+					scroll(0,textOutput.width*.5);
+					return;
+				}
+			}
+			
 			//TODO: Customizable invocation keystroke
+			
 			if (e.keyCode == Keyboard.TAB && e.shiftKey) {
 				disableTab();
 				toggleDisplay();
+				return;
 			}else if (visible && e.keyCode == Keyboard.TAB) {
 				disableTab();
 				if (visible&&stage.focus!=inputTextField) stage.focus = inputTextField;
@@ -751,8 +774,8 @@
 					//TODO: Intelligent tabbing
 					inputTextField.appendText(" ");
 					inputTextField.setSelection(inputTextField.length, inputTextField.length);
-				}else {
 				}
+				return;
 			}
 			if (e.keyCode == Keyboard.BACKSPACE && e.shiftKey) {
 				inputTextField.text = "";
@@ -765,12 +788,14 @@
 						return;
 					}
 					var success:Boolean = false;
-					if (echo) print("'"+inputTextField.text+"'",MessageTypes.USER);
-					if (commandManager.tryCommand(inputTextField.text)) {
+					if (echo) print("'" + inputTextField.text + "'", MessageTypes.USER);
+					try{
+						var attempt:* = commandManager.tryCommand(inputTextField.text);
 						success = true;
-					}else {
-						print("Invalid command " + inputTextField.text,MessageTypes.ERROR);
+					}catch (error:Error) {
+						print(error.message,MessageTypes.ERROR);
 					}
+						
 					inputTextField.text = "";
 					onInputFieldChange();
 				}else if (e.keyCode == Keyboard.PAGE_DOWN) {
@@ -781,11 +806,17 @@
 				
 			}
 		}
-		private function scroll(delta:int):void {
-			
-			if (delta < 0 && messageLog.length < persistence.numLines) return;
-			scrollIndex = delta < 0 ? Math.min(messageLog.length - persistence.numLines, scrollIndex - delta) : Math.max(0, scrollIndex - delta);
-			drawMessages();
+		private function scroll(deltaY:int = 0,deltaX:int = 0):void {
+			var prevScrollH:int = textOutput.scrollH;
+			if(deltaY!=0){
+				if (deltaY < 0 && messageLog.length < persistence.numLines) return;
+				scrollIndex = deltaY < 0 ? Math.min(messageLog.length - persistence.numLines, scrollIndex - deltaY) : Math.max(0, scrollIndex - deltaY);
+				drawMessages();
+				textOutput.scrollH = prevScrollH;
+			}
+			if (deltaX != 0) {
+				textOutput.scrollH = Math.max(0, textOutput.scrollH + deltaX);
+			}
 		}
 		private function resetTab(e:TimerEvent):void 
 		{

@@ -71,6 +71,15 @@
 			return instance.trace;
 		}
 		/**
+		 * Clears the trace buffer
+		 */
+		public static function get clearTrace():Function {
+			return instance.clearTrace;
+		}
+		public static function get clear():Function {
+			return instance.clear;
+		}
+		/**
 		 * Show the console
 		 */
 		public static function show():void {

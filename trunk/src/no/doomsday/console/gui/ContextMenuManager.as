@@ -42,6 +42,8 @@
 			console.contextMenu = consoleMenu;
 			
 			if (!shortcuts) return;
+			var toggleMenuItem:ContextMenuItem = new ContextMenuItem("Toggle console", true);
+			toggleMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onConsoleToggle,false,0,true);
 			var selectionMenuItem:ContextMenuItem = new ContextMenuItem("Set console scope", true);
 			selectionMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onSelectionMenu,false,0,true);
 			var controllerMenuItem:ContextMenuItem = new ContextMenuItem("Create controller");
@@ -53,10 +55,16 @@
 			if (!console.parent.contextMenu) {
 				console.parent.contextMenu = new ContextMenu();
 			}
+			console.parent.contextMenu.customItems.push(toggleMenuItem);
 			console.parent.contextMenu.customItems.push(selectionMenuItem);
 			console.parent.contextMenu.customItems.push(controllerMenuItem);
 			console.parent.contextMenu.customItems.push(referenceMenuItem);
 			console.parent.contextMenu.customItems.push(measureMenuItem);
+		}
+		
+		private function onConsoleToggle(e:ContextMenuEvent):void 
+		{
+			console.toggleDisplay();
 		}
 		
 		private function onMeasureMenu(e:ContextMenuEvent):void 
