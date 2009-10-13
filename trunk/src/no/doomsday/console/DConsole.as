@@ -68,8 +68,6 @@
 		//public static var BuildNumberFile:Class;
 		private static var BUILD:int = 1;
 		
-		private static var INSTANCE:DConsole;
-		
 		private var consoleBg:Shape;
 		private var textOutput:TextField;
 		private var inputTextField:TextField;
@@ -78,7 +76,7 @@
 		private var infoTargetY:Number;
 		private var scrollIndex:int = 0;
 		private var scrollRange:int = 0;
-		private var consoleHeight:Number = 120;
+		private var consoleHeight:Number = 5;
 			
 		private var messageLog:Vector.<Message>;
 		private var commands:Vector.<ConsoleCommand>;
@@ -120,26 +118,23 @@
 		
 		private var stats:ConsoleStats;
 		
-		/**
-		 * Get the singleton instance of DConsole
-		 * @return
-		 */
-		public static function get instance():DConsole {
-			if (!INSTANCE) {
-				INSTANCE = new DConsole();
-			}
-			return INSTANCE;
-		}
+		private var tabCount:int;
+		private var tabCountTimer:Timer = new Timer(150, 1);
+		
+		public var doubleTabEnabled:Boolean = false;
+		
 		/**
 		 * Creates a new DConsole instance. 
 		 * This class is intended to always be on top of the stage of the application it is associated with.
-		 * A static singleton retrieval method is available, optional but recommended
+		 * Using the ConsoleUtil.instance getter is recommended
 		 * To toggle console visibility, hit shift+tab 
 		 */
 		public function DConsole() 
 		{
 			visible = false;
 
+			tabCountTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTabCount,false,0,true);
+			
 			mainConsoleContainer = new Sprite();
 			
 			consoleBg = new Shape();
@@ -149,6 +144,8 @@
 			textOutput = new TextField();
 			textOutput.gridFitType = GridFitType.PIXEL;
 			inputTextField = new TextField();
+			inputTextField.border = true;
+			inputTextField.borderColor = 0x333333;
 			
 			autoCompleteManager = new AutocompleteManager(inputTextField);
 			autoCompleteManager.setDictionary(globalDictionary);
@@ -216,6 +213,8 @@
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
+		
+		
 		private function setupDefaultCommands(addMath:Boolean = true):void {
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
@@ -233,6 +232,7 @@
 			addCommand(new FunctionCallCommand("toggleTraceDisplay", toggleTraceDisplay, "Trace", "Toggle display of trace values"));
 			addCommand(new FunctionCallCommand("clearTrace", clearTrace, "Trace", "Clear trace cache"));
 			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
+			addCommand(new FunctionCallCommand("toggleDoubleTab", toggleDoubleTab, "Utility", "Toggles double-tab searching"));
 
 			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
 			
@@ -291,6 +291,11 @@
 				print("	Standalone commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
 			}
+		}
+		
+		private function toggleDoubleTab():void
+		{
+			setDoubleTabSearch(!doubleTabEnabled);
 		}
 		
 		private function printVersion():void
@@ -736,6 +741,7 @@
 			logDoc.@date = date;
 			fileRef.save(logDoc, "ConsoleLog_" + date + ".xml");
 		}
+		
 		private function onKeyUp(e:KeyboardEvent):void 
 		{
 			if (visible) {
@@ -761,6 +767,67 @@
 				}
 			}
 		}
+		private function resetTabCount(e:TimerEvent = null,forced:Boolean = false):void 
+		{
+			if (!forced) {
+				singleTab();
+			}else {
+				doubleTab();
+			}
+			tabCount = 0;
+			tabCountTimer.stop();
+			tabCountTimer.reset();
+		}
+		
+		private function doubleTab():void
+		{
+			var searchString:String = TextUtils.getWordAtCaretIndex(inputTextField);
+			if (searchString.length < 1) return;
+			var result:Vector.<String> = scopeManager.doSearch(searchString);
+			var out:String = "";
+			var count:int = 0;
+			var maxrow:int = 4;
+			if(result.length>0){
+				print("Scope methods matching '" + searchString + "'", MessageTypes.SYSTEM);
+				for (var i:int = 0; i < result.length; i++) 
+				{
+					out += result[i] + " ";
+					count++;
+					if (count > maxrow) {
+						count = 0;
+						print(out, MessageTypes.OUTPUT);
+						out = "";
+					}
+				}
+				if(out!="") print(out, MessageTypes.OUTPUT);
+			}
+			result = commandManager.doSearch(searchString);
+			count = 0;
+			out = "";
+			if(result.length>0){
+				print("Commands matching '" + searchString + "'", MessageTypes.SYSTEM);
+				for (i = 0; i < result.length; i++) 
+				{
+					out += result[i] + " ";
+					count++;
+					if (count > maxrow) {
+						count = 0;
+						print(out, MessageTypes.OUTPUT);
+						out = "";
+					}
+				}
+				if(out!="") print(out, MessageTypes.OUTPUT);
+			}
+		}
+		
+		private function singleTab():void
+		{
+			if (autoCompleteManager.suggestionActive) {
+				//TODO: Intelligent tabbing
+				inputTextField.appendText(" ");
+				inputTextField.setSelection(inputTextField.length, inputTextField.length);
+			}
+		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			
@@ -782,20 +849,31 @@
 			}
 			
 			//TODO: Customizable invocation keystroke
-			
 			if (e.keyCode == Keyboard.TAB && e.shiftKey) {
 				disableTab();
 				toggleDisplay();
 				return;
 			}else if (visible && e.keyCode == Keyboard.TAB) {
 				disableTab();
-				if (visible&&stage.focus!=inputTextField) stage.focus = inputTextField;
-				if (autoCompleteManager.suggestionActive) {
-					//TODO: Intelligent tabbing
-					inputTextField.appendText(" ");
-					inputTextField.setSelection(inputTextField.length, inputTextField.length);
+				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
+				if (!doubleTabEnabled) {
+					singleTab();
+					return;
 				}
-				return;
+				
+				if (tabCount < 1) {
+					//first tab
+					//trace("first");
+					tabCount++;
+					tabCountTimer.reset();
+					tabCountTimer.start();
+					return;
+				}else {
+					resetTabCount(null,true);
+					return;
+				}
+				//second tab
+				
 			}
 			if (e.keyCode == Keyboard.BACKSPACE && e.shiftKey) {
 				inputTextField.text = "";
@@ -962,6 +1040,10 @@
 			commandManager.setupAuthentication(pwd);
 		}
 		
+		public function setDoubleTabSearch(newvalue:Boolean = true):void {
+			doubleTabEnabled = newvalue;
+			print("Double-tab searching: " + doubleTabEnabled, MessageTypes.SYSTEM);
+		}
 		
 		//batch
 		public function runBatch(batch:String):Boolean {

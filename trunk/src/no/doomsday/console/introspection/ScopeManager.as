@@ -187,6 +187,20 @@
 			setScope(currentScope.obj, true);
 		}
 		
+		public function doSearch(search:String):Vector.<String>
+		{
+			var result:Vector.<String> = new Vector.<String>;
+			var s:String = search.toLowerCase();
+			for (var i:int = 0; i < currentScope.methods.length; i++) 
+			{
+				var m:MethodDesc = currentScope.methods[i];
+				if (m.name.toLowerCase().indexOf(s, 0) > -1) {
+					result.push(m.name);
+				}
+			}
+			return result;
+		}
+		
 	}
 
 }

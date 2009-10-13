@@ -180,6 +180,19 @@
 				console.print("Not authorized", MessageTypes.ERROR);
 			}
 		}
+		public function doSearch(search:String):Vector.<String>
+		{
+			var result:Vector.<String> = new Vector.<String>;
+			var s:String = search.toLowerCase();
+			for (var i:int = 0; i < commands.length; i++) 
+			{
+				var c:ConsoleCommand = commands[i];
+				if (c.trigger.toLowerCase().indexOf(s, 0) > -1) {
+					result.push(c.trigger);
+				}
+			}
+			return result;
+		}
 		
 		
 	}

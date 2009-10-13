@@ -23,6 +23,9 @@
 				position++;
 				var char:int = a.charCodeAt(position);
 				switch(char) {
+					case subCommandOpener:
+					position = findSubCommand(a, position);
+					break;
 					case space:
 					var sa:String = a.substring(0, position);
 					var sb:String = a.substring(position+1);
@@ -39,9 +42,6 @@
 					case arrayOpener:
 					position = findArray(a, position);
 					break;
-					case subCommandOpener:
-					position = findSubCommand(a, position);
-					break;
 				}
 			}
 			var out:Array = a.split("|");
@@ -54,6 +54,7 @@
 					out[i] = str.substring(1, str.length - 1);
 				}
 			}
+			trace(out);
 			return out;
 		}
 		private static function findSubCommand(input:String,start:int):int {

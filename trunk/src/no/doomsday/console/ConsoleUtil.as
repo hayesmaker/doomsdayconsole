@@ -12,7 +12,7 @@
 	public class ConsoleUtil 
 	{
 		
-		
+		private static var console:DConsole;
 		
 		public function ConsoleUtil() 
 		{
@@ -22,7 +22,11 @@
 		 * Get the singleton console instance
 		 */
 		public static function get instance():DConsole {
-			return DConsole.instance;
+			if (!console) {
+				console = new DConsole();
+			}
+			return console;
+			//return DConsole.instance;
 		}
 		/**
 		 * Add a message
@@ -90,6 +94,12 @@
 		 */
 		public static function hide():void {
 			instance.hide();
+		}
+		/**
+		 * Toggles double-tabbing to search/list commands and methods
+		 */
+		public static function get setDoubleTabSearch():Function {
+			return instance.setDoubleTabSearch;
 		}
 	}
 }

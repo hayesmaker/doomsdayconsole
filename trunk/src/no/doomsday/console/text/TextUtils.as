@@ -32,6 +32,13 @@
 			if (last == -1) last = str.length;
 			tf.setSelection(first, last);
 		}
+		public static function getWordAtCaretIndex(tf:TextField):String {
+			var str:String = tf.text;
+			var first:int = str.lastIndexOf(" ", tf.caretIndex)+1;
+			var last:int = str.indexOf(" ", first);
+			if (last == -1) last = str.length;
+			return str.slice(first, last);
+		}
 		public static function getFirstIndexOfWordAtCaretIndex(tf:TextField):int 
 		{
 			var str:String = tf.text;
