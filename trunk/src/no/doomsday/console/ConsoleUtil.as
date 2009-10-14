@@ -96,10 +96,14 @@
 			instance.hide();
 		}
 		/**
-		 * Toggles double-tabbing to search/list commands and methods
+		 * Toggles double-tabbing to search and list commands and methods
 		 */
-		public static function get setDoubleTabSearch():Function {
-			return instance.setDoubleTabSearch;
+		public static function set doubleTabSearch(value:Boolean):void {
+			instance.setDoubleTabSearch(value);
+		}
+		
+		public static function get doubleTabSearch():Boolean{
+			return instance.doubleTabEnabled;
 		}
 	}
 }
