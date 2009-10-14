@@ -121,7 +121,7 @@
 		private var tabCount:int;
 		private var tabCountTimer:Timer = new Timer(150, 1);
 		
-		public var tabSearchEnabled:Boolean = false;
+		public var tabSearchEnabled:Boolean = true;
 		
 		/**
 		 * Creates a new DConsole instance. 
