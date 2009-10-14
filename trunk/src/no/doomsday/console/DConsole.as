@@ -590,6 +590,7 @@
 			var msg:Message;
 			for (var i:int = 0; i < split.length; i++) 
 			{
+				if (split[i].indexOf("no.doomsday.console") > -1 || split[i].indexOf("adobe.com/AS3") > -1) continue;
 				msg = new Message(split[i], date, type);
 				messageLog.push(msg);
 				scrollIndex = Math.max(0, messageLog.length - persistence.numLines);

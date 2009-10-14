@@ -45,8 +45,8 @@
 			try{
 				args = ArgumentSplitterUtil.slice(cmdStr);
 			}catch (e:Error) {
-				console.print(e.message, MessageTypes.ERROR);
-				throw new Error(e.message);
+				console.print(e.getStackTrace(), MessageTypes.ERROR);
+				throw e;
 			}
 			var str:String = args.shift().toLowerCase();
 			if (!authenticated&&str!=authCommand.trigger) {
@@ -69,7 +69,7 @@
 					try{
 						var val:* = doCommand(commands[i], commandArgs, sub);
 					}catch (e:Error) {
-						throw(new Error(e.message));
+						throw(e);
 					}
 					if(!sub && val!=null && val!=undefined) console.print(val);
 					return val;
@@ -103,12 +103,12 @@
 						}
 						return val;
 					}catch (e:Error) {
-						console.print("Error: " + e.message, MessageTypes.ERROR);
+						console.print(e.getStackTrace(), MessageTypes.ERROR);
 						return null;
 					}
 					throw new Error(e.message);
 				}catch (e:Error) {
-					console.print("Error: " + e.message, MessageTypes.ERROR);
+					console.print(e.getStackTrace(), MessageTypes.ERROR);
 					return null;
 				}
 			}else {
