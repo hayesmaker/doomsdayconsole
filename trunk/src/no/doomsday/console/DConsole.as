@@ -771,6 +771,7 @@
 		}
 		private function doTab():void
 		{
+			if (inputTextField.text.length < 1) return;
 			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
 			if (autoCompleteManager.isKnown(word) || !isNaN(Number(word))) {
 				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){
