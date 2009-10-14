@@ -48,20 +48,18 @@
 			tf.width = 200;
 			tf.text = "shift-tab to toggle console";
 			tf.x = 10;
-			tf.y = stage.stageHeight -tf.height
+			tf.y = stage.stageHeight -tf.height;
 			addChild(tf);
 			
 			//add the console instance using ConsoleUtil
 			addChild(ConsoleUtil.instance);
 			
 			ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
-			ConsoleUtil.linkFunction("mathAdd", mathTest);
+			ConsoleUtil.linkFunction("out", outputTest);
 		}
-		//demonstrates how console commands handle arguments. In the console, type "mathAdd 3 1" for instance
-		//also demonstrates how the console prints return values
-		private function mathTest(a:Number, b:Number):Number {
-			var result:Number = a + b;
-			return result;
+		
+		private function outputTest(input:String):String {
+			return input;
 		}
 		//demonstrates how the console handles method calls that fail
 		private function failingFunction():void
