@@ -468,6 +468,7 @@
 			print("		Shift-Tab -> Toggle console", MessageTypes.SYSTEM);
 			print("		Tab -> (When out of focus) Set the keyboard focus to the input field", MessageTypes.SYSTEM);
 			print("		Tab -> (When in focus) Skip to end of line and append a space", MessageTypes.SYSTEM);
+			print("		Double-tab -> (If enabled) Search commands and methods", MessageTypes.SYSTEM);
 			print("		Enter -> Execute line", MessageTypes.SYSTEM);
 			print("		Page up/Page down -> Vertical scroll by page", MessageTypes.SYSTEM);
 			print("		Arrow up -> Recall the previous executed line", MessageTypes.SYSTEM);

@@ -139,8 +139,8 @@
 			var a:Vector.<VariableDesc> = currentScope.variables;
 			var cv:*;
 			if (a.length < 1) return;
-			console.print("	complex types:");
 			var i:int
+			var out:Array = [];
 			for (i = 0; i < a.length; i++) 
 			{
 				var vd:VariableDesc = a[i];
@@ -152,9 +152,15 @@
 					case "uint":
 					case "Array":
 					continue;
-					break;
 				}
-				console.print("		" + vd.name + ": " + vd.type);
+				out.push("		" + vd.name + ": " + vd.type);
+			}
+			if (out.length > 0) {
+				console.print("	complex types:");
+				for (i = 0; i < out.length; i++) 
+				{
+					console.print(out[i]);
+				}
 			}
 		}
 		
