@@ -8,14 +8,19 @@
 	public dynamic class AutocompleteDictionary
 	{
 		public var basepage:Object = new Object();
+		private var stringContents:Vector.<String> = new Vector.<String>;
 		public function AutocompleteDictionary() 
 		{
 		}
 		public function addToDictionary(str:String):void {
+			stringContents.push(str.toLowerCase());
             var strParts:Array = str.split("");
             strParts.push(new String());
             insert(strParts, basepage);
         }
+		public function contains(str:String):Boolean {
+			return stringContents.indexOf(str.toLowerCase(), 0) > -1 ? true : false;
+		}
 
         private function insert(parts:Array, page:Object):void {
             if(parts[0] == undefined) {

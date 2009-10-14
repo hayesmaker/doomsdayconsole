@@ -121,7 +121,7 @@
 		private var tabCount:int;
 		private var tabCountTimer:Timer = new Timer(150, 1);
 		
-		public var doubleTabEnabled:Boolean = false;
+		public var tabSearchEnabled:Boolean = false;
 		
 		/**
 		 * Creates a new DConsole instance. 
@@ -133,8 +133,6 @@
 		{
 			visible = false;
 
-			tabCountTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTabCount,false,0,true);
-			
 			mainConsoleContainer = new Sprite();
 			
 			consoleBg = new Shape();
@@ -232,7 +230,7 @@
 			addCommand(new FunctionCallCommand("toggleTraceDisplay", toggleTraceDisplay, "Trace", "Toggle display of trace values"));
 			addCommand(new FunctionCallCommand("clearTrace", clearTrace, "Trace", "Clear trace cache"));
 			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
-			addCommand(new FunctionCallCommand("toggleDoubleTab", toggleDoubleTab, "Utility", "Toggles double-tab searching"));
+			addCommand(new FunctionCallCommand("toggleTabSearch", toggleTabSearch, "Utility", "Toggles tabbing to search commands and methods for the current word"));
 
 			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
 			
@@ -293,9 +291,9 @@
 			}
 		}
 		
-		private function toggleDoubleTab():void
+		private function toggleTabSearch():void
 		{
-			setDoubleTabSearch(!doubleTabEnabled);
+			setTabSearch(!tabSearchEnabled);
 		}
 		
 		private function printVersion():void
@@ -771,19 +769,19 @@
 				}
 			}
 		}
-		private function resetTabCount(e:TimerEvent = null,forced:Boolean = false):void 
+		private function doTab():void
 		{
-			if (!forced) {
-				singleTab();
+			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
+			if (autoCompleteManager.isKnown(word) || !isNaN(Number(word))) {
+				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){
+					inputTextField.appendText(" ");
+				}
+				inputTextField.setSelection(inputTextField.length, inputTextField.length);
 			}else {
-				doubleTab();
+				tabSearch();
 			}
-			tabCount = 0;
-			tabCountTimer.stop();
-			tabCountTimer.reset();
 		}
-		
-		private function doubleTab():void
+		private function tabSearch():void
 		{
 			var searchString:String = TextUtils.getWordAtCaretIndex(inputTextField);
 			if (searchString.length < 1) return;
@@ -860,7 +858,9 @@
 			}else if (visible && e.keyCode == Keyboard.TAB) {
 				disableTab();
 				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
-				if (!doubleTabEnabled) {
+				doTab();
+				
+				/*if (!tabSearchEnabled) {
 					singleTab();
 					return;
 				}
@@ -875,8 +875,7 @@
 				}else {
 					resetTabCount(null,true);
 					return;
-				}
-				//second tab
+				}*/
 				
 			}
 			if (e.keyCode == Keyboard.BACKSPACE && e.shiftKey) {
@@ -908,6 +907,8 @@
 				
 			}
 		}
+		
+		
 		private function scroll(deltaY:int = 0,deltaX:int = 0):void {
 			var prevScrollH:int = textOutput.scrollH;
 			if(deltaY!=0){
@@ -1044,9 +1045,9 @@
 			commandManager.setupAuthentication(pwd);
 		}
 		
-		public function setDoubleTabSearch(newvalue:Boolean = true):void {
-			doubleTabEnabled = newvalue;
-			print("Double-tab searching: " + doubleTabEnabled, MessageTypes.SYSTEM);
+		public function setTabSearch(newvalue:Boolean = true):void {
+			tabSearchEnabled = newvalue;
+			print("Tab searching: " + tabSearchEnabled, MessageTypes.SYSTEM);
 		}
 		
 		//batch

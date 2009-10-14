@@ -31,7 +31,8 @@
 		}
 		
         private function changeListener(e:Event):void {
-            if(!paused) {
+			suggestionActive = false;
+            if (!paused) {
                 complete();
             }
         }
@@ -45,7 +46,7 @@
             }
         }
 
-        private function complete():void {
+        public function complete():void {
 			//we only complete single words, so start caret is the beginning of the word the caret is currently in
 			var firstIndex:int = TextUtils.getFirstIndexOfWordAtCaretIndex(_targetTextField);
 			var str:String = _targetTextField.text.substr(firstIndex, _targetTextField.caretIndex);
@@ -64,7 +65,15 @@
 			   _targetTextField.setSelection(_targetTextField.caretIndex, _targetTextField.text.length);
 			   suggestionActive = true;
 			}
-        }        
+        }
+		public function isKnown(str:String):Boolean {
+			if (scopeDict) {
+				if (scopeDict.contains(str)) {
+					return true;
+				}
+			}
+			return dict.contains(str);
+		}
 		
 		public function get targetTextField():TextField { return _targetTextField; }
 		
