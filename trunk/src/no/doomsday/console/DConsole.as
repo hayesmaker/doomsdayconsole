@@ -20,6 +20,7 @@
 	import no.doomsday.console.math.MathUtils;
 	import no.doomsday.console.measurement.MeasurementTool;
 	import no.doomsday.console.messages.Message;
+	import no.doomsday.console.messages.MessageRepeatMode;
 	import no.doomsday.console.messages.MessageTypes;
 	import no.doomsday.console.persistence.PersistenceManager;
 	import no.doomsday.console.references.ReferenceManager;
@@ -122,7 +123,36 @@
 		private var tabCountTimer:Timer = new Timer(150, 1);
 		
 		public var tabSearchEnabled:Boolean = true;
+		private var backgroundColor:uint = 0;
+		private var backgroundAlpha:Number = 0.8;
 		
+		//temp; rough mechanic to ignore repeated prints
+		private var previousPrintValues:String;
+		private var previousMessage:Message;
+		private var repeatMessageMode:int = MessageRepeatMode.STACK;
+		
+		
+		/**
+		 * Sets the handling method for repeated messages with identical values
+		 * @param	filter
+		 * One of the 3 modes described in the no.doomsday.console.messages.MessageRepeatMode enum
+		 */
+		public function setRepeatFilter(filter:int):void {
+			switch(filter) {
+				case MessageRepeatMode.IGNORE:
+				print("Repeat mode: Repeated messages are now ignored",MessageTypes.SYSTEM);
+				break;
+				case MessageRepeatMode.PASSTHROUGH:
+				print("Repeat mode: Repeated messages are now allowed",MessageTypes.SYSTEM);
+				break;
+				case MessageRepeatMode.STACK:
+				print("Repeat mode: Repeated messages are now stacked",MessageTypes.SYSTEM);
+				break;
+				default:
+				throw new Error("Unknown filter type");
+			}
+			repeatMessageMode = filter;
+		}
 		/**
 		 * Creates a new DConsole instance. 
 		 * This class is intended to always be on top of the stage of the application it is associated with.
@@ -202,7 +232,8 @@
 			
 			setupDefaultCommands();
 			
-			
+			setRepeatFilter(MessageRepeatMode.STACK);
+
 			print("Ready. Type help to get started.", MessageTypes.SYSTEM);
 			
 			calcHeight();
@@ -231,6 +262,7 @@
 			addCommand(new FunctionCallCommand("clearTrace", clearTrace, "Trace", "Clear trace cache"));
 			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
 			addCommand(new FunctionCallCommand("toggleTabSearch", toggleTabSearch, "Utility", "Toggles tabbing to search commands and methods for the current word"));
+			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "Utility", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
 
 			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
 			
@@ -318,6 +350,7 @@
 		private function onMouseWheel(e:MouseEvent):void 
 		{
 			var d:int = Math.max( -1, Math.min(1, e.delta));
+			if (e.ctrlKey) d *= persistence.numLines;
 			scroll(d);
 		}
 		
@@ -419,7 +452,7 @@
 		 */
 		public function trace(...values):void {
 			if (traceValues) {
-				var str:String = "trace: ";
+				var str:String = "";
 				for (var i:int = 0; i < values.length; i++) 
 				{
 					str += values[i].toString();
@@ -466,7 +499,7 @@
 			print("		Shift-Tab -> Toggle console", MessageTypes.SYSTEM);
 			print("		Tab -> (When out of focus) Set the keyboard focus to the input field", MessageTypes.SYSTEM);
 			print("		Tab -> (When in focus) Skip to end of line and append a space", MessageTypes.SYSTEM);
-			print("		Double-tab -> (If enabled) Search commands and methods", MessageTypes.SYSTEM);
+			print("		Tab -> (While caret is on an unknown term) Search commands and methods", MessageTypes.SYSTEM);
 			print("		Enter -> Execute line", MessageTypes.SYSTEM);
 			print("		Page up/Page down -> Vertical scroll by page", MessageTypes.SYSTEM);
 			print("		Arrow up -> Recall the previous executed line", MessageTypes.SYSTEM);
@@ -474,7 +507,7 @@
 			print("		Ctrl + Arrow keys -> Scroll", MessageTypes.SYSTEM);
 			print("		Shift+backspace -> Clear the input field", MessageTypes.SYSTEM);
 			print("	Mouse functions", MessageTypes.SYSTEM);
-			print("		Mousewheel -> Scroll line by line", MessageTypes.SYSTEM);
+			print("		Mousewheel -> Vertical scroll line by line (hold ctrl to scroll by pages)", MessageTypes.SYSTEM);
 			print("		Click drag below the input line -> Change console height", MessageTypes.SYSTEM);
 			print("	Misc", MessageTypes.SYSTEM);
 			print("		Use the 'commands' command to list available commmands", MessageTypes.SYSTEM);
@@ -518,7 +551,8 @@
 			scrollIndex = Math.max(0, messageLog.length - persistence.numLines);
 			if (calcHeight()>stage.stageHeight) {
 				setHeight(3);
-				return print("Out of bounds, setting to safe range");
+				print("Out of bounds, setting to safe range");
+				return;
 			}
 			redraw();
 			var rect:Rectangle = textOutput.getRect(this);
@@ -584,14 +618,31 @@
 		 * @param	str
 		 * The string to be added. A timestamp is automaticaly prefixed
 		 */
-		public function print(str:String, type:uint = MessageTypes.OUTPUT):void {
+		public function print(str:String, type:uint = MessageTypes.OUTPUT):Message{
 			var split:Array = str.split("\n").join("\r").split("\r");
+			if (split.join("").length < 1) return new Message("", "", 0);
 			var date:String = String(new Date().getTime());
 			var msg:Message;
 			for (var i:int = 0; i < split.length; i++) 
 			{
 				if (split[i].indexOf("no.doomsday.console") > -1 || split[i].indexOf("adobe.com/AS3") > -1) continue;
+				var txt:String = split[i];
+				if (previousPrintValues == txt && previousMessage) {
+					switch(repeatMessageMode) {
+						case MessageRepeatMode.STACK:
+							previousMessage.repeatcount++;
+							previousMessage.timestamp = date;
+							continue;
+						break;
+						case MessageRepeatMode.IGNORE:
+							continue;
+						break;
+						default:
+					}
+				}
+				previousPrintValues = txt;
 				msg = new Message(split[i], date, type);
+				previousMessage = msg;
 				messageLog.push(msg);
 				scrollIndex = Math.max(0, messageLog.length - persistence.numLines);
 			}			
@@ -602,6 +653,7 @@
 				ExternalInterface.call("console.log", str);
 			}
 			drawMessages();
+			return msg;
 		}
 		/**
 		 * Clear the console
@@ -629,7 +681,7 @@
 				if (lineNum < 10) {
 					lineNumStr = "0" + lineNumStr;
 				}
-				textOutput.appendText("["+lineNumStr+"] > ");
+				textOutput.appendText("[" + lineNumStr + "] > ");
 				if (timeStamp) {
 					textOutput.defaultTextFormat = TextFormats.debugTformatTimeStamp;
 					textOutput.appendText(messageLog[i].timestamp + " ");
@@ -645,6 +697,9 @@
 					case MessageTypes.ERROR:
 						fmt = TextFormats.debugTformatError;
 					break;
+					case MessageTypes.TRACE:
+						fmt = TextFormats.debugTformatTrace
+					break;
 					case MessageTypes.OUTPUT:
 					default:
 						if(i==messageLog.length-1){
@@ -655,7 +710,12 @@
 					break;
 				}
 				var idx:int = textOutput.text.length;
-				textOutput.appendText(messageLog[i].text + "\n");
+				var str:String = messageLog[i].text;
+				if (messageLog[i].repeatcount > 0) {
+					var str2:String = " x" + messageLog[i].repeatcount;
+					str += str2;
+				}	
+				textOutput.appendText(str+"\n");
 				textOutput.setTextFormat(fmt, idx, idx + messageLog[i].text.length);
 			}
 		}
@@ -1009,7 +1069,7 @@
 				h = parent.scrollRect.height;
 			}
 			consoleBg.graphics.clear();
-			consoleBg.graphics.beginFill(0, 0.8);
+			consoleBg.graphics.beginFill(backgroundColor, backgroundAlpha);
 			consoleBg.graphics.drawRect(0, 0, w, consoleHeight);
 			consoleBg.graphics.lineStyle(0, 0);
 			consoleBg.graphics.moveTo(0, consoleHeight);
@@ -1078,6 +1138,25 @@
 		private function onBatchLoaded(e:Event):void 
 		{
 			runBatch(e.target.data);
+		}
+		
+		//theming
+		public function setChromeTheme(backgroundColor:uint = 0, backgroundAlpha:Number = 0.8, borderColor:uint = 0x333333, inputBackgroundColor:uint = 0, helpBackgroundColor:uint = 0x222222):void {
+			
+			inputTextField.borderColor = borderColor;
+			inputTextField.backgroundColor = inputBackgroundColor;
+			infoField.backgroundColor = helpBackgroundColor;
+			this.backgroundColor = backgroundColor;
+			this.backgroundAlpha = backgroundAlpha;
+			if (visible) {
+				redraw();
+			}
+		}
+		public function setTextTheme(input:uint = 0xFFD900, oldMessage:uint = 0xBBBBBB, newMessage:uint = 0xFFFFFF, system:uint = 0x00DD00, timestamp:uint = 0xAAAAAA, error:uint = 0xEE0000, help:uint = 0xbbbbbb, trace:uint = 0x9CB79B):void {
+			TextFormats.setTheme(input, oldMessage, newMessage, system, timestamp, error, help, trace);
+			inputTextField.defaultTextFormat = TextFormats.debugTformatInput;
+			infoField.defaultTextFormat = TextFormats.debugTformatHelp;
+			drawMessages();
 		}
 	}
 	

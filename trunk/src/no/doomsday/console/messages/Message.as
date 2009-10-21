@@ -5,10 +5,11 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class Message 
+	public final class Message 
 	{
 		public var timestamp:String = "";
 		public var text:String = "";
+		public var repeatcount:int = 0;
 		public var type:uint = 0;
 		
 		public function Message(text:String, timestamp:String, type:uint = 0) 

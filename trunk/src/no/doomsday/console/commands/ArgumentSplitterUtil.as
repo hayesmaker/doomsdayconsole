@@ -54,7 +54,6 @@
 					out[i] = str.substring(1, str.length - 1);
 				}
 			}
-			trace(out);
 			return out;
 		}
 		private static function findSubCommand(input:String,start:int):int {
