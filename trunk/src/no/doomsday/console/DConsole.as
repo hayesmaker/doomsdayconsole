@@ -392,9 +392,6 @@
 				mainConsoleContainer.addChild(stats);
 				stats.x = textOutput.width - stats.width;
 				print("Stats on", MessageTypes.SYSTEM);
-				var rect:Rectangle = textOutput.getRect(this);
-				rect.width = stats.width;
-				stats.scrollRect = rect;
 			}
 		}
 		public function screenshot(e:Event = null):void
@@ -555,9 +552,6 @@
 				return;
 			}
 			redraw();
-			var rect:Rectangle = textOutput.getRect(this);
-			rect.width = stats.width;
-			stats.scrollRect = rect;
 		}
 		private function calcHeight():Number {
 			return consoleHeight = persistence.numLines * 14+22;
@@ -1031,7 +1025,10 @@
 			var bounds:Rectangle = redraw();
 			if (visible) {
 				if (parent) parent.addChild(this);
-				mainConsoleContainer.y = -consoleHeight+1;
+				mainConsoleContainer.y = -consoleHeight + 1;
+				if(stats.visible){
+					stats.x = textOutput.width - stats.width;
+				}
 				targetY = 0;
 				addEventListener(Event.ENTER_FRAME, updateMainMotion);
 			}else {
@@ -1088,6 +1085,8 @@
 			scaleHandle.x = 0;
 			scaleHandle.width = w;
 			scaleHandle.y = inputTextField.y + inputTextField.height;
+			
+			stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);
 			
 			return new Rectangle(0, 0, w, h);
 		}

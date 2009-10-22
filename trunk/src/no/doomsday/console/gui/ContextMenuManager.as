@@ -4,11 +4,13 @@
 	import flash.display.Stage;
 	import flash.events.ContextMenuEvent;
 	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuBuiltInItems;
 	import flash.ui.ContextMenuItem;
 	import no.doomsday.console.controller.ControllerManager;
 	import no.doomsday.console.DConsole;
 	import no.doomsday.console.introspection.ScopeManager;
 	import no.doomsday.console.measurement.MeasurementTool;
+	import no.doomsday.console.messages.MessageTypes;
 	import no.doomsday.console.references.ReferenceManager;
 	/**
 	 * ...
@@ -41,6 +43,8 @@
 			var toggleStatsItem:ContextMenuItem = new ContextMenuItem("Performance stats");
 			toggleStatsItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, console.toggleStats);
 			consoleMenu.customItems.push(logItem, screenshotItem, toggleStatsItem, toggleDisplayItem);
+			var bi:ContextMenuBuiltInItems = consoleMenu.builtInItems;
+			bi.forwardAndBack = bi.loop = bi.play = bi.print = bi.quality = bi.rewind = bi.save = bi.zoom = false;
 			console.contextMenu = consoleMenu;
 			
 			if (!shortcuts) return;
@@ -55,7 +59,12 @@
 			var measureMenuItem:ContextMenuItem = new ContextMenuItem("Get measurements");
 			measureMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMeasureMenu,false,0,true);
 			if (!console.parent.contextMenu) {
-				console.parent.contextMenu = new ContextMenu();
+				var newMenu:ContextMenu = new ContextMenu();
+				bi = newMenu.builtInItems;
+				bi.forwardAndBack = bi.loop = bi.play = bi.print = bi.quality = bi.rewind = bi.save = bi.zoom = false;
+				console.parent.contextMenu = newMenu;
+				
+				
 			}
 			console.parent.contextMenu.customItems.push(toggleMenuItem);
 			console.parent.contextMenu.customItems.push(selectionMenuItem);
@@ -72,8 +81,12 @@
 		private function onMeasureMenu(e:ContextMenuEvent):void 
 		{
 			if (e.mouseTarget is DisplayObject) {
+				if (e.mouseTarget != console.root) {
+					measureBracket.bracket(e.mouseTarget);
+				}else {
+					console.print("Unable to bracket root", MessageTypes.ERROR);
+				}
 				console.show();
-				measureBracket.bracket(e.mouseTarget);
 			}
 		}
 		private function onReferenceMenu(e:ContextMenuEvent):void 
@@ -88,6 +101,10 @@
 		{
 			if (e.mouseTarget is DisplayObject) {
 				console.show();
+				if (e.mouseTarget == console.root) {
+					console.print("Unable to create default controller for root", MessageTypes.ERROR);
+					return;
+				}
 				scopeManager.setScope(e.mouseTarget);
 				var properties:Array = ["name","x", "y", "width", "height", "rotation", "scaleX", "scaleY"];
 				controllerManager.createController(scopeManager.currentScope.obj, properties, e.mouseTarget.x, e.mouseTarget.y);
