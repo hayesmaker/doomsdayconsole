@@ -68,7 +68,7 @@
         }
 		public function isKnown(str:String, includeScope:Boolean = false):Boolean {
 			if (scopeDict&&includeScope) {
-				if (scopeDict.contains(str)) 
+				if (scopeDict.contains(str))
 				return true;
 			}
 			return dict.contains(str);
@@ -87,6 +87,14 @@
 				_targetTextField.addEventListener(Event.CHANGE, changeListener);
 				_targetTextField.addEventListener(KeyboardEvent.KEY_DOWN, keyDownListener);
 			}
+		}
+		public function correctCase(str:String):String {
+			try {
+				return dict.correctCase(str);
+			}catch (e:Error) {
+				if (scopeDict) return scopeDict.correctCase(str);
+			}
+			throw new Error("No correct case found");
 		}
     } 
 	

@@ -51,6 +51,12 @@
 			instance.print(msg, MessageTypes.ERROR);
 		}
 		/**
+		 * Legacy, deprecated. Use "createCommand" instead
+		 */
+		public static function linkFunction(triggerPhrase:String, func:Function, commandGroup:String = "Application", helpText:String = ""):void {
+			createCommand(triggerPhrase, func, commandGroup, helpText);
+		}
+		/**
 		 * Create a command for calling a specific function
 		 * @param	triggerPhrase
 		 * The trigger word for the command
@@ -60,7 +66,7 @@
 		 * Optional: The group name you want the command sorted under
 		 * @param	helpText
 		 */
-		public static function linkFunction(triggerPhrase:String, func:Function,commandGroup:String = "Application",helpText:String = ""):void {
+		public static function createCommand(triggerPhrase:String, func:Function, commandGroup:String = "Application", helpText:String = ""):void {
 			instance.addCommand(new FunctionCallCommand(triggerPhrase, func, commandGroup, helpText));
 		}
 		/**

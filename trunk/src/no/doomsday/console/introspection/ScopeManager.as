@@ -11,7 +11,9 @@
 	 */
 	public class ScopeManager
 	{
-		//private var cache:Dictionary = new Dictionary(true);
+		public static const SEARCH_METHODS:int = 0;
+		public static const SEARCH_ACCESSORS:int = 1;
+		
 		private var _currentScope:IntrospectionScope = createScope( { } );
 		private var _previousScope:IntrospectionScope;
 		private var console:DConsole;
@@ -191,17 +193,31 @@
 			setScope(currentScope.obj, true);
 		}
 		
-		public function doSearch(search:String):Vector.<String>
+		public function doSearch(search:String,searchMode:int = SEARCH_METHODS):Vector.<String>
 		{
 			var result:Vector.<String> = new Vector.<String>;
 			var s:String = search.toLowerCase();
-			for (var i:int = 0; i < currentScope.methods.length; i++) 
-			{
-				var m:MethodDesc = currentScope.methods[i];
-				if (m.name.toLowerCase().indexOf(s, 0) > -1) {
-					result.push(m.name);
+			var i:int;
+			switch(searchMode) {
+				case SEARCH_ACCESSORS:
+				for (i = currentScope.accessors.length; i--; ) 
+				{
+					var a:AccessorDesc= currentScope.accessors[i];
+					if (a.name.toLowerCase().indexOf(s, 0) > -1) {
+						result.push(a.name);
+					}
 				}
-			}
+				break;
+				case SEARCH_METHODS:
+				for (i = currentScope.methods.length; i--; ) 
+				{
+					var m:MethodDesc = currentScope.methods[i];
+					if (m.name.toLowerCase().indexOf(s, 0) > -1) {
+						result.push(m.name);
+					}
+				}
+				break;
+			}		
 			return result;
 		}
 		

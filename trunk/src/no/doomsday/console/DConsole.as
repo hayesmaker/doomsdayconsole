@@ -502,7 +502,7 @@
 			print("		Shift-Tab -> Toggle console", MessageTypes.SYSTEM);
 			print("		Tab -> (When out of focus) Set the keyboard focus to the input field", MessageTypes.SYSTEM);
 			print("		Tab -> (When in focus) Skip to end of line and append a space", MessageTypes.SYSTEM);
-			print("		Tab -> (While caret is on an unknown term) Search commands and methods", MessageTypes.SYSTEM);
+			print("		Tab -> (While caret is on an unknown term) Context sensitive search of commands, methods and accessors", MessageTypes.SYSTEM);
 			print("		Enter -> Execute line", MessageTypes.SYSTEM);
 			print("		Page up/Page down -> Vertical scroll by page", MessageTypes.SYSTEM);
 			print("		Arrow up -> Recall the previous executed line", MessageTypes.SYSTEM);
@@ -842,42 +842,78 @@
 		{
 			if (inputTextField.text.length < 1) return;
 			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
-			if (autoCompleteManager.isKnown(word, inputTextField.text.indexOf(word)>0) || !isNaN(Number(word))) {
+			var isFirstWord:Boolean = inputTextField.text.indexOf(word) < 1;
+			var firstWord:String;
+			if (isFirstWord) {
+				firstWord = word;
+			}else {
+				firstWord = TextUtils.getWordAtIndex(inputTextField, 0);
+			}
+			if (autoCompleteManager.isKnown(word, !isFirstWord) || !isNaN(Number(word))) {
+				var temp:String = inputTextField.text;
+				try {
+					temp = temp.replace(word, autoCompleteManager.correctCase(word));
+				}catch (e:Error) {
+				}
 				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){
 					inputTextField.appendText(" ");
 				}
 				inputTextField.setSelection(inputTextField.length, inputTextField.length);
 			}else {
-				tabSearch();
+				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
+				var call:Boolean = (firstWord == callCommand.trigger);
+				tabSearch(word, getSet && !isFirstWord, isFirstWord, call);
 			}
 		}
-		private function tabSearch():void
+		private function tabSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
 		{
-			var searchString:String = TextUtils.getWordAtCaretIndex(inputTextField);
 			if (searchString.length < 1) return;
-			var result:Vector.<String> = scopeManager.doSearch(searchString);
-			var out:String = "";
-			var count:int = 0;
-			var maxrow:int = 4;
-			if(result.length>0){
-				print("Scope methods matching '" + searchString + "'", MessageTypes.SYSTEM);
-				for (var i:int = 0; i < result.length; i++) 
-				{
-					out += result[i] + " ";
-					count++;
-					if (count > maxrow) {
-						count = 0;
-						print(out, MessageTypes.OUTPUT);
-						out = "";
+			var result:Vector.<String>;
+			if(includeScopeMethods){
+				result = scopeManager.doSearch(searchString,ScopeManager.SEARCH_METHODS);
+				var out:String = "";
+				var count:int = 0;
+				var maxrow:int = 4;
+				if(result.length>0){
+					print("Scope methods matching '" + searchString + "'", MessageTypes.SYSTEM);
+					for (var i:int = 0; i < result.length; i++) 
+					{
+						out += result[i] + " ";
+						count++;
+						if (count > maxrow) {
+							count = 0;
+							print(out, MessageTypes.OUTPUT);
+							out = "";
+						}
 					}
+					if(out!="") print(out, MessageTypes.OUTPUT);
 				}
-				if(out!="") print(out, MessageTypes.OUTPUT);
 			}
-			result = commandManager.doSearch(searchString);
+			if(includeCommands){
+				result = commandManager.doSearch(searchString);
+				count = 0;
+				out = "";
+				if(result.length>0){
+					print("Commands matching '" + searchString + "'", MessageTypes.SYSTEM);
+					for (i = 0; i < result.length; i++) 
+					{
+						out += result[i] + " ";
+						count++;
+						if (count > maxrow) {
+							count = 0;
+							print(out, MessageTypes.OUTPUT);
+							out = "";
+						}
+					}
+					if(out!="") print(out, MessageTypes.OUTPUT);
+				}
+			}
+			if (!includeAccessors) return;
+			result = scopeManager.doSearch(searchString,ScopeManager.SEARCH_ACCESSORS);
 			count = 0;
 			out = "";
 			if(result.length>0){
-				print("Commands matching '" + searchString + "'", MessageTypes.SYSTEM);
+				print("Scope accessors matching '" + searchString + "'", MessageTypes.SYSTEM);
 				for (i = 0; i < result.length; i++) 
 				{
 					out += result[i] + " ";
@@ -890,12 +926,12 @@
 				}
 				if(out!="") print(out, MessageTypes.OUTPUT);
 			}
+		
 		}
 		
 		private function singleTab():void
 		{
 			if (autoCompleteManager.suggestionActive) {
-				//TODO: Intelligent tabbing
 				inputTextField.appendText(" ");
 				inputTextField.setSelection(inputTextField.length, inputTextField.length);
 			}

@@ -80,7 +80,7 @@
 		//thanks Paulo Fierro :)
 		public static function getMethodTooltip(scope:Object, methodName:String):String {
 			var tip:String = methodName+"( "; 
-			var desc:XMLList = describeType(scope)..method.(attribute("name") == methodName);
+			var desc:XMLList = describeType(scope)..method.(attribute("name").toLowerCase() == methodName.toLowerCase());
 			if (desc.length() == 0) {
 				throw new Error("No description for method " + methodName);
 			}
@@ -99,7 +99,7 @@
 		}
 		public static function getAccessorTooltip(scope:Object, accessorName:String):String {
 			var tip:String = accessorName; 
-			var desc:XMLList = describeType(scope)..accessor.(attribute("name") == accessorName);
+			var desc:XMLList = describeType(scope)..accessor.(attribute("name").toLowerCase() == accessorName.toLowerCase());
 			if (desc.length() == 0) {
 				throw new Error("No description for accessor " + accessorName);
 			}

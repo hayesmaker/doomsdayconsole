@@ -9,17 +9,26 @@
 	{
 		public var basepage:Object = new Object();
 		private var stringContents:Vector.<String> = new Vector.<String>;
+		private var stringContentsLowercase:Vector.<String> = new Vector.<String>;
 		public function AutocompleteDictionary() 
 		{
 		}
+		
+		public function correctCase(str:String):String {
+			var idx:int = stringContentsLowercase.indexOf(str.toLowerCase());
+			if (idx == -1) throw new Error("No result");
+			return stringContents[idx];
+		}
+		
 		public function addToDictionary(str:String):void {
-			stringContents.push(str.toLowerCase());
+			stringContents.push(str);
+			stringContentsLowercase.push(str.toLowerCase()); //TODO: This is a terrible way to solve the search problem. Must fix.
             var strParts:Array = str.split("");
             strParts.push(new String());
             insert(strParts, basepage);
         }
 		public function contains(str:String):Boolean {
-			return stringContents.indexOf(str.toLowerCase(), 0) > -1;
+			return stringContentsLowercase.indexOf(str.toLowerCase(), 0) > -1;
 		}
 
         private function insert(parts:Array, page:Object):void {

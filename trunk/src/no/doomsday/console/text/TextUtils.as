@@ -33,8 +33,11 @@
 			tf.setSelection(first, last);
 		}
 		public static function getWordAtCaretIndex(tf:TextField):String {
+			return getWordAtIndex(tf, tf.caretIndex);
+		}
+		public static function getWordAtIndex(tf:TextField,index:int):String {
 			var str:String = tf.text;
-			var first:int = str.lastIndexOf(" ", tf.caretIndex)+1;
+			var first:int = str.lastIndexOf(" ", index)+1;
 			var last:int = str.indexOf(" ", first);
 			if (last == -1) last = str.length;
 			return str.slice(first, last);
