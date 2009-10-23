@@ -101,7 +101,10 @@
 			var tip:String = accessorName; 
 			var desc:XMLList = describeType(scope)..accessor.(attribute("name").toLowerCase() == accessorName.toLowerCase());
 			if (desc.length() == 0) {
-				throw new Error("No description for accessor " + accessorName);
+				desc = describeType(scope)..variable.(attribute("name").toLowerCase() == accessorName.toLowerCase());
+				if (desc.length() == 0) {
+					throw new Error("No description");
+				}
 			}
 			tip += ":" + desc.@type;
 			if (desc.@access == "readonly") {
