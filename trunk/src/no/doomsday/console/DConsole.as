@@ -67,7 +67,7 @@
 	{
 		//[Embed(source='../../../buildnumber.txt', mimeType='application/octet-stream')]
 		//public static var BuildNumberFile:Class;
-		private static var BUILD:int = 1;
+		private static var VERSION:String = "1.0a";
 		
 		private var consoleBg:Shape;
 		private var textOutput:TextField;
@@ -233,6 +233,7 @@
 			
 			print("Welcome",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
+			print("Console version " + VERSION, MessageTypes.SYSTEM);
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
 			
 			setupDefaultCommands();
@@ -302,12 +303,13 @@
 			addCommand(new FunctionCallCommand("updateScope", scopeManager.updateScope, "Introspection", "Gets changes to the current scope tree"));
 			addCommand(new FunctionCallCommand("alias", alias, "Introspection", "'alias methodName triggerWord' Create a new command shortcut to the specified function"));
 			
-			//experimental stuff
 			addCommand(new FunctionCallCommand("referenceThis", referenceManager.getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (referenceThis 1)"));
 			addCommand(new FunctionCallCommand("getReference", referenceManager.getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReference scopename 1)"));
 			addCommand(new FunctionCallCommand("listReferences", referenceManager.printReferences, "Referencing", "Lists all stored references and their IDs"));
 			addCommand(new FunctionCallCommand("clearReferences", referenceManager.clearReferences, "Referencing", "Clears all stored references"));
 			addCommand(new FunctionCallCommand("clearReference", referenceManager.clearReferenceByName, "Referencing", "Clears the specified reference"));
+			
+			addCommand(new FunctionCallCommand("maximizeConsole", maximize,"System","Sets console height to fill the screen"));
 			
 			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
 				
@@ -349,7 +351,7 @@
 		private function printVersion():void
 		{
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
-			print("Console build number " + BUILD, MessageTypes.SYSTEM);
+			print("Console version " + VERSION, MessageTypes.SYSTEM);
 		}
 		
 		private function createController(...properties:Array):void
@@ -574,8 +576,7 @@
 			persistence.numLines = int(Math.max(1, lines));
 			scrollIndex = Math.max(0, messageLog.length - persistence.numLines);
 			if (calcHeight()>stage.stageHeight) {
-				setHeight(3);
-				print("Out of bounds, setting to safe range");
+				maximize();
 				return;
 			}
 			redraw();
@@ -786,7 +787,7 @@
 		/**
 		 * Save the current console contents to an xml file
 		 */
-		public function log(e:Event = null ):void {
+		public function log(e:Event = null):void {
 			var logDoc:XML = <log/>;
 			for (var i:int = 0; i < messageLog.length; i++) 
 			{
@@ -1202,6 +1203,13 @@
 		private function onBatchLoaded(e:Event):void 
 		{
 			runBatch(e.target.data);
+		}
+		
+		//disp
+		public function maximize():void {
+			if (!stage) return;
+			var maxHeight:int = Math.floor(stage.stageHeight / 14)-1;
+			setHeight(maxHeight);
 		}
 		
 		//theming
