@@ -303,8 +303,8 @@
 			addCommand(new FunctionCallCommand("alias", alias, "Introspection", "'alias methodName triggerWord' Create a new command shortcut to the specified function"));
 			
 			//experimental stuff
-			addCommand(new FunctionCallCommand("getReference", referenceManager.getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (getReference 1)"));
-			addCommand(new FunctionCallCommand("getReferenceByName", referenceManager.getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReferenceByName scopename 1)"));
+			addCommand(new FunctionCallCommand("referenceThis", referenceManager.getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (referenceThis 1)"));
+			addCommand(new FunctionCallCommand("getReference", referenceManager.getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReference scopename 1)"));
 			addCommand(new FunctionCallCommand("listReferences", referenceManager.printReferences, "Referencing", "Lists all stored references and their IDs"));
 			addCommand(new FunctionCallCommand("clearReferences", referenceManager.clearReferences, "Referencing", "Clears all stored references"));
 			addCommand(new FunctionCallCommand("clearReference", referenceManager.clearReferenceByName, "Referencing", "Clears the specified reference"));
@@ -853,6 +853,7 @@
 				var temp:String = inputTextField.text;
 				try {
 					temp = temp.replace(word, autoCompleteManager.correctCase(word));
+					inputTextField.text = temp;
 				}catch (e:Error) {
 				}
 				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){

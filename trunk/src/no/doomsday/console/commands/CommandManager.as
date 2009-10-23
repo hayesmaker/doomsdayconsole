@@ -90,7 +90,6 @@
 				var func:FunctionCallCommand = (command as FunctionCallCommand);
 				try {
 					val = func.callback.apply(null, args);
-					if (isNaN(val) && val != undefined && val != null) return "NaN";
 					return val;
 				}catch (e:Error) {
 					//try again with all args as string
