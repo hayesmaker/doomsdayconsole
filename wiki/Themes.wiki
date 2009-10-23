@@ -6,7 +6,8 @@ If you wind up using the console a lot, you might find issue with the color sche
 = Details =
 ===To change font colors===
 
-{{{ConsoleUtil.instance.setTextTheme(
+{{{
+ConsoleUtil.instance.setTextTheme(
   input:uint, //The input text field color
   oldMessage:uint,  //The color of old messages
   newMessage:uint, //The color of the latest message
@@ -19,7 +20,8 @@ If you wind up using the console a lot, you might find issue with the color sche
 
 ===To change chrome colors===
 
-{{{ConsoleUtil.instance.setChromeTheme(
+{{{
+ConsoleUtil.instance.setChromeTheme(
   backgroundColor:uint, //The background color
   backgroundAlpha:Number, //The background alpha
   borderColor:uint, //The input field border color
