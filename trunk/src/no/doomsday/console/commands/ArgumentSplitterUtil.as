@@ -45,7 +45,6 @@
 				}
 			}
 			var out:Array = a.split("|");
-			//TODO: embarassing string cleanup, need to mend this
 			var str:String = "";
 			for (var i:int = 0; i < out.length; i++) 
 			{
@@ -57,10 +56,7 @@
 			return out;
 		}
 		private static function findSubCommand(input:String,start:int):int {
-			//var t:Token = new Token();
-			//t.type = "Object";
 			var score:int = 0;
-			//var opener:int = input.charCodeAt(start);
 			var l:int = input.length;
 			var char:int;
 			var end:int;
@@ -83,10 +79,7 @@
 			return end;
 		}
 		private static function findObject(input:String,start:int):int {
-			//var t:Token = new Token();
-			//t.type = "Object";
 			var score:int = 0;
-			//var opener:int = input.charCodeAt(start);
 			var l:int = input.length;
 			var char:int;
 			var end:int;
@@ -99,7 +92,6 @@
 					score--;
 					if (score <= 0) {
 						end = i;
-						//t.contents = input.slice(start, i+1);
 						break;
 					}
 				}
@@ -107,14 +99,10 @@
 			if (score > 0) {
 				throw(new ArgumentError("Object argument not properly terminated"));
 			}
-			//t.start = start+1;
 			return end;
 		}
 		private static function findArray(input:String, start:int):int {
-			//var t:Token = new Token();
-			//t.type = "Array";
 			var score:int = 0;
-			//var opener:int = input.charCodeAt(start);
 			var l:int = input.length;
 			var char:int;
 			var end:int;
@@ -127,7 +115,6 @@
 					score--;
 					if (score <= 0) {
 						end = i;
-						//t.contents = input.slice(start, i+1);
 						break;
 					}
 				}
@@ -143,11 +130,6 @@
 			return out;
 		}
 		private static function findCommand(input:String):int {
-			//var t:Token = new Token();
-			//t.type = "Command";
-			//t.contents = input.split(" ").shift();
-			//t.start = 0;
-			//t.end = t.contents.length;
 			return input.split(" ").shift().length;
 		}
 		

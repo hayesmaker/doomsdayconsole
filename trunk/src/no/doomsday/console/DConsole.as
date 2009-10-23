@@ -1110,6 +1110,7 @@
 		
 		private function redraw(e:Event = null):Rectangle
 		{
+			
 			var w:Number = stage.stageWidth;
 			var h:Number = stage.stageHeight;
 			if (parent.scrollRect) {
