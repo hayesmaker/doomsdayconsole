@@ -111,9 +111,7 @@
 		}
 		
 		public static function getMethodArgs(func:Object):Array {
-			trace("description mayhem!");
 			var desc:XML = describeType(func);
-			trace(desc);
 			var out:Array = [];
 			for each(var attrib:XML in desc..parameter) {
 				out.push(attrib);

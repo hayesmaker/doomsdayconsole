@@ -398,6 +398,7 @@
 				stats.x = textOutput.width - stats.width;
 				print("Stats on", MessageTypes.SYSTEM);
 			}
+			redraw();
 		}
 		public function screenshot(e:Event = null):void
 		{
