@@ -1,5 +1,6 @@
 ﻿package no.doomsday.console
 {
+	import flash.utils.describeType;
 	import no.doomsday.console.commands.FunctionCallCommand;
 	import no.doomsday.console.DConsole;
 	import no.doomsday.console.measurement.MeasurementTool;

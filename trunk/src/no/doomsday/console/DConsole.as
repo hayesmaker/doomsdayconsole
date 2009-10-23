@@ -115,7 +115,10 @@
 		private var locked:Boolean = false;
 		private var contextMenuManager:ContextMenuManager;
 		private var persistence:PersistenceManager;
+		
 		private var callCommand:FunctionCallCommand;
+		private var getCommand:FunctionCallCommand;
+		private var setCommand:FunctionCallCommand;
 		
 		private var stats:ConsoleStats;
 		
@@ -225,6 +228,8 @@
 			tabTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTab, false, 0, true);
 			
 			callCommand = new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
+			setCommand = new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope");
+			getCommand = new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope");
 			
 			print("Welcome",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
@@ -283,8 +288,8 @@
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
 						
 			addCommand(callCommand);
-			addCommand(new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope"));
-			addCommand(new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope"));
+			addCommand(getCommand);
+			addCommand(setCommand);
 			addCommand(new FunctionCallCommand("root", scopeManager.selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
 			addCommand(new FunctionCallCommand("select", scopeManager.setScopeByName, "Introspection", "Selects the specified object as the current introspection scope"));
 			addCommand(new FunctionCallCommand("selectByReference", referenceManager.setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
@@ -521,13 +526,21 @@
 				return;
 			}
 			var helpText:String = cmd.helpText;
-			if (cmd == callCommand) {
-				//arrgh
-				var secondElement:String = TextUtils.parseForSecondElement(inputTextField.text);
-				try{
-					helpText = InspectionUtils.getMethodTooltip(scopeManager.currentScope.obj, secondElement);
-				}catch (e:Error) {
-					helpText = cmd.helpText;
+			var secondElement:String = TextUtils.parseForSecondElement(inputTextField.text);
+			if(secondElement){
+				if (cmd == callCommand) {
+					//arrgh
+					try{
+						helpText = InspectionUtils.getMethodTooltip(scopeManager.currentScope.obj, secondElement);
+					}catch (e:Error) {
+						helpText = cmd.helpText;
+					}
+				}else if (cmd == setCommand || cmd == getCommand) {
+					try {
+						helpText = InspectionUtils.getAccessorTooltip(scopeManager.currentScope.obj, secondElement);
+					}catch (e:Error) {
+						helpText = cmd.helpText;
+					}
 				}
 			}
 			if (helpText != "") {
@@ -828,7 +841,7 @@
 		{
 			if (inputTextField.text.length < 1) return;
 			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
-			if (autoCompleteManager.isKnown(word) || !isNaN(Number(word))) {
+			if (autoCompleteManager.isKnown(word, inputTextField.text.indexOf(word)>0) || !isNaN(Number(word))) {
 				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){
 					inputTextField.appendText(" ");
 				}

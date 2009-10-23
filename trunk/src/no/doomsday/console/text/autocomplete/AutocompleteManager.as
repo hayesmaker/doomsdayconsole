@@ -66,11 +66,10 @@
 			   suggestionActive = true;
 			}
         }
-		public function isKnown(str:String):Boolean {
-			if (scopeDict) {
-				if (scopeDict.contains(str)) {
-					return true;
-				}
+		public function isKnown(str:String, includeScope:Boolean = false):Boolean {
+			if (scopeDict&&includeScope) {
+				if (scopeDict.contains(str)) 
+				return true;
 			}
 			return dict.contains(str);
 		}

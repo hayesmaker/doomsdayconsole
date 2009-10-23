@@ -19,7 +19,7 @@
             insert(strParts, basepage);
         }
 		public function contains(str:String):Boolean {
-			return stringContents.indexOf(str.toLowerCase(), 0) > -1 ? true : false;
+			return stringContents.indexOf(str.toLowerCase(), 0) > -1;
 		}
 
         private function insert(parts:Array, page:Object):void {

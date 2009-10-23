@@ -77,12 +77,10 @@
 				console.print(e.message, MessageTypes.ERROR);
 			}
 		}		
-		
-		
 		public function printMethods():void {
 			var m:Vector.<MethodDesc> = currentScope.methods;
 			console.print("	methods:");
-			var i:int
+			var i:int;
 			for (i = 0; i < m.length; i++) 
 			{
 				var md:MethodDesc = m[i];

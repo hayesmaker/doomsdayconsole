@@ -97,6 +97,18 @@
 			tip += " ):"+desc.@returnType;
 			return tip;
 		}
+		public static function getAccessorTooltip(scope:Object, accessorName:String):String {
+			var tip:String = accessorName; 
+			var desc:XMLList = describeType(scope)..accessor.(attribute("name") == accessorName);
+			if (desc.length() == 0) {
+				throw new Error("No description for accessor " + accessorName);
+			}
+			tip += ":" + desc.@type;
+			if (desc.@access == "readonly") {
+				tip += " (read only)";
+			}
+			return tip;
+		}
 		
 		public static function getMethodArgs(func:Object):Array {
 			trace("description mayhem!");
