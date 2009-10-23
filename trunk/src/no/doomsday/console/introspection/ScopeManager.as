@@ -44,7 +44,7 @@
 				createScope(o);
 				autoCompleteManager.scopeDict = currentScope.autoCompleteDict;
 			}catch (e:Error) {
-				console.print("No such scope",MessageTypes.ERROR);
+				throw e;
 			}
 			printScope();
 			printDownPath();
@@ -69,14 +69,12 @@
 			if (_currentScope.obj is DisplayObject) {
 				setScope(_currentScope.obj.parent);
 			}
-			printScope();
-			printDownPath();
 		}		
 		public function setScopeByName(str:String):void {
 			try {
 				setScope(getScopeByName(str));
 			}catch (e:Error) {
-				console.print(e.message, MessageTypes.ERROR);
+				throw e;
 			}
 		}		
 		public function printMethods():void {

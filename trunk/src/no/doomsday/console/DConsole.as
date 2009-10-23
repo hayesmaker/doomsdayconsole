@@ -291,9 +291,9 @@
 			addCommand(getCommand);
 			addCommand(setCommand);
 			addCommand(new FunctionCallCommand("root", scopeManager.selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
-			addCommand(new FunctionCallCommand("select", scopeManager.setScopeByName, "Introspection", "Selects the specified object as the current introspection scope"));
-			addCommand(new FunctionCallCommand("selectByReference", referenceManager.setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
-			addCommand(new FunctionCallCommand("back", scopeManager.up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
+			addCommand(new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object as the current introspection scope"));
+			//addCommand(new FunctionCallCommand("selectByReference", referenceManager.setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
+			addCommand(new FunctionCallCommand("parent", scopeManager.up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
 			addCommand(new FunctionCallCommand("children", scopeManager.printChildren, "Introspection", "Get available children in the current scope"));
 			addCommand(new FunctionCallCommand("variables", scopeManager.printVariables, "Introspection", "Get available variables in the current scope"));
 			addCommand(new FunctionCallCommand("complex", scopeManager.printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
@@ -325,6 +325,19 @@
 			if (Capabilities.playerType == "StandAlone" || Capabilities.playerType == "External") {
 				print("	Standalone commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
+			}
+		}
+		
+		private function doSelect(target:String):void
+		{
+			try{
+				scopeManager.setScopeByName(target);
+			}catch (e:Error) {
+				try{
+					referenceManager.setScopeByReferenceKey(target);
+				}catch (e:Error) {
+					print("No such scope", MessageTypes.ERROR);
+				}
 			}
 		}
 		
