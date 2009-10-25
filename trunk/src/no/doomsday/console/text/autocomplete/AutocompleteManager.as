@@ -66,12 +66,13 @@
 			   suggestionActive = true;
 			}
         }
-		public function isKnown(str:String, includeScope:Boolean = false):Boolean {
+		public function isKnown(str:String, includeScope:Boolean = false, includeCommands:Boolean = true):Boolean {
 			if (scopeDict&&includeScope) {
 				if (scopeDict.contains(str))
 				return true;
 			}
-			return dict.contains(str);
+			if(includeCommands) return dict.contains(str);
+			return false;
 		}
 		
 		public function get targetTextField():TextField { return _targetTextField; }

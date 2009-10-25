@@ -33,8 +33,11 @@
 			}
 		}
 		
-		public function getReferenceByName(name:String,id:String):void
+		public function getReferenceByName(name:String,id:String = null):void
 		{
+			if (!id) {
+				id = "ref" + uid;
+			}
 			try{
 				referenceDict[id] = scopeManager.getScopeByName(name);
 				printReferences();

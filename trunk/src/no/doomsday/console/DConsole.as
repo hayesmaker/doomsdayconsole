@@ -121,10 +121,7 @@
 		private var setCommand:FunctionCallCommand;
 		
 		private var stats:ConsoleStats;
-		
-		private var tabCount:int;
-		private var tabCountTimer:Timer = new Timer(150, 1);
-		
+			
 		public var tabSearchEnabled:Boolean = true;
 		private var backgroundColor:uint = 0;
 		private var backgroundAlpha:Number = 0.8;
@@ -306,10 +303,11 @@
 			addCommand(new FunctionCallCommand("referenceThis", referenceManager.getReference, "Referencing", "Stores a weak reference to the current scope in a specified id (referenceThis 1)"));
 			addCommand(new FunctionCallCommand("getReference", referenceManager.getReferenceByName, "Referencing", "Stores a weak reference to the specified scope in the specified id (getReference scopename 1)"));
 			addCommand(new FunctionCallCommand("listReferences", referenceManager.printReferences, "Referencing", "Lists all stored references and their IDs"));
-			addCommand(new FunctionCallCommand("clearReferences", referenceManager.clearReferences, "Referencing", "Clears all stored references"));
+			addCommand(new FunctionCallCommand("clearAllReferences", referenceManager.clearReferences, "Referencing", "Clears all stored references"));
 			addCommand(new FunctionCallCommand("clearReference", referenceManager.clearReferenceByName, "Referencing", "Clears the specified reference"));
 			
 			addCommand(new FunctionCallCommand("maximizeConsole", maximize,"System","Sets console height to fill the screen"));
+			addCommand(new FunctionCallCommand("minimizeConsole", minimize,"System","Sets console height to 1"));
 			
 			addCommand(new FunctionCallCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)"));
 				
@@ -329,7 +327,7 @@
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
 			}
 		}
-		
+	
 		private function doSelect(target:String):void
 		{
 			try{
@@ -856,14 +854,14 @@
 		{
 			if (inputTextField.text.length < 1) return;
 			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
-			var isFirstWord:Boolean = inputTextField.text.indexOf(word) < 1;
+			var isFirstWord:Boolean = inputTextField.text.lastIndexOf(word) < 1;
 			var firstWord:String;
 			if (isFirstWord) {
 				firstWord = word;
 			}else {
 				firstWord = TextUtils.getWordAtIndex(inputTextField, 0);
 			}
-			if (autoCompleteManager.isKnown(word, !isFirstWord) || !isNaN(Number(word))) {
+			if (autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord) || !isNaN(Number(word))) {
 				var temp:String = inputTextField.text;
 				try {
 					temp = temp.replace(word, autoCompleteManager.correctCase(word));
@@ -873,12 +871,12 @@
 				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){
 					inputTextField.appendText(" ");
 				}
-				inputTextField.setSelection(inputTextField.length, inputTextField.length);
 			}else {
 				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
 				var call:Boolean = (firstWord == callCommand.trigger);
 				tabSearch(word, getSet && !isFirstWord, isFirstWord, call);
 			}
+			inputTextField.setSelection(inputTextField.length, inputTextField.length);
 		}
 		private function tabSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
 		{
@@ -980,23 +978,6 @@
 				disableTab();
 				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
 				doTab();
-				
-				/*if (!tabSearchEnabled) {
-					singleTab();
-					return;
-				}
-				
-				if (tabCount < 1) {
-					//first tab
-					//trace("first");
-					tabCount++;
-					tabCountTimer.reset();
-					tabCountTimer.start();
-					return;
-				}else {
-					resetTabCount(null,true);
-					return;
-				}*/
 				
 			}
 			if (e.keyCode == Keyboard.BACKSPACE && e.shiftKey) {
@@ -1205,11 +1186,15 @@
 			runBatch(e.target.data);
 		}
 		
-		//disp
+		//minmaxing size
 		public function maximize():void {
 			if (!stage) return;
 			var maxHeight:int = Math.floor(stage.stageHeight / 14)-1;
 			setHeight(maxHeight);
+		}
+		private function minimize():void
+		{
+			setHeight(1);
 		}
 		
 		//theming
