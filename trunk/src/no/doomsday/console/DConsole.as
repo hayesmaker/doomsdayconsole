@@ -378,7 +378,10 @@
 		{
 			System.exit(code);
 		}
-		private function routeToJS():void {
+		/**
+		 * Toggle: Route all print statements to javascript console.log through externalinterface
+		 */
+		public function routeToJS():void {
 			if (ExternalInterface.available) {
 				routingToJS = !routingToJS;
 				if (routingToJS) {
@@ -390,7 +393,10 @@
 				print("ExternalInterface not available", MessageTypes.ERROR);
 			}
 		}
-		private function alertErrors():void {
+		/**
+		 * Route errors to javascript console.log through externalinterface
+		 */
+		public function alertErrors():void {
 			if (ExternalInterface.available) {
 				alertingErrors = !alertingErrors;
 				if (alertingErrors ) {
@@ -402,6 +408,9 @@
 				print("ExternalInterface not available", MessageTypes.ERROR);
 			}
 		}
+		/**
+		 * Toggle display of mrDoob stats
+		 */
 		public function toggleStats(e:Event = null):void {
 			if (mainConsoleContainer.contains(stats)) {
 				mainConsoleContainer.removeChild(stats);
@@ -413,6 +422,10 @@
 			}
 			redraw();
 		}
+		/**
+		 * Get a screenshot of the stage and save as a png
+		 * @param	e
+		 */
 		public function screenshot(e:Event = null):void
 		{
 			var bmd:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, true, 0);
