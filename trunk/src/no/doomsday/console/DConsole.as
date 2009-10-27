@@ -266,8 +266,10 @@
 			addCommand(new FunctionCallCommand("enumerateFonts", TextUtils.listFonts, "Utility", "Lists font names available to this swf"));
 			addCommand(new FunctionCallCommand("toggleTabSearch", toggleTabSearch, "Utility", "Toggles tabbing to search commands and methods for the current word"));
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "Utility", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
-
+			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
+			addCommand(new FunctionCallCommand("goto", goto, "Utility", "Scrolls to the specified line, if possible"));
 			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
+			
 			
 			if(addMath){	
 				addCommand(new FunctionCallCommand("sin", Math.sin, "Math", "Returns the sine of an angle measured in radians"));
@@ -974,10 +976,10 @@
 					scroll(-1);
 					return;
 					case Keyboard.LEFT:
-					scroll(0,-textOutput.width*.5);
+					//scroll(0,-textOutput.width*.5);
 					return
 					case Keyboard.RIGHT:
-					scroll(0,textOutput.width*.5);
+					//scroll(0,textOutput.width*.5);
 					return;
 				}
 			}
@@ -1197,6 +1199,25 @@
 		private function onBatchLoaded(e:Event):void 
 		{
 			runBatch(e.target.data);
+		}
+		
+		private function goto(line:int):void {
+			scrollToLine(line-1);
+		}
+		private function scrollToLine(line:int):void {
+			var diff:int = scrollIndex - line;
+			scroll(diff);
+		}
+		
+		private function searchLog(str:String):void {
+			for (var i:int = 0; i < messageLog.length; i++) 
+			{
+				if (messageLog[i].text.toLowerCase().indexOf(str) > -1) {
+					scrollToLine(i);
+					print("'"+str + "' found at line " + i);
+					break;
+				}
+			}
 		}
 		
 		//minmaxing size
