@@ -1224,7 +1224,7 @@
 		public function maximize():void {
 			if (!stage) return;
 			var maxHeight:int = Math.floor(stage.stageHeight / 14)-1;
-			setHeight(maxHeight);
+			setHeight(maxHeight-1);
 		}
 		private function minimize():void
 		{
