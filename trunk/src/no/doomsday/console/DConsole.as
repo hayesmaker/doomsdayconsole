@@ -372,10 +372,7 @@
 			var d:int = Math.max( -1, Math.min(1, e.delta));
 			if (e.ctrlKey) d *= persistence.numLines;
 			scroll(d);
-		}
-		
-		
-		
+		}		
 		private function quitCommand(code:int = 0):void
 		{
 			System.exit(code);
@@ -869,6 +866,7 @@
 		{
 			if (inputTextField.text.length < 1) return;
 			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
+			
 			var isFirstWord:Boolean = inputTextField.text.lastIndexOf(word) < 1;
 			var firstWord:String;
 			if (isFirstWord) {
@@ -876,26 +874,60 @@
 			}else {
 				firstWord = TextUtils.getWordAtIndex(inputTextField, 0);
 			}
-			if (autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord) || !isNaN(Number(word))) {
+			if (autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord)||!isNaN(Number(word))) {
+				//this word is okay, so accept the tab
+				var wordIndex:int = TextUtils.getFirstIndexOfWordAtCaretIndex(inputTextField);
+					
+				//is there currently a selection?
+				if (inputTextField.selectedText.length > 0) {
+					moveCaretToIndex(inputTextField.selectionBeginIndex);
+					wordIndex = inputTextField.selectionBeginIndex;
+				}else if(inputTextField.text.charAt(inputTextField.caretIndex)==" "&&inputTextField.caretIndex!=inputTextField.text.length-1){
+					moveCaretToIndex(inputTextField.caretIndex - 1);
+				}
+				
+				word = TextUtils.getWordAtCaretIndex(inputTextField);
+				wordIndex = inputTextField.caretIndex;
+				
+				//case correction
 				var temp:String = inputTextField.text;
 				try {
 					temp = temp.replace(word, autoCompleteManager.correctCase(word));
 					inputTextField.text = temp;
 				}catch (e:Error) {
 				}
-				if(inputTextField.text.charAt(inputTextField.text.length-1)!=" "){
-					inputTextField.appendText(" ");
+				
+				//is there a word after the current word?
+				if (wordIndex + word.length < inputTextField.text.length - 1) {
+					moveCaretToIndex(wordIndex + word.length);
+					TextUtils.selectWordAtCaretIndex(inputTextField);
+					
+				}else {
+					//if it's the last word
+					if (inputTextField.text.charAt(inputTextField.text.length-1)!=" ") {
+						inputTextField.appendText(" ");
+					}
+					moveCaretToIndex();
 				}
-			}else {
+			}else{
 				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
 				var call:Boolean = (firstWord == callCommand.trigger);
-				tabSearch(word, getSet && !isFirstWord, isFirstWord, call);
+				tabSearch(word, !isFirstWord, isFirstWord, call);
+				TextUtils.selectWordAtCaretIndex(inputTextField);
 			}
-			inputTextField.setSelection(inputTextField.length, inputTextField.length);
+		}
+		
+		private function moveCaretToIndex(index:int = -1):void
+		{
+			if (index == -1) {
+				index = inputTextField.length;
+			}
+			inputTextField.setSelection(index, index);
 		}
 		private function tabSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
 		{
 			if (searchString.length < 1) return;
+			var found:Boolean = false;
 			var result:Vector.<String>;
 			if(includeScopeMethods){
 				result = scopeManager.doSearch(searchString,ScopeManager.SEARCH_METHODS);
@@ -914,7 +946,8 @@
 							out = "";
 						}
 					}
-					if(out!="") print(out, MessageTypes.OUTPUT);
+					if (out != "") print(out, MessageTypes.OUTPUT);
+					found = true;
 				}
 			}
 			if(includeCommands){
@@ -933,7 +966,8 @@
 							out = "";
 						}
 					}
-					if(out!="") print(out, MessageTypes.OUTPUT);
+					if (out != "") print(out, MessageTypes.OUTPUT);
+					found = true;
 				}
 			}
 			if (!includeAccessors) return;
@@ -952,7 +986,11 @@
 						out = "";
 					}
 				}
-				if(out!="") print(out, MessageTypes.OUTPUT);
+				if (out != "") print(out, MessageTypes.OUTPUT);
+				found = true;
+			}
+			if (!found) {
+				print("No matches for '" + searchString + "'",MessageTypes.ERROR);
 			}
 		
 		}
