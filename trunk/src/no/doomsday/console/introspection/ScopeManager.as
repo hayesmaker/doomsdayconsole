@@ -206,6 +206,13 @@
 						result.push(a.name);
 					}
 				}
+				for (i = currentScope.variables.length; i--; ) 
+				{
+					var v:VariableDesc = currentScope.variables[i];
+					if (v.name.toLowerCase().indexOf(s, 0) > -1) {
+						result.push(v.name);
+					}
+				}
 				break;
 				case SEARCH_METHODS:
 				for (i = currentScope.methods.length; i--; ) 

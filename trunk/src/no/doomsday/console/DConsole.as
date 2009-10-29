@@ -119,6 +119,7 @@
 		private var callCommand:FunctionCallCommand;
 		private var getCommand:FunctionCallCommand;
 		private var setCommand:FunctionCallCommand;
+		private var selectCommand:FunctionCallCommand;
 		
 		private var stats:ConsoleStats;
 			
@@ -227,6 +228,7 @@
 			callCommand = new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
 			setCommand = new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope");
 			getCommand = new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope");
+			selectCommand = new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object as the current introspection scope");
 			
 			print("Welcome",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
@@ -291,11 +293,11 @@
 			addCommand(getCommand);
 			addCommand(setCommand);
 			addCommand(new FunctionCallCommand("root", scopeManager.selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
-			addCommand(new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object as the current introspection scope"));
+			addCommand(selectCommand);
 			//addCommand(new FunctionCallCommand("selectByReference", referenceManager.setScopeByReferenceKey, "Introspection", "Gets a stored reference and sets it as the current introspection scope"));
 			addCommand(new FunctionCallCommand("parent", scopeManager.up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
 			addCommand(new FunctionCallCommand("children", scopeManager.printChildren, "Introspection", "Get available children in the current scope"));
-			addCommand(new FunctionCallCommand("variables", scopeManager.printVariables, "Introspection", "Get available variables in the current scope"));
+			addCommand(new FunctionCallCommand("variables", scopeManager.printVariables, "Introspection", "Get available simple variables in the current scope"));
 			addCommand(new FunctionCallCommand("complex", scopeManager.printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
 			addCommand(new FunctionCallCommand("scopes", scopeManager.printDownPath, "Introspection", "List available scopes in the current scope"));
 			addCommand(new FunctionCallCommand("methods", scopeManager.printMethods, "Introspection", "Get available methods in the current scope"));
@@ -914,7 +916,8 @@
 			}else{
 				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
 				var call:Boolean = (firstWord == callCommand.trigger);
-				tabSearch(word, !isFirstWord, isFirstWord, call);
+				var select:Boolean = (firstWord == selectCommand.trigger);
+				tabSearch(word, !isFirstWord||select, isFirstWord, call);
 				
 				if (flag) {
 					TextUtils.selectWordAtCaretIndex(inputTextField);
