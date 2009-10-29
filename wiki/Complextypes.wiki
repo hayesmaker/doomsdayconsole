@@ -8,6 +8,10 @@ Say you have a function, {{{addGuy(fullname:String,age:int)}}, linking it to the
 
 {{{addGuy "Andreas Rønning" 27}}}
 
+===XML===
+To supply an XML argument, simply use XML notation
+{{{myCommand <data><node/></data>}}}
+
 ===Arrays===
 To supply an array argument, simply use ActionScript bracket syntax:
 
@@ -25,5 +29,5 @@ Objects can contain arrays, and arrays can contain objects. Both the array and o
 
 {{{myCommand [{"myArray":[{"firstname":"andreas","lastname":"rønning"}]}]}}}
 
-===Objects and subcommands===
-Subcommand results are currently not available for inclusion in objects or arrays. I'm busy rewriting the parser to support this.
+===Objects, xml and subcommands===
+Preparsed XML and subcommand results are currently not available for inclusion in objects or arrays. I'm busy rewriting the parser to support this.
