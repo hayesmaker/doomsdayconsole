@@ -77,9 +77,8 @@
 		public function parseForReferences(args:Array):Array {
 			for (var i:int = 0; i < args.length; i++) 
 			{
-				if (args[i].indexOf("<") > -1) {
-					//contains a reference
-					var s:Array = args[i].split("<").join(">").split(">");
+				if (args[i].indexOf("@") > -1) {
+					var s:Array = args[i].split("@");
 					var key:String = s[1];
 					if (referenceDict[key] != null) {
 						if (referenceDict[key] is Function) {

@@ -22,6 +22,9 @@
 				tmp = tmp.slice(1, tmp.length - 1);
 				tmp = commandManager.tryCommand(tmp, true);
 				break;
+				case "<":
+				tmp = new XML(tmp);
+				break;
 			}
 			if (tmp is String) {
 				if (tmp == "false") {

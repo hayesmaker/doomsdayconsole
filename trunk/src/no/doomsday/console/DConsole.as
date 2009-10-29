@@ -864,6 +864,8 @@
 		}
 		private function doTab():void
 		{
+			var flag:Boolean = false; //TODO: Temporary flag until this whole tab business has been sorted out
+			
 			if (inputTextField.text.length < 1) return;
 			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
 			
@@ -913,7 +915,8 @@
 				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
 				var call:Boolean = (firstWord == callCommand.trigger);
 				tabSearch(word, !isFirstWord, isFirstWord, call);
-				TextUtils.selectWordAtCaretIndex(inputTextField);
+				
+				if(flag) TextUtils.selectWordAtCaretIndex(inputTextField);
 			}
 		}
 		

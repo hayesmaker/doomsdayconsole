@@ -89,6 +89,10 @@
 			if (command is FunctionCallCommand) {
 				var func:FunctionCallCommand = (command as FunctionCallCommand);
 				try {
+					for (i = 0; i < args.length; i++) 
+					{
+						trace(args[i] + ": " + typeof args[i]);
+					}
 					val = func.callback.apply(null, args);
 					return val;
 				}catch (e:Error) {
@@ -116,21 +120,6 @@
 			}
 		}
 		
-		private function parseForSubCommands(args:Array):Array
-		{
-			for (var i:int = 0; i < args.length; i++) 
-			{
-				if (args[i].charAt(0) == "%") {
-					trace("subcommand!");
-					var split:Array = args[i].split("");
-					split.pop();
-					split.shift();
-					var cmdStr:String = split.join("");
-					args[i] = tryCommand(cmdStr,true);
-				}
-			}
-			return args;
-		}
 		/**
 		 * List available command phrases
 		 */
