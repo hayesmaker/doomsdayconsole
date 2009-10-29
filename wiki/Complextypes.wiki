@@ -10,6 +10,7 @@ Say you have a function, {{{addGuy(fullname:String,age:int)}}, linking it to the
 
 ===XML===
 To supply an XML argument, simply use XML notation
+
 {{{myCommand <data><node/></data>}}}
 
 ===Arrays===
