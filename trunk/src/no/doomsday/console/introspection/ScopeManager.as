@@ -13,6 +13,7 @@
 	{
 		public static const SEARCH_METHODS:int = 0;
 		public static const SEARCH_ACCESSORS:int = 1;
+		public static const SEARCH_CHILDREN:int = 2;
 		
 		private var _currentScope:IntrospectionScope = createScope( { } );
 		private var _previousScope:IntrospectionScope;
@@ -212,6 +213,15 @@
 					var m:MethodDesc = currentScope.methods[i];
 					if (m.name.toLowerCase().indexOf(s, 0) > -1) {
 						result.push(m.name);
+					}
+				}
+				break;
+				case SEARCH_CHILDREN:
+				for (i = currentScope.children.length; i--; ) 
+				{
+					var c:ChildScopeDesc= currentScope.children[i];
+					if (c.name.toLowerCase().indexOf(s, 0) > -1) {
+						result.push(c.name);
 					}
 				}
 				break;

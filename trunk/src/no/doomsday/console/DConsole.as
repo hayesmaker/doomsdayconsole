@@ -916,7 +916,13 @@
 				var call:Boolean = (firstWord == callCommand.trigger);
 				tabSearch(word, !isFirstWord, isFirstWord, call);
 				
-				if(flag) TextUtils.selectWordAtCaretIndex(inputTextField);
+				if (flag) {
+					TextUtils.selectWordAtCaretIndex(inputTextField);
+				}else{
+					word = TextUtils.getWordAtCaretIndex(inputTextField);
+					wordIndex = TextUtils.getFirstIndexOfWordAtCaretIndex(inputTextField);
+					moveCaretToIndex(wordIndex + word.length);
+				}
 			}
 		}
 		
@@ -932,11 +938,11 @@
 			if (searchString.length < 1) return;
 			var found:Boolean = false;
 			var result:Vector.<String>;
+			var maxrow:int = 4;
 			if(includeScopeMethods){
 				result = scopeManager.doSearch(searchString,ScopeManager.SEARCH_METHODS);
 				var out:String = "";
 				var count:int = 0;
-				var maxrow:int = 4;
 				if(result.length>0){
 					print("Scope methods matching '" + searchString + "'", MessageTypes.SYSTEM);
 					for (var i:int = 0; i < result.length; i++) 
@@ -979,6 +985,24 @@
 			out = "";
 			if(result.length>0){
 				print("Scope accessors matching '" + searchString + "'", MessageTypes.SYSTEM);
+				for (i = 0; i < result.length; i++) 
+				{
+					out += result[i] + " ";
+					count++;
+					if (count > maxrow) {
+						count = 0;
+						print(out, MessageTypes.OUTPUT);
+						out = "";
+					}
+				}
+				if (out != "") print(out, MessageTypes.OUTPUT);
+				found = true;
+			}
+			result = scopeManager.doSearch(searchString,ScopeManager.SEARCH_CHILDREN);
+			count = 0;
+			out = "";
+			if(result.length>0){
+				print("Children matching '" + searchString + "'", MessageTypes.SYSTEM);
 				for (i = 0; i < result.length; i++) 
 				{
 					out += result[i] + " ";
