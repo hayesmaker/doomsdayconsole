@@ -108,5 +108,13 @@
 		public static function set tabSearch(value:Boolean):void {
 			instance.setTabSearch(value);
 		}
+		/**
+		 * Sets the console docking position
+		 * @param	position
+		 * "top" or "bot"/"bottom"
+		 */
+		public static function dock(position:String):void {
+			instance.dock(position);
+		}
 	}
 }

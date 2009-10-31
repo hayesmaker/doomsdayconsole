@@ -89,10 +89,6 @@
 			if (command is FunctionCallCommand) {
 				var func:FunctionCallCommand = (command as FunctionCallCommand);
 				try {
-					for (i = 0; i < args.length; i++) 
-					{
-						trace(args[i] + ": " + typeof args[i]);
-					}
 					val = func.callback.apply(null, args);
 					return val;
 				}catch (e:Error) {

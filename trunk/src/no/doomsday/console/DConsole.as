@@ -130,6 +130,9 @@
 		
 		public var invokeKeyStroke:KeyStroke;
 		
+		private var DOCK_TOP:int = 0;
+		private var DOCK_BOTTOM:int = 1;
+		
 		/**
 		 * Creates a new DConsole instance. 
 		 * This class is intended to always be on top of the stage of the application it is associated with.
@@ -170,7 +173,7 @@
 			
 			infoField = new TextField();
 			infoField.background = true;
-			infoField.backgroundColor = 0x222222;
+			infoField.backgroundColor = 0x151515;
 			infoField.tabEnabled = false;
 			infoField.mouseEnabled = false;
 			infoField.selectable = false;
@@ -191,8 +194,6 @@
 			addChild(measureBracket);
 			addChild(mainConsoleContainer);
 			addChild(controllerManager);
-			
-			
 			
 			mainConsoleContainer.addChild(consoleBg);	
 			mainConsoleContainer.addChild(textOutput);
@@ -224,6 +225,18 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		public function dock(value:String):void {
+			value = value.toLowerCase();
+			if (value == "bot" || value == "bottom") {
+				persistence.dockState = DOCK_BOTTOM;
+				print("Docking to bottom", MessageTypes.SYSTEM);
+			}else {
+				persistence.dockState = DOCK_TOP;
+				print("Docking to top", MessageTypes.SYSTEM);
+			}
+			redraw();
 		}
 		
 		public function setInvokeKeys(...keyCodes:Array):void {
@@ -264,6 +277,9 @@
 		private function setupDefaultCommands(addMath:Boolean = true):void {
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
+			addCommand(new FunctionCallCommand("dock", dock, "System", "Docks the console to either 'top'(default) or 'bottom'"));
+			
+			
 			addCommand(new FunctionCallCommand("clearhistory", persistence.clearHistory, "System", "Clears the stored command history"));
 			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands"));
 			addCommand(new FunctionCallCommand("help", getHelp, "Utility", "Output basic instructions"));
@@ -282,10 +298,9 @@
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "Utility", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
 			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
 			addCommand(new FunctionCallCommand("goto", goto, "Utility", "Scrolls to the specified line, if possible"));
-			addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
 			
-			
-			if(addMath){	
+			if (addMath) {	
+				addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
 				addCommand(new FunctionCallCommand("sin", Math.sin, "Math", "Returns the sine of an angle measured in radians"));
 				addCommand(new FunctionCallCommand("cos", Math.cos, "Math", "Returns the cosine of an angle measured in radians"));
 				addCommand(new FunctionCallCommand("add", MathUtils.add, "Math", "Returns X + Y"));
@@ -375,9 +390,19 @@
 		
 		private function onScaleHandleDrag(e:Event):void 
 		{
-			var y:Number = stage.mouseY-22;
+			var my:Number;
 			var eh:Number = 14;
-			setHeight(Math.floor(y / eh));
+			switch(persistence.dockState) {
+				case DOCK_TOP:
+					my = stage.mouseY-22;
+					setHeight(Math.floor(my / eh));
+				break;
+				case DOCK_BOTTOM:
+					my = stage.mouseY+22;
+					var inv:Number = stage.stageHeight - my;
+					setHeight(Math.floor(inv / eh));
+				break;
+			}
 			infoTargetY = inputTextField.y;
 		}
 		
@@ -584,7 +609,14 @@
 				}
 			}
 			if (helpText != "") {
-				infoTargetY = inputTextField.y+18;
+				switch(persistence.dockState) {
+					case DOCK_TOP:
+						infoTargetY = inputTextField.y+18;
+					break;
+					case DOCK_BOTTOM:
+						infoTargetY = inputTextField.y-17;
+					break;
+				}
 				infoField.text = "?	" + cmd.trigger + ": " + helpText;
 				addEventListener(Event.ENTER_FRAME, updateInfoMotion);
 			}else {
@@ -1166,11 +1198,22 @@
 			var bounds:Rectangle = redraw();
 			if (visible) {
 				if (parent) parent.addChild(this);
-				mainConsoleContainer.y = -consoleHeight + 1;
-				if(stats.visible){
-					stats.x = textOutput.width - stats.width;
+				switch(persistence.dockState) {
+					case DOCK_BOTTOM:
+						mainConsoleContainer.y = stage.stageHeight+1;
+						if(stats.visible){
+							stats.x = textOutput.width - stats.width;
+						}
+						targetY = stage.stageHeight - consoleHeight;
+					break;
+					case DOCK_TOP:
+						mainConsoleContainer.y = -consoleHeight + 1;
+						if(stats.visible){
+							stats.x = textOutput.width - stats.width;
+						}
+						targetY = 0;
+					break;
 				}
-				targetY = 0;
 				addEventListener(Event.ENTER_FRAME, updateMainMotion);
 			}else {
 				reenableTab();
@@ -1207,30 +1250,68 @@
 				w = parent.scrollRect.width;
 				h = parent.scrollRect.height;
 			}
-			consoleBg.graphics.clear();
-			consoleBg.graphics.beginFill(backgroundColor, backgroundAlpha);
-			consoleBg.graphics.drawRect(0, 0, w, consoleHeight);
-			consoleBg.graphics.lineStyle(0, 0);
-			consoleBg.graphics.moveTo(0, consoleHeight);
-			consoleBg.graphics.lineTo(w, consoleHeight);
-			
-			textOutput.height = consoleHeight-18;
-			textOutput.width = w;
-			inputTextField.width = w;
-			inputTextField.height = 18;
-			inputTextField.y = consoleHeight-18;
-			infoField.y = inputTextField.y;
-			infoField.height = 17;
-			infoField.width = w;
-			drawMessages();
-			
-			scaleHandle.x = 0;
-			scaleHandle.width = w;
-			scaleHandle.y = inputTextField.y + inputTextField.height;
-			
-			stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);
-			
-			return new Rectangle(0, 0, w, h);
+			switch(persistence.dockState) {
+				case DOCK_TOP:
+					consoleBg.graphics.clear();
+					consoleBg.graphics.beginFill(backgroundColor, backgroundAlpha);
+					consoleBg.graphics.drawRect(0, 0, w, consoleHeight);
+					consoleBg.graphics.lineStyle(0, 0);
+					consoleBg.graphics.moveTo(0, consoleHeight);
+					consoleBg.graphics.lineTo(w, consoleHeight);
+					consoleBg.y = 0;
+					
+					textOutput.height = consoleHeight-18;
+					textOutput.width = w;
+					textOutput.y = 0;
+					inputTextField.width = w;
+					inputTextField.height = 18;
+					inputTextField.y = consoleHeight - 18;
+					infoField.y = inputTextField.y;
+					infoField.height = 17;
+					infoField.width = w;
+					drawMessages();
+					
+					scaleHandle.x = 0;
+					scaleHandle.width = w;
+					scaleHandle.y = inputTextField.y + inputTextField.height;
+					
+					stats.y = 0;
+					mainConsoleContainer.y = 0;
+					
+					stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);	
+				break;
+				case DOCK_BOTTOM:
+					consoleBg.graphics.clear();
+					consoleBg.graphics.beginFill(backgroundColor, backgroundAlpha);
+					consoleBg.graphics.drawRect(0, 0, w, consoleHeight);
+					consoleBg.graphics.lineStyle(0, 0);
+					consoleBg.graphics.moveTo(0, consoleHeight);
+					consoleBg.graphics.lineTo(w, consoleHeight);
+					consoleBg.y = 0;
+					
+					textOutput.height = consoleHeight-18;
+					textOutput.width = w;
+					textOutput.y = 0;
+					inputTextField.width = w;
+					inputTextField.height = 18;
+					inputTextField.y = consoleHeight - 18;
+					infoField.y = inputTextField.y;
+					infoField.height = 17;
+					infoField.width = w;
+					drawMessages();
+					
+					scaleHandle.x = 0;
+					scaleHandle.width = w;
+					scaleHandle.y = -scaleHandle.height;
+					
+					stats.y = 0;
+					
+					mainConsoleContainer.y = stage.stageHeight - consoleHeight;
+					
+					stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);	
+				break;
+			}
+			return new Rectangle(x, y, w, h);
 		}
 		
 		private function alias(methodName:String, commandString:String):void {

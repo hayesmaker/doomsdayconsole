@@ -15,20 +15,32 @@
 		private var _commandIndex:int;
 		private var historySO:SharedObject;
 		public var maxHistory:int = 10;
+		private var _dockState:int = 0;
 		public function PersistenceManager(console:DConsole) 
 		{
 			this.console = console;
 			historySO = SharedObject.getLocal("consoleHistory");
 			if (!historySO.data.history) historySO.data.history = [];
 			if (!historySO.data.numLines) historySO.data.numLines = numLines;
+			if (!historySO.data.dockState) historySO.data.dockState = _dockState;
 			numLines = historySO.data.numLines;
 			previousCommands = historySO.data.history;
+			_dockState = historySO.data.dockState;
 			commandIndex = previousCommands.length;
 		}
 		public function clearHistory():void
 		{
 			historySO.data.history = [];
 		}
+		
+		public function get dockState():int { return _dockState; }
+		
+		public function set dockState(value:int):void 
+		{
+			_dockState = value;
+			historySO.data.dockState = _dockState;
+		}
+		
 		public function get commandIndex():int { return _commandIndex; }
 		
 		public function set commandIndex(value:int):void 
