@@ -161,31 +161,73 @@ package no.doomsday.console.measurement
 			var mx:Number = Math.max(0, Math.min(stage.mouseX, stage.stageWidth));
 			var my:Number = Math.max(0, Math.min(stage.mouseY, stage.stageHeight));
 			increment = 1
+			var snap:Boolean = false;
 			if (e is MouseEvent) {
 				var me:MouseEvent = e as MouseEvent
 				if (me.shiftKey) {
 					increment = 10;
-				}else if (me.ctrlKey) {
-					increment = 5;
 				}else {
 					increment = 1;
 				}
+				snap = me.ctrlKey;
 				try { 
 					me.updateAfterEvent();
 				}catch (err:Error) { };
 			}
 			
-			switch(currentlyChecking) {
-				case topLeftCornerHandle:
-				setTopLeft(mx, my);
-				break;
-				case bottomRightCornerHandle:
-				setBotRight(mx,my);
-				break;
-				case rectSprite:
-				setCenter(mx, my);
-				break;
+			//TODO: Quick and dirty solution. Should be more elegant.
+			if (snap) {
+				var snapTarget:Rectangle = null;
+				var objects:Array = stage.getObjectsUnderPoint(new Point(mx, my));
+				var dispObj:DisplayObject;
+				for (var i:int = objects.length; i--; ) 
+				{
+					dispObj = objects[i];
+					if (!contains(dispObj)) {
+						snapTarget = dispObj.getRect(stage);
+						break;
+					}
+				}
+				if (snapTarget) {
+					switch(currentlyChecking) {
+						case topLeftCornerHandle:
+						setTopLeft(snapTarget.x, snapTarget.y);
+						break;
+						case bottomRightCornerHandle:
+						setBotRight(snapTarget.x+snapTarget.width,snapTarget.y+snapTarget.height);
+						break;
+						case rectSprite:
+						setTopLeft(snapTarget.x, snapTarget.y);
+						setBotRight(snapTarget.x+snapTarget.width,snapTarget.y+snapTarget.height);
+						break;
+					}
+				}else {
+					switch(currentlyChecking) {
+						case topLeftCornerHandle:
+						setTopLeft(mx, my);
+						break;
+						case bottomRightCornerHandle:
+						setBotRight(mx,my);
+						break;
+						case rectSprite:
+						setCenter(mx, my);
+						break;
+					}
+				}
+			}else{
+				switch(currentlyChecking) {
+					case topLeftCornerHandle:
+					setTopLeft(mx, my);
+					break;
+					case bottomRightCornerHandle:
+					setBotRight(mx,my);
+					break;
+					case rectSprite:
+					setCenter(mx, my);
+					break;
+				}
 			}
+			
 			render();
 		}
 		/**
@@ -236,7 +278,18 @@ package no.doomsday.console.measurement
 		public function toggle():void
 		{
 			visible = !visible;
+		}
+		override public function get visible():Boolean { return super.visible; }
+		
+		override public function set visible(value:Boolean):void 
+		{
+			super.visible = value;
+			
 			console.print("Measuring bracket active: " + visible, MessageTypes.SYSTEM);
+			if(visible){
+				console.print("	Hold shift to round to values of 10", MessageTypes.SYSTEM);
+				console.print("	Hold ctrl to snap to mouse target", MessageTypes.SYSTEM);
+			}
 		}
 		
 	}

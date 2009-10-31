@@ -9,7 +9,7 @@
 	import no.doomsday.console.commands.ConsoleCommand;
 	import no.doomsday.console.commands.FunctionCallCommand;
 	import no.doomsday.console.controller.ControllerManager;
-	import no.doomsday.console.gui.ContextMenuManager;
+	import no.doomsday.console.gui.KeyStroke;
 	import no.doomsday.console.gui.ScaleHandle;
 	import no.doomsday.console.introspection.AccessorDesc;
 	import no.doomsday.console.introspection.ChildScopeDesc;
@@ -35,7 +35,6 @@
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -51,14 +50,13 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
-	import flash.ui.ContextMenu;
-	import flash.ui.ContextMenuItem;
 	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
 	import flash.utils.ByteArray;
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	import no.doomsday.input.keyboard.KeyboardManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -67,8 +65,8 @@
 	{
 		//[Embed(source='../../../buildnumber.txt', mimeType='application/octet-stream')]
 		//public static var BuildNumberFile:Class;
-		private static var VERSION:String = "1.0a";
-		
+		private static var VERSION:String = "1.03a";
+			
 		private var consoleBg:Shape;
 		private var textOutput:TextField;
 		private var inputTextField:TextField;
@@ -103,8 +101,6 @@
 		private var autoCompleteManager:AutocompleteManager;
 		private var globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
 		
-		private var menu:ContextMenu;
-		
 		private var scaleHandle:ScaleHandle;
 		
 		private var referenceManager:ReferenceManager;
@@ -113,7 +109,6 @@
 		private var commandManager:CommandManager;
 		
 		private var locked:Boolean = false;
-		private var contextMenuManager:ContextMenuManager;
 		private var persistence:PersistenceManager;
 		
 		private var callCommand:FunctionCallCommand;
@@ -131,29 +126,10 @@
 		private var previousPrintValues:String;
 		private var previousMessage:Message;
 		private var repeatMessageMode:int = MessageRepeatMode.STACK;
+		private var keyboardManager:KeyboardManager;
 		
+		public var invokeKeyStroke:KeyStroke;
 		
-		/**
-		 * Sets the handling method for repeated messages with identical values
-		 * @param	filter
-		 * One of the 3 modes described in the no.doomsday.console.messages.MessageRepeatMode enum
-		 */
-		public function setRepeatFilter(filter:int):void {
-			switch(filter) {
-				case MessageRepeatMode.IGNORE:
-				print("Repeat mode: Repeated messages are now ignored",MessageTypes.SYSTEM);
-				break;
-				case MessageRepeatMode.PASSTHROUGH:
-				print("Repeat mode: Repeated messages are now allowed",MessageTypes.SYSTEM);
-				break;
-				case MessageRepeatMode.STACK:
-				print("Repeat mode: Repeated messages are now stacked",MessageTypes.SYSTEM);
-				break;
-				default:
-				throw new Error("Unknown filter type");
-			}
-			repeatMessageMode = filter;
-		}
 		/**
 		 * Creates a new DConsole instance. 
 		 * This class is intended to always be on top of the stage of the application it is associated with.
@@ -162,8 +138,10 @@
 		 */
 		public function DConsole() 
 		{
+			keyboardManager = new KeyboardManager();
+			invokeKeyStroke = new KeyStroke(keyboardManager, Keyboard.TAB, Keyboard.SHIFT);
+			
 			visible = false;
-
 			mainConsoleContainer = new Sprite();
 			
 			consoleBg = new Shape();
@@ -179,14 +157,10 @@
 			autoCompleteManager = new AutocompleteManager(inputTextField);
 			autoCompleteManager.setDictionary(globalDictionary);
 			
-			measureBracket = new MeasurementTool(this);
-			measureBracket.visible = false;
-			
 			persistence = new PersistenceManager(this);
 			controllerManager = new ControllerManager();
 			scopeManager = new ScopeManager(this, autoCompleteManager);
 			referenceManager = new ReferenceManager(this,scopeManager);
-			contextMenuManager = new ContextMenuManager(this, scopeManager, referenceManager, controllerManager, measureBracket);
 			commandManager = new CommandManager(this, persistence, referenceManager);
 			
 			tabTimer = new Timer(50, 1);
@@ -211,9 +185,14 @@
 					
 			scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
 			
+			measureBracket = new MeasurementTool(this);
+			measureBracket.visible = false;
+			
 			addChild(measureBracket);
 			addChild(mainConsoleContainer);
 			addChild(controllerManager);
+			
+			
 			
 			mainConsoleContainer.addChild(consoleBg);	
 			mainConsoleContainer.addChild(textOutput);
@@ -238,7 +217,6 @@
 			setupDefaultCommands();
 			
 			setRepeatFilter(MessageRepeatMode.STACK);
-
 			print("Ready. Type help to get started.", MessageTypes.SYSTEM);
 			
 			calcHeight();
@@ -247,6 +225,40 @@
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
+		
+		public function setInvokeKeys(...keyCodes:Array):void {
+			if (keyCodes.length > 0) {
+				invokeKeyStroke.keyCodes = keyCodes;
+			}
+		}
+		
+		/**
+		 * Sets the handling method for repeated messages with identical values
+		 * @param	filter
+		 * One of the 3 modes described in the no.doomsday.console.messages.MessageRepeatMode enum
+		 */
+		public function setRepeatFilter(filter:int):void {
+			switch(filter) {
+				case MessageRepeatMode.IGNORE:
+				print("Repeat mode: Repeated messages are now ignored",MessageTypes.SYSTEM);
+				break;
+				case MessageRepeatMode.PASSTHROUGH:
+				print("Repeat mode: Repeated messages are now allowed",MessageTypes.SYSTEM);
+				break;
+				case MessageRepeatMode.STACK:
+				print("Repeat mode: Repeated messages are now stacked",MessageTypes.SYSTEM);
+				break;
+				default:
+				throw new Error("Unknown filter type");
+			}
+			repeatMessageMode = filter;
+		}
+		public function getManagerRefs():Array {
+			var a:Array = [];
+			return [scopeManager, referenceManager, controllerManager, measureBracket];
+		}
+		
+		
 		
 		
 		private function setupDefaultCommands(addMath:Boolean = true):void {
@@ -761,10 +773,6 @@
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			
-			contextMenuManager.setUpMenuItems(true);
-			//scope menu test	
-			
 			try{
 				parentTabChildren = parent.tabChildren;
 				parentTabEnabled = parent.tabEnabled;
@@ -783,6 +791,8 @@
 			if (score > 0) {
 				print("Use the setupStage command to temporarily alleviate these problems",MessageTypes.ERROR);
 			}
+			keyboardManager.setup(stage);
+			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			stage.addEventListener(Event.RESIZE, onStageResize);
@@ -1053,11 +1063,13 @@
 			}
 			
 			//TODO: Customizable invocation keystroke
-			if (e.keyCode == Keyboard.TAB && e.shiftKey) {
+			//if (e.keyCode == Keyboard.TAB && e.shiftKey) {
+			if (invokeKeyStroke.valid) {
 				disableTab();
 				toggleDisplay();
 				return;
-			}else if (visible && e.keyCode == Keyboard.TAB) {
+			}
+			if (visible && e.keyCode == Keyboard.TAB) {
 				disableTab();
 				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
 				doTab();
