@@ -8,4 +8,4 @@ To do this, use the setInvokeKeys method of the DConsole class in the following 
 ConsoleUtil.instance.setInvokeKeys(KeyBoard.SPACE,KeyBoard.CTRL,KeyBoard.SHIFT,KeyBoard.ENTER);
 }}}
 
-Any number of arguments other than 0 is valid.
+At least one key code is required.
