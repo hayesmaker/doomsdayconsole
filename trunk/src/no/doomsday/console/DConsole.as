@@ -3,6 +3,7 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import com.adobe.images.PNGEncoder;
+	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
 	import net.hires.debug.ConsoleStats;
 	import no.doomsday.console.commands.CommandManager;
@@ -298,6 +299,7 @@
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "Utility", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
 			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
 			addCommand(new FunctionCallCommand("goto", goto, "Utility", "Scrolls to the specified line, if possible"));
+			addCommand(new FunctionCallCommand("make", make, "Utility", "Creates a new instance of a specified class by its full name (ie package.ClassName)"));
 			
 			if (addMath) {	
 				addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
@@ -1390,6 +1392,12 @@
 		private function minimize():void
 		{
 			setHeight(1);
+		}
+		
+		//oh dear
+		private function make(className:String):*{
+			var c:Object = getDefinitionByName(className);
+			return new c;
 		}
 		
 		//theming

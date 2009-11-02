@@ -2,6 +2,9 @@
 {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	//import flash.display.NativeMenu;
+	//import flash.display.NativeMenuItem;
+	//import flash.display.NativeWindow;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.system.Capabilities;
@@ -19,7 +22,7 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class ContextMenuUtil
+	public class ContextMenuUtilAir
 	{
 		private static var console:DConsole;
 		private static var referenceManager:ReferenceManager;
@@ -27,7 +30,7 @@
 		private static var controllerManager:ControllerManager;
 		private static var measureBracket:MeasurementTool;
 		private static var consoleMenu:ContextMenu;
-		public function ContextMenuUtil() 
+		public function ContextMenuUtilAir() 
 		{
 			
 		}
@@ -43,10 +46,10 @@
 			toggleDisplayItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, console.toggleDisplay);
 			var toggleStatsItem:ContextMenuItem = new ContextMenuItem("Performance stats");
 			toggleStatsItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, console.toggleStats);
-			consoleMenu.customItems.push(toggleDisplayItem);
-			consoleMenu.customItems.push(toggleStatsItem);
-			consoleMenu.customItems.push(logItem);
-			consoleMenu.customItems.push(screenshotItem);
+			consoleMenu.addItem(toggleDisplayItem);
+			consoleMenu.addItem(toggleStatsItem);
+			consoleMenu.addItem(logItem);
+			consoleMenu.addItem(screenshotItem);
 			console.contextMenu = consoleMenu;
 			
 			if (!root) return;
@@ -62,11 +65,11 @@
 			measureMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMeasureMenu, false, 0, true);
 			
 			var baseMenu:ContextMenu = new ContextMenu();
-			baseMenu.customItems.push(toggleMenuItem);
-			baseMenu.customItems.push(selectionMenuItem);
-			baseMenu.customItems.push(controllerMenuItem); 
-			baseMenu.customItems.push(referenceMenuItem);
-			baseMenu.customItems.push(measureMenuItem);
+			baseMenu.addItem(toggleMenuItem);
+			baseMenu.addItem(selectionMenuItem);
+			baseMenu.addItem(controllerMenuItem); 
+			baseMenu.addItem(referenceMenuItem);
+			baseMenu.addItem(measureMenuItem);
 			
 			if (!root.contextMenu) root.contextMenu = new ContextMenu();
 			root.contextMenu = baseMenu;
