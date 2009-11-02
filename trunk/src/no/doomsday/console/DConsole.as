@@ -10,6 +10,7 @@
 	import no.doomsday.console.commands.ConsoleCommand;
 	import no.doomsday.console.commands.FunctionCallCommand;
 	import no.doomsday.console.controller.ControllerManager;
+	import no.doomsday.console.events.ConsoleEvent;
 	import no.doomsday.console.gui.KeyStroke;
 	import no.doomsday.console.gui.ScaleHandle;
 	import no.doomsday.console.introspection.AccessorDesc;
@@ -210,7 +211,7 @@
 			callCommand = new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
 			setCommand = new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope");
 			getCommand = new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope");
-			selectCommand = new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object as the current introspection scope");
+			selectCommand = new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
 			
 			print("Welcome",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
@@ -300,7 +301,8 @@
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "Utility", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
 			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
 			addCommand(new FunctionCallCommand("goto", goto, "Utility", "Scrolls to the specified line, if possible"));
-			addCommand(new FunctionCallCommand("make", make, "Utility", "Creates a new instance of a specified class by its full name (ie package.ClassName)"));
+			addCommand(new FunctionCallCommand("new", make, "Utility", "Creates a new instance of a specified class by its full name (ie package.ClassName). Hard capped to 20 args."));
+			addCommand(new FunctionCallCommand("repeat", repeatCommand, "System", "Repeats command string X Y times"));
 			
 			if (addMath) {	
 				addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
@@ -318,6 +320,7 @@
 			
 			addCommand(new FunctionCallCommand("showMouse", Mouse.show, "UI", "Shows the mouse cursor"));
 			addCommand(new FunctionCallCommand("hideMouse", Mouse.hide, "UI", "Hides the mouse cursor"));
+			addCommand(new FunctionCallCommand("runBatch", runBatchFromUrl, "Batch", "Runs a sequence of commands from a txt file, delimited by \\n"));
 						
 			addCommand(callCommand);
 			addCommand(getCommand);
@@ -362,6 +365,14 @@
 			}
 		}
 		
+		private function repeatCommand(cmd:String,count:int = 1):void
+		{
+			for (var i:int = 0; i < count; i++) 
+			{
+				commandManager.tryCommand(cmd);
+			}
+		}
+		
 		private function getLipsum(length:int):String
 		{
 			return Lipsum.getText(length);
@@ -372,7 +383,7 @@
 			try{
 				scopeManager.setScopeByName(target);
 			}catch (e:Error) {
-				try{
+				try {
 					referenceManager.setScopeByReferenceKey(target);
 				}catch (e:Error) {
 					print("No such scope", MessageTypes.ERROR);
@@ -729,6 +740,11 @@
 				previousPrintValues = txt;
 				msg = new Message(split[i], date, type);
 				previousMessage = msg;
+				if (msg.type != MessageTypes.USER) {
+					var evt:ConsoleEvent = new ConsoleEvent(ConsoleEvent.MESSAGE);
+					evt.text = msg.text;
+					dispatchEvent(evt);
+				}
 				messageLog.push(msg);
 				scrollIndex = Math.max(0, messageLog.length - persistence.numLines);
 			}			
@@ -1315,6 +1331,7 @@
 					stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);	
 				break;
 			}
+			infoTargetY = inputTextField.y;
 			return new Rectangle(x, y, w, h);
 		}
 		
@@ -1346,7 +1363,8 @@
 			var result:Boolean = false;
 			for (var i:int = 0; i < split.length; i++) 
 			{
-				result = commandManager.tryCommand(split[i])
+				trace(split[i]);
+				result = commandManager.tryCommand(split[i]);
 			}
 			if (result) {
 				print("Batch completed", MessageTypes.SYSTEM);
@@ -1391,15 +1409,59 @@
 			var maxHeight:int = Math.floor(stage.stageHeight / 14)-1;
 			setHeight(maxHeight-1);
 		}
-		private function minimize():void
+		public function minimize():void
 		{
 			setHeight(1);
 		}
 		
 		//oh dear
-		private function make(className:String):*{
-			var c:Object = getDefinitionByName(className);
-			return new c;
+		public function make(className:String, ...args):*{
+			var c:Class = getDefinitionByName(className) as Class;
+			switch (args.length) //This is a fucking nightmare!
+			{
+				case 1:
+				return new c(args[0]);
+				case 2:
+				return new c(args[0], args[1]);
+				case 3:
+				return new c(args[0], args[1], args[2]);
+				case 4:
+				return new c(args[0], args[1], args[2], args[3]);
+				case 5:
+				return new c(args[0], args[1], args[2], args[3], args[4]);
+				case 6:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5]);
+				case 7:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+				case 8:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+				case 9:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+				case 10:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+				case 11:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);
+				case 12:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11]);
+				case 13:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12]);
+				case 14:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13]);
+				case 15:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14]);
+				case 16:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);
+				case 17:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16]);
+				case 18:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17]);
+				case 19:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17], args[18]);
+				case 20:
+				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17], args[18], args[19]);
+				default:
+				return new c();
+			}
 		}
 		
 		//theming

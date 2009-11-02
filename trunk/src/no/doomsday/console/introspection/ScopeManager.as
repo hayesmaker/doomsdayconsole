@@ -91,7 +91,7 @@
 		public function printVariables():void {
 			var a:Vector.<VariableDesc> = currentScope.variables;
 			var cv:*;
-			console.print("	variables:");
+			console.print("	variables: "+a.length);
 			var i:int
 			for (i = 0; i < a.length; i++) 
 			{
@@ -105,6 +105,7 @@
 				}
 			}
 			var b:Vector.<AccessorDesc> = currentScope.accessors;
+			console.print("	accessors: "+b.length);
 			for (i = 0; i < b.length; i++) 
 			{
 				var ad:AccessorDesc = b[i];
@@ -120,7 +121,7 @@
 		public function printChildren():void {
 			var c:Vector.<ChildScopeDesc> = currentScope.children;
 			if (c.length < 1) return;
-			console.print("	children:");
+			console.print("	children: "+c.length);
 			for (var i:int = 0; i < c.length; i++) 
 			{
 				var cc:ChildScopeDesc = c[i];
@@ -154,8 +155,8 @@
 				}
 				out.push("		" + vd.name + ": " + vd.type);
 			}
+			console.print("	complex types: "+out.length);
 			if (out.length > 0) {
-				console.print("	complex types:");
 				for (i = 0; i < out.length; i++) 
 				{
 					console.print(out[i]);

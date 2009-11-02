@@ -6,6 +6,7 @@
 	import flash.events.Event;
 	import flash.system.Capabilities;
 	import flash.system.System;
+	import flash.text.TextField;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuBuiltInItems;
 	import flash.ui.ContextMenuItem;
@@ -112,7 +113,12 @@
 				}
 				scopeManager.setScope(target);
 				var properties:Array = ["name","x", "y", "width", "height", "rotation", "scaleX", "scaleY"];
-				controllerManager.createController(scopeManager.currentScope.obj, properties, e.mouseTarget.x, e.mouseTarget.y);
+				if (target is TextField) {
+					properties.unshift("text");
+					properties.unshift("autoSize");
+				}
+				controllerManager.createController(scopeManager.currentScope.obj, properties, e.mouseTarget.x + 20, e.mouseTarget.y + 20);
+				console.minimize();
 				console.print("Controller created. Type values to alter, or use the mousewheel on numbers.");
 			}
 		}

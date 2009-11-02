@@ -284,8 +284,8 @@ package no.doomsday.console.measurement
 		{
 			super.visible = value;
 			
-			console.print("Measuring bracket active: " + visible, MessageTypes.SYSTEM);
 			if(visible){
+				console.print("Measuring bracket active: " + visible, MessageTypes.SYSTEM);
 				console.print("	Hold shift to round to values of 10", MessageTypes.SYSTEM);
 				console.print("	Hold ctrl to snap to mouse target", MessageTypes.SYSTEM);
 			}

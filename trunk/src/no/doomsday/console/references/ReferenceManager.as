@@ -72,6 +72,8 @@
 		public function setScopeByReferenceKey(key:String):void {
 			if (referenceDict[key]) {
 				scopeManager.setScope(referenceDict[key]);
+			}else {
+				throw new Error("No such reference");	
 			}
 		}
 		public function parseForReferences(args:Array):Array {

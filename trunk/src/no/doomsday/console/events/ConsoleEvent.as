@@ -9,8 +9,10 @@
 	public class ConsoleEvent extends Event 
 	{
 		public static const COMMAND:String = "consolecommand";
+		public static const MESSAGE:String = "consolemessage";
 		public static const PROPERTY_UPDATE:String = "onpropertyupdate";
 		public var args:Array;
+		public var text:String;
 		/**
 		 * Creates a new ConsoleEvent instance. This is a generic event class that simply holds an array of arguments
 		 * @param	type
@@ -27,6 +29,7 @@
 		{ 
 			var e:ConsoleEvent = new ConsoleEvent(type, bubbles, cancelable);
 			e.args = args;
+			e.text = text;
 			return e;
 		} 
 		
