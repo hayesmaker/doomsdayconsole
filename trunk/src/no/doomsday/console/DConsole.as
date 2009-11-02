@@ -58,6 +58,7 @@
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import no.doomsday.input.keyboard.KeyboardManager;
+	import no.doomsday.utilities.text.Lipsum;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -279,7 +280,7 @@
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("version", printVersion, "System", "Prints the welcome message"));
 			addCommand(new FunctionCallCommand("dock", dock, "System", "Docks the console to either 'top'(default) or 'bottom'"));
-			
+			addCommand(new FunctionCallCommand("lipsum", getLipsum, "Utility", "Gets a Lorem Ipsum string of X length"));
 			
 			addCommand(new FunctionCallCommand("clearhistory", persistence.clearHistory, "System", "Clears the stored command history"));
 			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands"));
@@ -359,6 +360,11 @@
 				print("	Standalone commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
 			}
+		}
+		
+		private function getLipsum(length:int):String
+		{
+			return Lipsum.getText(length);
 		}
 	
 		private function doSelect(target:String):void
@@ -574,7 +580,7 @@
 			print("		Arrow up -> Recall the previous executed line", MessageTypes.SYSTEM);
 			print("		Arrow down -> Recall the more recent executed line", MessageTypes.SYSTEM);
 			print("		Ctrl + Arrow keys -> Scroll", MessageTypes.SYSTEM);
-			print("		Shift+backspace -> Clear the input field", MessageTypes.SYSTEM);
+			print("		Ctrl + backspace -> Clear the input field", MessageTypes.SYSTEM);
 			print("	Mouse functions", MessageTypes.SYSTEM);
 			print("		Mousewheel -> Vertical scroll line by line (hold ctrl to scroll by pages)", MessageTypes.SYSTEM);
 			print("		Click drag below the input line -> Change console height", MessageTypes.SYSTEM);
@@ -1095,47 +1101,43 @@
 					return;
 				}
 			}
-			
-			//TODO: Customizable invocation keystroke
-			//if (e.keyCode == Keyboard.TAB && e.shiftKey) {
 			if (invokeKeyStroke.valid) {
 				disableTab();
 				toggleDisplay();
 				return;
 			}
-			if (visible && e.keyCode == Keyboard.TAB) {
+			if (!visible) return;
+			if (e.keyCode == Keyboard.TAB) {
 				disableTab();
 				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
 				doTab();
-				
+				return;
 			}
-			if (e.keyCode == Keyboard.BACKSPACE && e.shiftKey) {
+			if (e.keyCode == Keyboard.BACKSPACE && e.ctrlKey) {
 				inputTextField.text = "";
 				onInputFieldChange();
+				return;
 			}
-			if (visible) {
-				if (e.keyCode == Keyboard.ENTER) {
-					if (inputTextField.text.length < 1) {
-						stage.focus = inputTextField;
-						return;
-					}
-					var success:Boolean = false;
-					if (echo) print("'" + inputTextField.text + "'", MessageTypes.USER);
-					try{
-						var attempt:* = commandManager.tryCommand(inputTextField.text);
-						success = true;
-					}catch (error:Error) {
-						print(error.message,MessageTypes.ERROR);
-					}
-						
-					inputTextField.text = "";
-					onInputFieldChange();
-				}else if (e.keyCode == Keyboard.PAGE_DOWN) {
-					scroll(-persistence.numLines);
-				}else if (e.keyCode == Keyboard.PAGE_UP) {
-					scroll(persistence.numLines);
+			if (e.keyCode == Keyboard.ENTER) {
+				if (inputTextField.text.length < 1) {
+					stage.focus = inputTextField;
+					return;
 				}
-				
+				var success:Boolean = false;
+				if (echo) print("'" + inputTextField.text + "'", MessageTypes.USER);
+				try{
+					var attempt:* = commandManager.tryCommand(inputTextField.text);
+					success = true;
+				}catch (error:Error) {
+					print(error.message,MessageTypes.ERROR);
+				}
+					
+				inputTextField.text = "";
+				onInputFieldChange();
+			}else if (e.keyCode == Keyboard.PAGE_DOWN) {
+				scroll(-persistence.numLines);
+			}else if (e.keyCode == Keyboard.PAGE_UP) {
+				scroll(persistence.numLines);
 			}
 		}
 		

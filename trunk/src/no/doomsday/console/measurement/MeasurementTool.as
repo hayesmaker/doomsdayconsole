@@ -175,7 +175,6 @@ package no.doomsday.console.measurement
 				}catch (err:Error) { };
 			}
 			
-			//TODO: Quick and dirty solution. Should be more elegant.
 			if (snap) {
 				var snapTarget:Rectangle = null;
 				var objects:Array = stage.getObjectsUnderPoint(new Point(mx, my));
