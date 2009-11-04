@@ -32,6 +32,7 @@ package no.doomsday.console.measurement
 		private var _increment:Number = -1;
 		public var clickOffset:Point;
 		private var console:DConsole;
+		private var previousObj:Object;
 		public function MeasurementTool(console:DConsole) 
 		{
 			this.console = console;
@@ -184,6 +185,10 @@ package no.doomsday.console.measurement
 					dispObj = objects[i];
 					if (!contains(dispObj)) {
 						snapTarget = dispObj.getRect(stage);
+						if(dispObj!=previousObj){
+							console.print("Measure tool bracketing: " + dispObj.name + ":" + dispObj);
+							previousObj = dispObj;
+						}
 						break;
 					}
 				}
@@ -197,7 +202,7 @@ package no.doomsday.console.measurement
 						break;
 						case rectSprite:
 						setTopLeft(snapTarget.x, snapTarget.y);
-						setBotRight(snapTarget.x+snapTarget.width,snapTarget.y+snapTarget.height);
+						setBotRight(snapTarget.x + snapTarget.width, snapTarget.y + snapTarget.height);
 						break;
 					}
 				}else {
@@ -213,7 +218,8 @@ package no.doomsday.console.measurement
 						break;
 					}
 				}
-			}else{
+			}else {
+				previousObj = null;
 				switch(currentlyChecking) {
 					case topLeftCornerHandle:
 					setTopLeft(mx, my);
@@ -237,6 +243,7 @@ package no.doomsday.console.measurement
 			visible = true;
 			rect = displayObject.getRect(this);
 			render();
+			console.print("Measure tool bracketing: " + displayObject.name + ":" + typeof(displayObject));
 		}
 		public function getMeasurements():String {
 			return rect.toString();
@@ -288,6 +295,8 @@ package no.doomsday.console.measurement
 				console.print("Measuring bracket active: " + visible, MessageTypes.SYSTEM);
 				console.print("	Hold shift to round to values of 10", MessageTypes.SYSTEM);
 				console.print("	Hold ctrl to snap to mouse target", MessageTypes.SYSTEM);
+			}else {
+				previousObj = null;
 			}
 		}
 		

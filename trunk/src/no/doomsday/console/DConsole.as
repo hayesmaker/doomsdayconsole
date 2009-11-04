@@ -1100,7 +1100,16 @@
 		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
-			
+			if (invokeKeyStroke.valid) {
+				toggleDisplay();
+				return;
+			}
+			if (!visible) return;
+			if (e.keyCode == Keyboard.TAB) {
+				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
+				doTab();
+				return;
+			}
 			if (e.ctrlKey) {
 				switch(e.keyCode) {
 					case Keyboard.UP:
@@ -1116,18 +1125,6 @@
 					//scroll(0,textOutput.width*.5);
 					return;
 				}
-			}
-			if (invokeKeyStroke.valid) {
-				disableTab();
-				toggleDisplay();
-				return;
-			}
-			if (!visible) return;
-			if (e.keyCode == Keyboard.TAB) {
-				disableTab();
-				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
-				doTab();
-				return;
 			}
 			if (e.keyCode == Keyboard.BACKSPACE && e.ctrlKey) {
 				inputTextField.text = "";
@@ -1217,7 +1214,10 @@
 			var i:int;
 			var bounds:Rectangle = redraw();
 			if (visible) {
-				if (parent) parent.addChild(this);
+				if (parent) {
+					parent.addChild(this);
+					disableTab();
+				}
 				switch(persistence.dockState) {
 					case DOCK_BOTTOM:
 						mainConsoleContainer.y = stage.stageHeight+1;
