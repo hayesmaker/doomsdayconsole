@@ -14,6 +14,7 @@
 		public function ScaleHandle() 
 		{
 			buttonMode = true;
+			tabEnabled = false;
 			alpha = 0;
 			graphics.beginFill(0x333333);
 			graphics.drawRect(0, 0, 30, 10);

@@ -58,7 +58,7 @@
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import no.doomsday.input.keyboard.KeyboardManager;
+	import no.doomsday.console.input.KeyboardManager;
 	import no.doomsday.utilities.text.Lipsum;
 	/**
 	 * ...

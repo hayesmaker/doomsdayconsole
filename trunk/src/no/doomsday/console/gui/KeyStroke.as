@@ -1,7 +1,7 @@
 ﻿package no.doomsday.console.gui 
 {
 	import flash.events.KeyboardEvent;
-	import no.doomsday.input.keyboard.KeyboardManager;
+	import no.doomsday.console.input.KeyboardManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning
