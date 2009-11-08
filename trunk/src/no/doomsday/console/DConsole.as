@@ -1,5 +1,6 @@
 ﻿package no.doomsday.console
 {
+	import flash.media.SoundMixer;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import com.adobe.images.PNGEncoder;
@@ -66,9 +67,7 @@
 	 */
 	public class DConsole extends Sprite
 	{
-		//[Embed(source='../../../buildnumber.txt', mimeType='application/octet-stream')]
-		//public static var BuildNumberFile:Class;
-		private static var VERSION:String = "1.03a";
+		private static var VERSION:String = "1.04a";
 			
 		private var consoleBg:Shape;
 		private var textOutput:TextField;
@@ -302,6 +301,7 @@
 			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
 			addCommand(new FunctionCallCommand("goto", goto, "Utility", "Scrolls to the specified line, if possible"));
 			addCommand(new FunctionCallCommand("new", make, "Utility", "Creates a new instance of a specified class by its full name (ie package.ClassName). Hard capped to 20 args."));
+			addCommand(new FunctionCallCommand("getClass", getClassByName, "Utility", "Returns a reference to the Class object of the specified classname"));
 			addCommand(new FunctionCallCommand("repeat", repeatCommand, "System", "Repeats command string X Y times"));
 			
 			if (addMath) {	
@@ -1425,9 +1425,13 @@
 			setHeight(1);
 		}
 		
+		
+		public function getClassByName(str:String):Class {
+			return getDefinitionByName(str) as Class;
+		}
 		//oh dear
 		public function make(className:String, ...args):*{
-			var c:Class = getDefinitionByName(className) as Class;
+			var c:Class = getClassByName(className);
 			switch (args.length) //This is a fucking nightmare!
 			{
 				case 1:
