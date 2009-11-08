@@ -1,0 +1,44 @@
+#summary A general purpose description
+
+==Whosawhat now?==
+This is a fast, relatively spartan utility for interacting with your application at runtime, taking the form of an output textfield and an input textfield. The output field doubles as a trace window, and is your source of feedback. The input field is how you primarily interact with the console. You type in commands, native or custom, and watch the effects. 
+
+It works by sitting on top of the rest of your application, using some rudimentary introspection functionality to target onscreen displayobjects, their properties and children, and letting you change their variable values and call methods. 
+
+==How do i implement it?==
+A singleton utility lets you access and write to the console from anywhere in your application, as well as link methods to custom console commands for testing with various arguments. To get started, simply {{{addChild(ConsoleUtil.instance)}}} at your root, and you're off. It self-manages its depth.
+
+==Won't it mess around with the rest of my application?==
+Absolutely. That's what it's designed for! But, seriously, keeping the console footprint as small as possible has been a prime concern. Beyond practically demanding stage align and scalemode be set to top_left and no_scale, the console won't touch anything else you might do, and never will. Until you ask it to. It should also never interfere with the garbage collection passes through your app. Internal references to objects are commonly stored as weak references in dictionaries.
+
+==Is it deploy ready?==
+Ideally, deployed solutions will not contain an instance of the console. It adds an overhead of about 20kb to your app, and allows endusers intimate access to your application. The function {{{setPassword()}}} allows you to block command access in a simple way, but for now, i recommend removing the console altogether from release builds. It will, however, not break your app or change its behavior, so if security is less of a concern, you needn't worry.
+
+==What constitutes a "command"?==
+A command is simply a bit of text pointing to an action you want to carry out. For instance, typing in "clear" and hitting the enter key will clear the console message buffer, removing all the content. The command "log" will attempt to save the console contents to a timestamped XML file. 
+
+Custom commands are created with {{{ConsoleUtil.createCommand("triggerword",myFunction)}}}. Consequently, typing in "triggerword" and hitting enter will call myFunction. If myFunction has arguments, typing "triggerword myArgument myOtherArgument" will attempt to call myFunction with those arguments.
+
+==But i hate typing!==
+The console incorporates fast, dirty autocomplete for object names, commands and properties, as well as a persistent command history maintained through a shared object. You will love this when you need to test series of commands you already put in the previous session.
+
+==What are the extras?==
+You can also create "controllers", which are GUI windows with configurable tables of values you can interact with to make runtime changes to properties and see their results; useful for making fine-pixel adjustments to displayobjects to test and find their perfect position, rotation and scale values. Controllers are created by entering an object context using the introspection commands, or, more easily, by right clicking an onscreen displayObject and choosing "create controller" from the popup menu. This shortcut enumerates standard properties such as x,y,width,height,scaleX,scaleY and rotation.
+
+hires.net's mrdoob statistics utility is super useful at all times, so i've gone and integrated it straight in the top right corner of console. To toggle it, use the command "stats" or use the right click context menu.
+
+Additionally, the command "measure" toggles an interactive on-screen measurement rectangle for getting coordinates and dimensions of onscreen objects.
+
+==I still don't get it. Why shouldn't i just use MonsterDebugger?==
+If you don't "get it", then it's not for you. MD is a fantastic tool, and you should use it if it fulfills your requirements. The goal of this project is not to make a be-all debugging solution. The primary goal is to let users avoid having to create custom GUI every time they want to test a method with different arguments. Here are examples of ways in which i've used it to date.
+
+  * Trying various image URLs with an image gallery to see if scale and layout automates correctly
+  * Passing arguments to a socket connection to test connectivity and remoting
+  * Adjusting tween times alongside an AD without having to recompile
+  * Adjusting pixel position, rotation and scale of display objects alongside a designer without having to recompile
+  * Changing game agent states at runtime to test various conditions
+  * Changing application states under various conditions to make sure it doesn't break
+  * Reloading site XML content descriptors at runtime, letting me compare documents and make changes to documents without having to recompile to test them.
+
+===Disclaimer:===
+This is more of a canvas than a complete tool. You need to add commands yourself to make it truly useful. Also, by its nature, this is not a particularly intuitive tool. You type in words to execute commands, and it requires a developer's understanding of a Flash application. Designers will hate it. For most users, this is not a fast way to work. However, if you are working on medium sized applications, and need to test things like multiuser functionality, remoting, game behaviors or otherwise need a frontend with which to interact with your application without having to put big temporary buttons on your stage, this is where it's at.
