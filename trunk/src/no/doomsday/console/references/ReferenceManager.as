@@ -17,6 +17,7 @@
 		private function get uid():uint {
 			return uidPool++;
 		}
+		//TODO: Add autocomplete for reference names
 		public function ReferenceManager(console:DConsole, scopeManager:ScopeManager) 
 		{
 			this.scopeManager = scopeManager;
@@ -33,17 +34,22 @@
 			}
 		}
 		
-		public function getReferenceByName(name:String,id:String = null):void
+		public function getReferenceByName(target:*,id:String = null):void
 		{
+			var t:Object;
+			try {
+				t = scopeManager.getScopeByName(target);
+			}catch (e:Error) {
+				t = target;
+			}
+			if (!t) {
+				throw new Error("Invalid target");
+			}
 			if (!id) {
 				id = "ref" + uid;
 			}
-			try{
-				referenceDict[id] = scopeManager.getScopeByName(name);
-				printReferences();
-			}catch (e:Error) {
-				console.print(e.message, MessageTypes.ERROR);
-			}
+			referenceDict[id] = t;
+			printReferences();
 		}
 		public function getReference(id:String = null):void
 		{

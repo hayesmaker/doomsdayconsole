@@ -103,12 +103,6 @@
 			instance.hide();
 		}
 		/**
-		 * Toggles tabbing unknown words to search and list commands and methods
-		 */
-		public static function set tabSearch(value:Boolean):void {
-			instance.setTabSearch(value);
-		}
-		/**
 		 * Sets the console docking position
 		 * @param	position
 		 * "top" or "bot"/"bottom"

@@ -378,7 +378,7 @@
 			return Lipsum.getText(length);
 		}
 	
-		private function doSelect(target:String):void
+		private function doSelect(target:*):void
 		{
 			try{
 				scopeManager.setScopeByName(target);
@@ -386,7 +386,11 @@
 				try {
 					referenceManager.setScopeByReferenceKey(target);
 				}catch (e:Error) {
-					print("No such scope", MessageTypes.ERROR);
+					try {
+						scopeManager.setScope(target);
+					}catch(e:Error){
+						print("No such scope", MessageTypes.ERROR);
+					}
 				}
 			}
 		}
@@ -814,11 +818,18 @@
 				var idx:int = textOutput.text.length;
 				var str:String = messageLog[i].text;
 				if (messageLog[i].repeatcount > 0) {
-					var str2:String = " x" + messageLog[i].repeatcount;
+					var str2:String = " x" + (messageLog[i].repeatcount+1);
 					str += str2;
 				}	
-				textOutput.appendText(str+"\n");
-				textOutput.setTextFormat(fmt, idx, idx + messageLog[i].text.length);
+				textOutput.appendText(str + "\n");
+				try{
+					textOutput.setTextFormat(fmt, idx, idx + messageLog[i].text.length);
+				}catch (e:Error) {
+					//clear();
+					messageLog.splice(i, 1);
+					print("The console encountered a message draw error. Did you attempt to print a ByteArray?", MessageTypes.ERROR);
+					drawMessages();
+				}
 			}
 		}
 		private function setupStageAlignAndScale():void {

@@ -1,6 +1,7 @@
 ﻿package no.doomsday.console.introspection 
 {
 	import flash.display.DisplayObject;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import no.doomsday.console.DConsole;
 	import no.doomsday.console.messages.MessageTypes;
@@ -52,9 +53,9 @@
 		}
 		
 		public function getScopeByName(str:String):*{
-			try {
+			if (currentScope.obj[str]) {
 				return currentScope.obj[str];
-			}catch (e:Error) {
+			}else{
 				try {
 					return(currentScope.obj.getChildByName(str));
 				}catch (e:Error) {
@@ -165,7 +166,11 @@
 		}
 		
 		public function printScope():void {
-			console.print("scope : " + currentScope.obj.toString());
+			if (currentScope.obj is ByteArray) {
+				console.print("scope : [ByteArray]");
+			}else{
+				console.print("scope : " + currentScope.obj.toString());
+			}
 		}
 		public function setAccessorOnObject(accessorName:String, arg:*):*
 		{
