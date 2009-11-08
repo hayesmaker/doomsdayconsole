@@ -381,7 +381,7 @@
 		private function doSelect(target:*):void
 		{
 			try{
-				scopeManager.setScopeByName(target);
+				scopeManager.setScopeByName(String(target));
 			}catch (e:Error) {
 				try {
 					referenceManager.setScopeByReferenceKey(target);

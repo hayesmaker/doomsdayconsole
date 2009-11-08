@@ -53,9 +53,10 @@
 		}
 		
 		public function getScopeByName(str:String):*{
-			if (currentScope.obj[str]) {
-				return currentScope.obj[str];
-			}else{
+			try{
+				if (currentScope.obj[str]) return currentScope.obj[str];
+				else throw new Error();
+			}catch(e:Error){
 				try {
 					return(currentScope.obj.getChildByName(str));
 				}catch (e:Error) {
