@@ -769,6 +769,7 @@
 			drawMessages();
 		}
 		private function drawMessages():void {
+			var date:Date = new Date();
 			if (!visible||locked) return;
 			textOutput.text = "";
 			textOutput.defaultTextFormat = TextFormats.debugTformatOld;
@@ -790,7 +791,8 @@
 				textOutput.appendText("[" + lineNumStr + "] > ");
 				if (timeStamp) {
 					textOutput.defaultTextFormat = TextFormats.debugTformatTimeStamp;
-					textOutput.appendText(messageLog[i].timestamp + " ");
+					date.setTime(messageLog[i].timestamp)
+					textOutput.appendText(date.toLocaleDateString()+" "+date.toLocaleTimeString()+ " ");
 				}
 				var fmt:TextFormat;
 				switch(messageLog[i].type) {
