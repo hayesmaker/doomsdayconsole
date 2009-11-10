@@ -240,6 +240,7 @@ package no.doomsday.console.measurement
 		 * @param	displayObject
 		 */
 		public function bracket(displayObject:DisplayObject):void {
+			console.print("Measure tool bracketing: " + displayObject.name + ":" + typeof(displayObject));
 			visible = true;
 			rect = displayObject.getRect(this);
 			render();
