@@ -140,8 +140,6 @@
 		private var DOCK_BOTTOM:int = 1;
 		private var monitorManager:MonitorManager;
 		
-		private var introspectionCommands:IntrospectionCommands;
-		
 		private var showLineNum:Boolean = true;
 		
 		
@@ -330,8 +328,6 @@
 				addCommand(new FunctionCallCommand("routeToJS", routeToJS, "ExternalInterface", "Toggle output to JS console"));
 				addCommand(new FunctionCallCommand("alertErrors", alertErrors, "ExternalInterface", "Toggle JS alert on errors"));
 			}	
-			
-			introspectionCommands = new IntrospectionCommands(this, scopeManager, referenceManager);
 			
 			addCommand(new FunctionCallCommand("lipsum", getLipsum, "Utility", "Gets a Lorem Ipsum string of X length"));
 			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands. Add a second argument to search."));
