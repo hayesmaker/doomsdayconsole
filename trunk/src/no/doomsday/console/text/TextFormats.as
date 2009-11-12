@@ -15,6 +15,8 @@
 		public static const debugTformatError:TextFormat = new TextFormat("_typewriter", 11, 0xEE0000, null, null, null, null, null, null, 0, 0, 0, 0);
 		public static const debugTformatHelp:TextFormat = new TextFormat("_typewriter", 10, 0xbbbbbb, null, null, null, null, null, null, 0, 0, 0, 0);
 		public static const debugTformatTrace:TextFormat = new TextFormat("_typewriter", 11, 0x9CB79B, null, null, null, null, null, null, 0, 0, 0, 0);
+		
+		public static const windowTitleFormat:TextFormat = new TextFormat("_sans", 10, 0xeeeeee, null, null, null, null, null, null, 0, 0, 0, 0);
 		public function TextFormats() 
 		{
 		}

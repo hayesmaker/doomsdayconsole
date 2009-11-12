@@ -24,6 +24,13 @@
 				c.print("	" + fnts[i].fontName);
 			}
 		}
+		public static function getNextSpaceAfterCaret(tf:TextField):int {
+			var str:String = tf.text;
+			var first:int = str.lastIndexOf(" ", tf.caretIndex)+1;
+			var last:int = str.indexOf(" ", first);
+			if (last < 0) last = tf.text.length;
+			return last;
+		}
 		public static function selectWordAtCaretIndex(tf:TextField):void 
 		{
 			var str:String = tf.text;

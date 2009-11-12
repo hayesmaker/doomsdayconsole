@@ -10,7 +10,9 @@ package no.doomsday.console.measurement
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.ui.ContextMenu;
 	import no.doomsday.console.DConsole;
+	import no.doomsday.console.introspection.ScopeManager;
 	import no.doomsday.console.messages.MessageTypes;
 	
 	/**
@@ -33,9 +35,12 @@ package no.doomsday.console.measurement
 		public var clickOffset:Point;
 		private var console:DConsole;
 		private var previousObj:Object;
-		public function MeasurementTool(console:DConsole) 
+		private var scopeManager:ScopeManager;
+		private var selectMode:Boolean = false;
+		public function MeasurementTool(console:DConsole,scopeManager:ScopeManager) 
 		{
 			this.console = console;
+			this.scopeManager = scopeManager;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
@@ -43,6 +48,15 @@ package no.doomsday.console.measurement
 		private function onRemovedFromStage(e:Event):void 
 		{
 			//stage.removeEventListener(Event.RESIZE, getValues);
+		}
+		public function invoke(doSelect:Boolean = false):void {
+			if (doSelect) {
+				selectMode = doSelect;
+				visible = true;
+				console.print("	Snap-selection active. Ctrl-drag to bracket AND select underlying objects.", MessageTypes.SYSTEM);
+			}else {
+				toggle();
+			}
 		}
 		private function roundTo(num:Number, target:Number):Number {
 			return Math.round(num / target) * target;
@@ -186,7 +200,11 @@ package no.doomsday.console.measurement
 					if (!contains(dispObj)) {
 						snapTarget = dispObj.getRect(stage);
 						if(dispObj!=previousObj){
-							console.print("Measure tool bracketing: " + dispObj.name + ":" + dispObj);
+							if (selectMode) {
+								scopeManager.setScope(dispObj);
+							}else {
+								console.print("Measure tool bracketing: " + dispObj.name + ":" + dispObj);
+							}
 							previousObj = dispObj;
 						}
 						break;

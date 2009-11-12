@@ -62,6 +62,7 @@
 			if(suggestion.length>0){
 				//_targetTextField.text = str;
 				_targetTextField.appendText(suggestion);
+				//TODO: Make autocomplete only work within the word currently at the caret
 			   _targetTextField.setSelection(_targetTextField.caretIndex, _targetTextField.text.length);
 			   suggestionActive = true;
 			}

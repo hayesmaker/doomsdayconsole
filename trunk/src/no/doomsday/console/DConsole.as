@@ -1,5 +1,6 @@
 ﻿package no.doomsday.console
 {
+	import flash.display.Loader;
 	import flash.media.SoundMixer;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
@@ -25,6 +26,7 @@
 	import no.doomsday.console.messages.Message;
 	import no.doomsday.console.messages.MessageRepeatMode;
 	import no.doomsday.console.messages.MessageTypes;
+	import no.doomsday.console.monitoring.MonitorManager;
 	import no.doomsday.console.persistence.PersistenceManager;
 	import no.doomsday.console.references.ReferenceManager;
 	import no.doomsday.console.text.autocomplete.AutocompleteDictionary;
@@ -134,6 +136,7 @@
 		
 		private var DOCK_TOP:int = 0;
 		private var DOCK_BOTTOM:int = 1;
+		private var monitorManager:MonitorManager;
 		
 		/**
 		 * Creates a new DConsole instance. 
@@ -167,6 +170,8 @@
 			scopeManager = new ScopeManager(this, autoCompleteManager);
 			referenceManager = new ReferenceManager(this,scopeManager);
 			commandManager = new CommandManager(this, persistence, referenceManager);
+			monitorManager = new MonitorManager(this, scopeManager);
+			
 			
 			tabTimer = new Timer(50, 1);
 			messageLog = new Vector.<Message>;
@@ -190,7 +195,7 @@
 					
 			scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
 			
-			measureBracket = new MeasurementTool(this);
+			measureBracket = new MeasurementTool(this,scopeManager);
 			measureBracket.visible = false;
 			
 			addChild(measureBracket);
@@ -290,7 +295,7 @@
 			addCommand(new FunctionCallCommand("echo", toggleEcho, "View", "Toggle display of user commands"));
 			addCommand(new FunctionCallCommand("timestampDisplay", toggleTimestamp, "View", "Toggle display of message timestamp"));
 			addCommand(new FunctionCallCommand("log", log, "Utility", "Save the complete console log for this session to an xml document"));
-			addCommand(new FunctionCallCommand("measure", measureBracket.toggle, "Utility", "Creates a scalable measurement bracket widget. Hold shift to snap to 10s."));
+			addCommand(new FunctionCallCommand("measure", measureBracket.invoke, "Utility", "Toggles a scalable measurement bracket and selection widget. If X is true, bracketing an object sets it as scope."));
 			addCommand(new FunctionCallCommand("screenshot", screenshot, "Utility", "Save a png screenshot (sans console)"));
 			addCommand(new FunctionCallCommand("toggleTrace", toggleTrace, "Trace", "Toggle reception of trace values"));
 			addCommand(new FunctionCallCommand("toggleTraceDisplay", toggleTraceDisplay, "Trace", "Toggle display of trace values"));
@@ -303,6 +308,13 @@
 			addCommand(new FunctionCallCommand("new", make, "Utility", "Creates a new instance of a specified class by its full name (ie package.ClassName). Hard capped to 20 args."));
 			addCommand(new FunctionCallCommand("getClass", getClassByName, "Utility", "Returns a reference to the Class object of the specified classname"));
 			addCommand(new FunctionCallCommand("repeat", repeatCommand, "System", "Repeats command string X Y times"));
+			addCommand(new FunctionCallCommand("getLoader", loadImage, "Utility", "Returns a 'dumb' Loader getting data from the url X"));
+			
+			addCommand(new FunctionCallCommand("addMonitor", monitorManager.createMonitor, "Monitoring", "Begins monitoring ..values of the current scope"));
+			addCommand(new FunctionCallCommand("removeMonitor", monitorManager.destroyMonitor, "Monitoring", "Stops monitoring the current scope"));
+			addCommand(new FunctionCallCommand("removeAllMonitors", monitorManager.destroyMonitors, "Monitoring", "Destroys all monitors"));
+			addCommand(new FunctionCallCommand("setMonitorInterval", monitorManager.setMonitorInterval, "Monitoring", "Sets the monitor polling interval in milliseconds (defaults to 300)"));
+			
 			
 			if (addMath) {	
 				addCommand(new FunctionCallCommand("random", MathUtils.random, "Math", "Returns a number between X and Y. If Z is true, the value will be rounded. Defaults to 0 1 false"));
@@ -363,6 +375,13 @@
 				print("	Standalone commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
 			}
+		}
+			
+		private function loadImage(url:String):Loader
+		{
+			var l:Loader = new Loader();
+			l.load(new URLRequest(url));
+			return l;
 		}
 		
 		private function listFonts():void
@@ -1231,10 +1250,12 @@
 			visible = !visible;
 			var i:int;
 			var bounds:Rectangle = redraw();
+			monitorManager.stop();
 			if (visible) {
+				monitorManager.start();
 				if (parent) {
 					parent.addChild(this);
-					disableTab();
+					disableTab();	
 				}
 				switch(persistence.dockState) {
 					case DOCK_BOTTOM:
