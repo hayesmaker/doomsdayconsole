@@ -1,5 +1,7 @@
 ﻿package no.doomsday.console.utilities.controller 
 {
+	import flash.display.DisplayObject;
+	import no.doomsday.console.core.gui.Window;
 	import no.doomsday.console.core.text.TextFormats;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -13,7 +15,7 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class Controller extends Sprite
+	public class Controller extends Window
 	{
 		private var targetObj:*; 
 		private var paramsField:TextField = new TextField();
@@ -23,27 +25,16 @@
 		private var closeButton:Sprite;
 		private var manager:ControllerManager;
 		private var bg:Shape = new Shape();
+		private var contents:Sprite = new Sprite();
 		public function Controller(o:*, params:Array,manager:ControllerManager) 
 		{
 			var dragBarHeight:int = 10;
 			this.manager = manager;
-			addChild(bg);
-			dragArea = new Sprite();
-			dragArea.buttonMode = true;
-			dragArea.graphics.lineStyle(0, 0);
-			dragArea.graphics.beginFill(0xCCCCCC);
-			
-			closeButton = new Sprite();
-			closeButton.graphics.lineStyle(0, 0);
-			closeButton.graphics.beginFill(0x330000);
-			closeButton.graphics.drawRect(0, 0, 10, 10);
-			closeButton.addEventListener(MouseEvent.CLICK, close, false, 0, true);
-			closeButton.buttonMode = true;
 			
 			targetObj = o;
-			paramsField.defaultTextFormat = TextFormats.debugTformatOld;
+			paramsField.defaultTextFormat = TextFormats.windowDefaultFormat;
 			paramsField.y = dragBarHeight;
-			addChild(paramsField);
+			contents.addChild(paramsField);
 			paramsField.multiline = true;
 			paramsField.selectable = false;
 			paramsField.mouseEnabled = false;
@@ -53,29 +44,36 @@
 			{
 				var cf:ControlField = new ControlField(params[i],typeof targetObj[params[i]]);
 				cf.addEventListener(ControllerEvent.VALUE_CHANGE, onCfChange,false,0,true);
-				addChild(cf);
+				contents.addChild(cf);
 				controlFields.push(cf);
 				cf.y = paramsField.textHeight+dragBarHeight;
 				cf.x = 110;
 				cf.value = o[params[i]];
 				paramsField.appendText("\n" + params[i]);
 			}
-			
-			addChild(dragArea);
-			addChild(closeButton)
-			dragArea.graphics.drawRect(0, 0, 150, dragBarHeight);
-			closeButton.x = 150;
-			var dimRect:Rectangle = getBounds(this);
-			bg.y = dragBarHeight;
-			bg.graphics.lineStyle(0, 0);
-			bg.graphics.beginFill(0x222222,.9);
-			bg.graphics.drawRect(0, 0, dimRect.width, dimRect.height);
-			bg.graphics.endFill();
-			dragArea.addEventListener(MouseEvent.MOUSE_DOWN, beginDragging, false, 0, true);
+			super("Controller: " + o.name, new Rectangle(0, 0, contents.width, contents.height), contents);
+			if (targetObj is DisplayObject) addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 0, true);
+			addEventListener(Event.CHANGE, onEnterFrame);
+		}
+		
+		private function onEnterFrame(e:Event = null):void 
+		{
+			graphics.clear();
+			graphics.lineStyle(0,0,.5);
+			var p:Point = new Point(targetObj.x, targetObj.y);
+			p = DisplayObject(targetObj).parent.localToGlobal(p);
+			p = this.globalToLocal(p);
+			graphics.lineTo(p.x, p.y);
+			refresh();
+		}
+		override protected function onClose(e:MouseEvent):void 
+		{
+			close(e);
 		}
 		
 		private function close(e:MouseEvent):void 
 		{
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			manager.removeController(this);
 		}
 		
@@ -90,6 +88,7 @@
 		{
 			for (var i:int = 0; i < controlFields.length; i++) 
 			{
+				if (controlFields[i].hasFocus) continue;
 				controlFields[i].value = targetObj[controlFields[i].targetProperty];
 			}
 		}

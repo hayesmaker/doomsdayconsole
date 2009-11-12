@@ -17,6 +17,7 @@
 		public static const debugTformatTrace:TextFormat = new TextFormat("_typewriter", 11, 0x9CB79B, null, null, null, null, null, null, 0, 0, 0, 0);
 		
 		public static const windowTitleFormat:TextFormat = new TextFormat("_sans", 10, 0xeeeeee, null, null, null, null, null, null, 0, 0, 0, 0);
+		public static const windowDefaultFormat:TextFormat = new TextFormat("_sans", 10, 0x111111, null, null, null, null, null, null, 0, 0, 0, 0);
 		public function TextFormats() 
 		{
 		}

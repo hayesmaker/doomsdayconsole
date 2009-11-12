@@ -18,11 +18,12 @@
 	{
 		private var tf:TextField;
 		public var targetProperty:String;
+		public var hasFocus:Boolean;
 		public function ControlField(property:String,type:String = "string") 
 		{
 			targetProperty = property;
 			tf = new TextField();
-			tf.defaultTextFormat = TextFormats.debugTformatNew;
+			tf.defaultTextFormat = TextFormats.windowDefaultFormat;
 			tf.height = 20;
 			tf.autoSize = TextFieldAutoSize.LEFT;
 			tf.selectable = true;
@@ -47,11 +48,13 @@
 		
 		private function onFocusOut(e:FocusEvent):void 
 		{
+			hasFocus = false;
 			removeEventListener(KeyboardEvent.KEY_DOWN, onEnter);
 		}
 		
 		private function onFocusIn(e:FocusEvent):void 
 		{
+			hasFocus = true;
 			addEventListener(KeyboardEvent.KEY_DOWN, onEnter, false, 0, true);
 		}
 		

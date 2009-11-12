@@ -37,11 +37,17 @@
 		private var scrollBarBottom:SimpleScrollbar = new SimpleScrollbar(SimpleScrollbar.HORIZONTAL);
 		private var scrollBarRight:SimpleScrollbar = new SimpleScrollbar(SimpleScrollbar.VERTICAL);
 		private var viewRect:Rectangle;
+		private var closeButton:Sprite = new Sprite();
 		private var background:Shape = new Shape();
 		public function Window(title:String, rect:Rectangle, contents:DisplayObject = null, maxRect:Rectangle = null, minRect:Rectangle = null)
 		{
 			scrollBarBottom.addEventListener(Event.CHANGE, onScroll);
 			scrollBarRight.addEventListener(Event.CHANGE, onScroll);
+			
+			closeButton.graphics.beginFill(0xFFFFFF);
+			closeButton.graphics.lineStyle(0, 0);
+			closeButton.graphics.drawRect(0, 0, BAR_HEIGHT - 3, BAR_HEIGHT - 3);
+			closeButton.buttonMode = true;
 			
 			addChild(background);
 			this.contents.y = background.y = BAR_HEIGHT;
@@ -50,6 +56,7 @@
 			this.maxRect = maxRect;
 			this.minRect = minRect;
 			
+			rect.height += BAR_HEIGHT;
 			titleField.height = BAR_HEIGHT+3;
 			titleField.selectable = false;
 			titleField.defaultTextFormat = TextFormats.windowTitleFormat;
@@ -68,6 +75,7 @@
 			resizeHandle.graphics.lineTo(0, SCALE_HANDLE_SIZE + 5);
 			resizeHandle.scrollRect = new Rectangle(0, 0, SCALE_HANDLE_SIZE, SCALE_HANDLE_SIZE);
 			
+			closeButton.addEventListener(MouseEvent.CLICK, onClose);
 			
 			addChild(chrome);
 			header.addChild(titleField);
@@ -75,6 +83,7 @@
 			chrome.addChild(scrollBarBottom);
 			chrome.addChild(scrollBarRight);
 			chrome.addChild(resizeHandle);
+			chrome.addChild(closeButton);
 			chrome.addChild(outlines);
 			
 			resizeHandle.buttonMode = header.buttonMode = true;
@@ -93,6 +102,11 @@
 			if (contents) {
 				setContents(contents);
 			}
+		}
+		
+		protected function onClose(e:MouseEvent):void 
+		{
+			
 		}
 		
 		private function onScroll(e:Event):void 
@@ -165,6 +179,9 @@
 			outlines.graphics.drawRect(0, 0, rect.width, rect.height + BAR_HEIGHT);
 			
 			titleField.width = rect.width;
+			closeButton.x = rect.width - (BAR_HEIGHT-2);
+			closeButton.y = 1;
+			
 			resizeHandle.x = rect.width - SCALE_HANDLE_SIZE;
 			resizeHandle.y = rect.height + BAR_HEIGHT - SCALE_HANDLE_SIZE;
 			
@@ -233,6 +250,7 @@
 			x = stage.mouseX - clickOffset.x;
 			y = stage.mouseY - clickOffset.y;
 			e.updateAfterEvent();
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 		public function setContents(d:DisplayObject):void {
 			while (contents.numChildren > 0) {

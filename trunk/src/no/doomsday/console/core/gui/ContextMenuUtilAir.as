@@ -12,7 +12,7 @@
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuBuiltInItems;
 	import flash.ui.ContextMenuItem;
-	import no.doomsday.console.controller.ControllerManager;
+	import no.doomsday.console.utilities.controller.ControllerManager;
 	import no.doomsday.console.core.DConsole;
 	import no.doomsday.console.core.introspection.ScopeManager;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
