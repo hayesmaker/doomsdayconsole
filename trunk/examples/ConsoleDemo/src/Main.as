@@ -8,9 +8,12 @@
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import no.doomsday.console.ConsoleUtil;
+	import no.doomsday.console.gui.Window;
+	import no.doomsday.utilities.loaders.QuickLoader;
 	
 	/**
 	 * ...
@@ -54,8 +57,10 @@
 			//add the console instance using ConsoleUtil
 			addChild(ConsoleUtil.instance);
 			
-			ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
-			ConsoleUtil.linkFunction("out", outputTest);
+			//ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
+			//ConsoleUtil.linkFunction("out", outputTest);
+			addChild(new Window("This is an extremely long title for no reason at all", new Rectangle(50, 50, 100, 100),new QuickLoader("http://www.google.no/intl/no_no/images/logo.gif")));
+			addChild(new Window("horses", new Rectangle(120, 250, 100, 100)));
 		}
 		
 		private function outputTest(input:String):String {

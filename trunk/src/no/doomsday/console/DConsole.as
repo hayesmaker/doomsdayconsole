@@ -1,5 +1,7 @@
 ﻿package no.doomsday.console
 {
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
 	import flash.display.Loader;
 	import flash.media.SoundMixer;
 	import flash.net.URLLoader;
@@ -63,6 +65,7 @@
 	import flash.utils.Timer;
 	import no.doomsday.console.input.KeyboardManager;
 	import no.doomsday.utilities.text.Lipsum;
+	import org.as3lib.kitchensync.action.tweenable.TargetProperty;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -137,6 +140,8 @@
 		private var DOCK_TOP:int = 0;
 		private var DOCK_BOTTOM:int = 1;
 		private var monitorManager:MonitorManager;
+		
+		public var showLineNum:Boolean = true;
 		
 		/**
 		 * Creates a new DConsole instance. 
@@ -303,12 +308,16 @@
 			addCommand(new FunctionCallCommand("enumerateFonts", listFonts, "Utility", "Lists font names available to this swf"));
 			addCommand(new FunctionCallCommand("toggleTabSearch", toggleTabSearch, "Utility", "Toggles tabbing to search commands and methods for the current word"));
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "Utility", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
+			addCommand(new FunctionCallCommand("toggleLineNumbers", toggleLineNumbers, "Utility", "Toggles the display of line numbers"));
+			
+			
 			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
 			addCommand(new FunctionCallCommand("goto", goto, "Utility", "Scrolls to the specified line, if possible"));
 			addCommand(new FunctionCallCommand("new", make, "Utility", "Creates a new instance of a specified class by its full name (ie package.ClassName). Hard capped to 20 args."));
 			addCommand(new FunctionCallCommand("getClass", getClassByName, "Utility", "Returns a reference to the Class object of the specified classname"));
 			addCommand(new FunctionCallCommand("repeat", repeatCommand, "System", "Repeats command string X Y times"));
 			addCommand(new FunctionCallCommand("getLoader", loadImage, "Utility", "Returns a 'dumb' Loader getting data from the url X"));
+			addCommand(new FunctionCallCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)"));
 			
 			addCommand(new FunctionCallCommand("addMonitor", monitorManager.createMonitor, "Monitoring", "Begins monitoring ..values of the current scope"));
 			addCommand(new FunctionCallCommand("removeMonitor", monitorManager.destroyMonitor, "Monitoring", "Stops monitoring the current scope"));
@@ -376,6 +385,16 @@
 				addCommand(new FunctionCallCommand("quitapp", quitCommand, "System", "Quit the application"));
 			}
 		}
+		
+		private function toClipBoard(str:String):void {
+			Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, str);
+		}
+		
+		private function toggleLineNumbers():void
+		{
+			(showLineNum = !showLineNum) ? print("Line numbers: on", MessageTypes.SYSTEM) : print("Line numbers: off", MessageTypes.SYSTEM);
+			drawMessages();
+		}
 			
 		private function loadImage(url:String):Loader
 		{
@@ -411,6 +430,9 @@
 					referenceManager.setScopeByReferenceKey(target);
 				}catch (e:Error) {
 					try {
+						if (typeof target == "string") {
+							throw new Error();
+						}
 						scopeManager.setScope(target);
 					}catch(e:Error){
 						print("No such scope", MessageTypes.ERROR);
@@ -812,7 +834,7 @@
 				if (lineNum < 10) {
 					lineNumStr = "0" + lineNumStr;
 				}
-				textOutput.appendText("[" + lineNumStr + "] > ");
+				if(showLineNum) textOutput.appendText("[" + lineNumStr + "] > ");
 				if (timeStamp) {
 					textOutput.defaultTextFormat = TextFormats.debugTformatTimeStamp;
 					date.setTime(messageLog[i].timestamp)

@@ -5,14 +5,14 @@
   <target-player>10.0.0</target-player>
   <compiler>
     <source-path append="true">
-      <path-element>D:\dev\googlecode\doomsdayconsole\examples\ConsoleDemo\src</path-element>
-      <path-element>D:\dev\googlecode\doomsdayconsole\src</path-element>
-      <path-element>D:\dev\as3libs</path-element>
+      <path-element>D:\dev\googlecode\console\examples\ConsoleDemo\src</path-element>
+      <path-element>D:\dev\googlecode\console\src</path-element>
+      <path-element>D:\dev\asclasses\as3</path-element>
       <path-element>C:\Program Files\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
   </compiler>
   <file-specs>
-    <path-element>D:\dev\googlecode\doomsdayconsole\examples\ConsoleDemo\src\Main.as</path-element>
+    <path-element>D:\dev\googlecode\console\examples\ConsoleDemo\src\Main.as</path-element>
   </file-specs>
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>60</default-frame-rate>

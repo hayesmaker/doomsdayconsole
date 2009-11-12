@@ -42,7 +42,8 @@
 				printScope();
 				return;
 			}
-			try{
+			try {
+				
 				createScope(o);
 				autoCompleteManager.scopeDict = currentScope.autoCompleteDict;
 			}catch (e:Error) {
