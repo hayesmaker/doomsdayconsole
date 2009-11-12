@@ -1,10 +1,10 @@
 ﻿package no.doomsday.console
 {
 	import flash.utils.describeType;
-	import no.doomsday.console.commands.FunctionCallCommand;
-	import no.doomsday.console.DConsole;
-	import no.doomsday.console.measurement.MeasurementTool;
-	import no.doomsday.console.messages.MessageTypes;
+	import no.doomsday.console.core.commands.FunctionCallCommand;
+	import no.doomsday.console.core.DConsole;
+	import no.doomsday.console.utilities.measurement.MeasurementTool;
+	import no.doomsday.console.core.messages.MessageTypes;
 	
 	/**
 	 * ...
