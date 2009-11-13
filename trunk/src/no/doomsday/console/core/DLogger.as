@@ -89,6 +89,8 @@ package no.doomsday.console.core
 			//_senderFmt = _getFmt(0xFFFFFF);
 			_describeFmt = TextFormats.debugTformatSystem;
 			
+			_createTraceWindow();
+			
 			addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 		}
 		
@@ -447,7 +449,7 @@ package no.doomsday.console.core
 			_txt.height 		= _bg.height - 10;
 			_txtBounds.width 	= _bg.width - 40;
 			_txtBounds.height 	= _bg.height - 20;
-			_txt.scrollRect = _txtBounds;
+			_txt.scrollRect 	= _txtBounds;
 		}
 		/**
 		 * Gets the currently set logger dimensions
@@ -459,8 +461,7 @@ package no.doomsday.console.core
 		
 		private function _createBg():void
 		{
-			if (stage == null) return;
-			
+			if (!stage) return;
 			_bg.graphics.clear();
 			
 			var fillColor:uint = _inverseColor ? 0xFFFFFF : 0x000000;
@@ -478,7 +479,7 @@ package no.doomsday.console.core
 			if (_enableContextMenu && parent != null)
 			{
 				var openItem:ContextMenuItem = new ContextMenuItem(OPEN_LOGGER_LABEL);
-					openItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, _validateOpen)
+					openItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, _validateOpen);
 									
 				parent.contextMenu = new ContextMenu();
 				parent.contextMenu.customItems = [openItem];
@@ -527,11 +528,11 @@ package no.doomsday.console.core
 			_txtBounds = new Rectangle();
 			_txtBounds.x 		= 0;
 			_txtBounds.y 		= 5;
+			
 			_txtBounds.width 	= _bg.width - 40;
 			_txtBounds.height 	= _bg.height - 20;
 			
 			_txt.scrollRect = _txtBounds;
-			trace(_fmt[MessageTypes.OUTPUT].color);
 			_txt.defaultTextFormat = _fmt[MessageTypes.OUTPUT];
 			_txt.text = "";
 			
@@ -551,7 +552,7 @@ package no.doomsday.console.core
 			addChild(_bg);
 			addChild(_txt);
 			
-			log("Welcome to AILogger v" + VERSION + " |  Booted at " + new Date().toString() + "\n");
+			log("Welcome to DLogger v" + VERSION + " |  Booted at " + new Date().toString() + "\n");
 			log("Player version is " + Capabilities.version + "\n");
 		}
 		
@@ -676,7 +677,6 @@ package no.doomsday.console.core
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 			
-			_createTraceWindow();
 			_createContextMenuItems();
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
@@ -762,8 +762,8 @@ package no.doomsday.console.core
 		private function _handleVisibility():void {
 			if (_isVisible)
 			{
-				// Asking parent DisplayObjectContainer to move logger to the top of the Display List
-				_moveToTop();
+				setDims(new Rectangle(x, y, _width, _height));
+				_moveToTop(); // Asking parent DisplayObjectContainer to move logger to the top of the Display List
 				enableScrolling();
 				fadeIn();
 			}

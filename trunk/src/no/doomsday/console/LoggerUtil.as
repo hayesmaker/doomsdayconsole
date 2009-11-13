@@ -40,7 +40,7 @@
 		 * @param	...args
 		 */
 		public static function log(...args):void {
-			_instance.log.apply(_instance, args);
+			instance.log.apply(instance, args);
 		}
 		/**
 		 * Print out a message with specific coloring
