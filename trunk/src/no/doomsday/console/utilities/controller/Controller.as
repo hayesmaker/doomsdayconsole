@@ -28,12 +28,14 @@
 		private var contents:Sprite = new Sprite();
 		public function Controller(o:*, params:Array,manager:ControllerManager) 
 		{
+			cacheAsBitmap = true;
+			
 			var dragBarHeight:int = 10;
 			this.manager = manager;
 			
 			targetObj = o;
 			paramsField.defaultTextFormat = TextFormats.windowDefaultFormat;
-			paramsField.y = dragBarHeight;
+			//paramsField.y = 0;
 			contents.addChild(paramsField);
 			paramsField.multiline = true;
 			paramsField.selectable = false;
@@ -46,34 +48,28 @@
 				cf.addEventListener(ControllerEvent.VALUE_CHANGE, onCfChange,false,0,true);
 				contents.addChild(cf);
 				controlFields.push(cf);
-				cf.y = paramsField.textHeight+dragBarHeight;
+				cf.y = paramsField.textHeight;
 				cf.x = 110;
 				cf.value = o[params[i]];
 				paramsField.appendText("\n" + params[i]);
 			}
 			super("Controller: " + o.name, new Rectangle(0, 0, contents.width, contents.height), contents);
-			if (targetObj is DisplayObject) addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 0, true);
-			addEventListener(Event.CHANGE, onEnterFrame);
 		}
 		
-		private function onEnterFrame(e:Event = null):void 
+		
+		override protected function onWindowDrag(e:MouseEvent):void 
 		{
-			graphics.clear();
-			graphics.lineStyle(0,0,.5);
-			var p:Point = new Point(targetObj.x, targetObj.y);
-			p = DisplayObject(targetObj).parent.localToGlobal(p);
-			p = this.globalToLocal(p);
-			graphics.lineTo(p.x, p.y);
-			refresh();
-		}
+			super.onWindowDrag(e);
+			update();
+		}	
 		override protected function onClose(e:MouseEvent):void 
 		{
+			super.onClose(e);
 			close(e);
 		}
 		
 		private function close(e:MouseEvent):void 
 		{
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			manager.removeController(this);
 		}
 		
@@ -90,27 +86,23 @@
 			{
 				if (controlFields[i].hasFocus) continue;
 				controlFields[i].value = targetObj[controlFields[i].targetProperty];
+				if (controlFields[i].targetProperty == "name") {
+					setTitle("Controller: "+targetObj[controlFields[i].targetProperty]);
+				}
 			}
+			
 		}
-		
-		private function beginDragging(e:MouseEvent):void 
-		{
-			parent.setChildIndex(this, parent.numChildren - 1);
-			clickOffset = new Point(mouseX, mouseY);
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, dragUpdate, false, 0, true);
-			stage.addEventListener(MouseEvent.MOUSE_UP, stopDragging, false, 0, true);
-		}
-		
-		private function dragUpdate(e:MouseEvent):void 
-		{
-			x = stage.mouseX - clickOffset.x;
-			y = stage.mouseY - clickOffset.y;
-		}
-		
-		private function stopDragging(e:MouseEvent):void 
-		{
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, dragUpdate);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, stopDragging);
+		public function update():void {
+			if(targetObj is DisplayObject){
+				graphics.clear();
+				graphics.lineStyle(0,0,.2);
+				var p:Point = new Point(targetObj.x, targetObj.y);
+				p = DisplayObject(targetObj).parent.localToGlobal(p);
+				p = this.globalToLocal(p);
+				graphics.lineTo(p.x, p.y);
+				graphics.drawCircle(p.x, p.y, 3);
+			}
+			refresh();
 		}
 		
 	}

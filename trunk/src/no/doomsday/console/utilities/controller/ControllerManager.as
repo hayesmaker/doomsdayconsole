@@ -2,6 +2,7 @@
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -27,6 +28,20 @@
 					removeChild(c);
 					break;
 				}
+			}
+		}
+		public function start():void {
+			addEventListener(Event.ENTER_FRAME, update);
+		}
+		public function stop():void {
+			removeEventListener(Event.ENTER_FRAME, update);
+		}
+		
+		private function update(e:Event):void 
+		{
+			for (var i:int = 0; i < controllers.length; i++) 
+			{
+				controllers[i].update();
 			}
 		}
 		

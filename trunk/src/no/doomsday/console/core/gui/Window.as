@@ -1,5 +1,6 @@
 ﻿package no.doomsday.console.core.gui 
 {
+	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.GradientType;
 	import flash.display.Loader;
@@ -76,6 +77,8 @@
 			resizeHandle.scrollRect = new Rectangle(0, 0, SCALE_HANDLE_SIZE, SCALE_HANDLE_SIZE);
 			
 			closeButton.addEventListener(MouseEvent.CLICK, onClose);
+			closeButton.addEventListener(MouseEvent.ROLL_OVER, onCloseRollover);
+			closeButton.addEventListener(MouseEvent.ROLL_OUT, onCloseRollout);
 			
 			addChild(chrome);
 			header.addChild(titleField);
@@ -104,12 +107,27 @@
 			}
 		}
 		
-		protected function onClose(e:MouseEvent):void 
+		private function onCloseRollout(e:MouseEvent):void 
 		{
-			
+			DisplayObject(e.target).blendMode = BlendMode.NORMAL;
 		}
 		
-		private function onScroll(e:Event):void 
+		private function onCloseRollover(e:MouseEvent):void 
+		{
+			DisplayObject(e.target).blendMode = BlendMode.INVERT;
+		}
+		protected function setTitle(str:String):void {
+			titleField.text = str;
+		}
+		
+		protected function onClose(e:MouseEvent):void 
+		{
+			header.removeEventListener(MouseEvent.MOUSE_DOWN, startDragging);
+			resizeHandle.removeEventListener(MouseEvent.MOUSE_DOWN, startResizing);
+			removeEventListener(MouseEvent.MOUSE_DOWN, setDepth);
+		}
+		
+		protected function onScroll(e:Event):void 
 		{
 			var r:Rectangle = getContentsRect();
 			var newRect:Rectangle = contents.scrollRect.clone();
@@ -125,7 +143,7 @@
 			redraw(viewRect);
 		}
 		
-		private function startResizing(e:MouseEvent):void 
+		protected function startResizing(e:MouseEvent):void 
 		{
 			clickOffset.x = SCALE_HANDLE_SIZE - resizeHandle.mouseX;
 			clickOffset.y = SCALE_HANDLE_SIZE - resizeHandle.mouseY;
@@ -133,13 +151,13 @@
 			stage.addEventListener(MouseEvent.MOUSE_UP, onResizeStop);
 		}
 		
-		private function onResizeStop(e:MouseEvent):void 
+		protected function onResizeStop(e:MouseEvent):void 
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onResizeDrag);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onResizeStop);
 		}
 		
-		private function onResizeDrag(e:MouseEvent):void 
+		protected function onResizeDrag(e:MouseEvent):void 
 		{
 			e.updateAfterEvent();
 			var newMaxX:Number = Math.max(SCALE_HANDLE_SIZE + BAR_HEIGHT, mouseX + clickOffset.x);
@@ -148,7 +166,7 @@
 			resizeRect.height = newMaxY - BAR_HEIGHT;
 			redraw(resizeRect);
 		}
-		private function scroll(x:int = 0, y:int = 0):void {
+		protected function scroll(x:int = 0, y:int = 0):void {
 			if (contents.scrollRect.x + x >= 0) {
 				if (contents.scrollRect.width + x <= maxScrollH) contents.scrollRect.x += x;
 			}
@@ -156,13 +174,13 @@
 				if (contents.scrollRect.height + y <= maxScrollV) contents.scrollRect.y += y;
 			}
 		}
-		private function resetScroll():void {
+		protected function resetScroll():void {
 			contents.scrollRect.x = 0;
 			contents.scrollRect.y = 0;
 			scrollBarBottom.outValue = 0;
 			scrollBarRight.outValue = 0;
 		}
-		private function redraw(rect:Rectangle):void {
+		protected function redraw(rect:Rectangle):void {
 			GRADIENT_MATRIX.createGradientBox(rect.width * 3, rect.height * 3);
 			
 			background.graphics.clear();	
@@ -202,7 +220,7 @@
 			viewRect = rect;
 		}
 		
-		private function updateScrollBars(maxH:Number,maxV:Number,rect:Rectangle):void
+		protected function updateScrollBars(maxH:Number,maxV:Number,rect:Rectangle):void
 		{
 			if (maxH > 0) {
 				scrollBarBottom.visible = true;
@@ -221,17 +239,17 @@
 				scrollBarRight.visible = false;
 			}
 		}
-		private function getContentsRect():Rectangle {
+		protected function getContentsRect():Rectangle {
 			if (contents.numChildren < 1) return new Rectangle();
 			return contents.getChildAt(0).getRect(contents);
 		}
 		
-		private function setDepth(e:MouseEvent):void 
+		protected function setDepth(e:MouseEvent):void 
 		{
 			parent.setChildIndex(this, parent.numChildren - 1);	
 		}
 		
-		private function startDragging(e:MouseEvent):void 
+		protected function startDragging(e:MouseEvent):void 
 		{
 			clickOffset.x = chrome.mouseX;
 			clickOffset.y = chrome.mouseY;
@@ -239,20 +257,20 @@
 			stage.addEventListener(MouseEvent.MOUSE_UP, stopDragging);
 		}
 		
-		private function stopDragging(e:MouseEvent):void 
+		protected function stopDragging(e:MouseEvent):void 
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onWindowDrag);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stopDragging);
 		}
 		
-		private function onWindowDrag(e:MouseEvent):void 
+		protected function onWindowDrag(e:MouseEvent):void 
 		{
 			x = stage.mouseX - clickOffset.x;
 			y = stage.mouseY - clickOffset.y;
 			e.updateAfterEvent();
 			dispatchEvent(new Event(Event.CHANGE));
 		}
-		public function setContents(d:DisplayObject):void {
+		protected function setContents(d:DisplayObject):void {
 			while (contents.numChildren > 0) {
 				contents.removeChildAt(0);
 			}

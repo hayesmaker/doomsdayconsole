@@ -141,6 +141,7 @@
 		private var monitorManager:MonitorManager;
 		
 		private var showLineNum:Boolean = true;
+		private var extrasContainer:Sprite;
 		
 		
 		/**
@@ -203,9 +204,12 @@
 			measureBracket = new MeasurementTool(this,scopeManager);
 			measureBracket.visible = false;
 			
-			addChild(measureBracket);
+			extrasContainer = new Sprite();
+			addChild(extrasContainer);
+			
 			addChild(mainConsoleContainer);
-			addChild(controllerManager);
+			extrasContainer.addChild(measureBracket);
+			extrasContainer.addChild(controllerManager);
 			
 			mainConsoleContainer.addChild(consoleBg);	
 			mainConsoleContainer.addChild(textOutput);
@@ -640,7 +644,7 @@
 		{
 			print("Help", MessageTypes.SYSTEM);
 			print("	Keyboard commands", MessageTypes.SYSTEM);
-			print("		Shift-Tab -> Toggle console", MessageTypes.SYSTEM);
+			print("		Shift-Tab (default) -> Toggle console", MessageTypes.SYSTEM);
 			print("		Tab -> (When out of focus) Set the keyboard focus to the input field", MessageTypes.SYSTEM);
 			print("		Tab -> (When in focus) Skip to end of line and append a space", MessageTypes.SYSTEM);
 			print("		Tab -> (While caret is on an unknown term) Context sensitive search of commands, methods and accessors", MessageTypes.SYSTEM);
@@ -1281,8 +1285,13 @@
 			var i:int;
 			var bounds:Rectangle = redraw();
 			monitorManager.stop();
+			controllerManager.stop();
 			if (visible) {
+				extrasContainer.alpha = 0;
+				extrasContainer.addEventListener(Event.ENTER_FRAME, fadeInClip);
+				
 				monitorManager.start();
+				controllerManager.start();
 				if (parent) {
 					parent.addChild(this);
 					disableTab();	
@@ -1310,6 +1319,16 @@
 			inputTextField.text = "";
 			onInputFieldChange();
 			stage.focus = inputTextField;
+		}
+		
+		private function fadeInClip(e:Event):void 
+		{
+			var d:DisplayObject = DisplayObject(e.target);
+			if (d.alpha < 1) {
+				d.alpha += 0.1;
+			}else {
+				d.removeEventListener(Event.ENTER_FRAME, fadeInClip);
+			}
 		}
 		
 		private function updateMainMotion(e:Event):void 
