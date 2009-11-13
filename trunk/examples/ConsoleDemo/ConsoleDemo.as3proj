@@ -6,7 +6,7 @@
     <movie input="" />
     <movie path="bin\ConsoleDemo.swf" />
     <movie fps="60" />
-    <movie width="800" />
+    <movie width="1028" />
     <movie height="600" />
     <movie version="10" />
     <movie background="#FFFFFF" />
@@ -15,7 +15,6 @@
   <classpaths>
     <class path="src" />
     <class path="..\..\src" />
-    <class path="..\..\..\ailogger" />
   </classpaths>
   <!-- Build options -->
   <build>

@@ -32,8 +32,10 @@
 		
 		private function init(e:Event = null):void 
 		{	
-			addChild(ConsoleUtil.instance);
-			ConsoleUtil.pass = "mypass";
+			
+			LoggerUtil.log("Text");
+			addChild(LoggerUtil.instance);
+			//LoggerUtil.pass = "mypass";
 			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
@@ -81,7 +83,7 @@
 			var ct:ColorTransform = new ColorTransform();
 			ct.color = Math.random() * 0xFFFFFF;
 			testButton.transform.colorTransform = ct;
-			ConsoleUtil.log("Click!");
+			LoggerUtil.log("Click!");
 		}
 		
 	}
