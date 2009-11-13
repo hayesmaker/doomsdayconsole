@@ -1,4 +1,4 @@
-﻿package no.doomsday.console.core.gui
+﻿package no.doomsday.console.utilities
 {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
