@@ -44,8 +44,8 @@ package net.hires.debug
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.utils.getTimer;	
-	import no.doomsday.console.DConsole;
-	import no.doomsday.console.messages.MessageTypes;
+	import no.doomsday.console.core.DConsole;
+	import no.doomsday.console.core.messages.MessageTypes;
 
     /**
      * <b>Hi-ReS! Stats</b> FPS, MS and MEM, all in one.
