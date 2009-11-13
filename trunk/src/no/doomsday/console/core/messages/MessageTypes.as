@@ -11,7 +11,9 @@
 		public static const USER:uint = 1;
 		public static const OUTPUT:uint = 2;
 		public static const ERROR:uint = 3;
-		public static const TRACE:uint = 4;
+		public static const WARNING:uint = 4;
+		public static const TRACE:uint = 5;
+		public static const EVENT:uint = 6;
 		
 	}
 	

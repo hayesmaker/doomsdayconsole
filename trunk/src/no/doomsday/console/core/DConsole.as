@@ -16,6 +16,8 @@
 	import no.doomsday.console.core.events.ConsoleEvent;
 	import no.doomsday.console.core.gui.KeyStroke;
 	import no.doomsday.console.core.gui.ScaleHandle;
+	import no.doomsday.console.core.interfaces.IConsole;
+	import no.doomsday.console.core.interfaces.ILogger;
 	import no.doomsday.console.core.introspection.AccessorDesc;
 	import no.doomsday.console.core.introspection.ChildScopeDesc;
 	import no.doomsday.console.core.introspection.ScopeManager;
@@ -69,9 +71,9 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class DConsole extends Sprite
+	public class DConsole extends Sprite implements ILogger, IConsole
 	{
-		private static var VERSION:String = "1.04a";
+		private static const VERSION:String = "1.05a";
 			
 		private var consoleBg:Shape;
 		private var textOutput:TextField;
@@ -226,7 +228,7 @@
 			getCommand = new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope");
 			selectCommand = new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
 			
-			print("Welcome",MessageTypes.SYSTEM);
+			print("Welcome to Doomsday Console by Doomsday device labs - www.doomsday.no",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
 			print("Console version " + VERSION, MessageTypes.SYSTEM);
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
@@ -336,7 +338,7 @@
 			addCommand(new FunctionCallCommand("lipsum", getLipsum, "Utility", "Gets a Lorem Ipsum string of X length"));
 			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands. Add a second argument to search."));
 			addCommand(new FunctionCallCommand("stats", toggleStats, "Utility", "Toggles display of mrdoob Stats"));
-			addCommand(new FunctionCallCommand("log", log, "Utility", "Save the complete console log for this session to an xml document"));
+			addCommand(new FunctionCallCommand("log", saveLog, "Utility", "Save the complete console log for this session to an xml document"));
 			addCommand(new FunctionCallCommand("measure", measureBracket.invoke, "Utility", "Toggles a scalable measurement bracket and selection widget. If X is true, bracketing an object sets it as scope."));
 			addCommand(new FunctionCallCommand("screenshot", screenshot, "Utility", "Save a png screenshot (sans console)"));
 			addCommand(new FunctionCallCommand("enumerateFonts", listFonts, "Utility", "Lists font names available to this swf"));
@@ -936,7 +938,7 @@
 		/**
 		 * Save the current console contents to an xml file
 		 */
-		public function log(e:Event = null):void {
+		public function saveLog(e:Event = null):void {
 			var logDoc:XML = <log/>;
 			for (var i:int = 0; i < messageLog.length; i++) 
 			{
@@ -1558,11 +1560,18 @@
 				redraw();
 			}
 		}
-		public function setTextTheme(input:uint = 0xFFD900, oldMessage:uint = 0xBBBBBB, newMessage:uint = 0xFFFFFF, system:uint = 0x00DD00, timestamp:uint = 0xAAAAAA, error:uint = 0xEE0000, help:uint = 0xbbbbbb, trace:uint = 0x9CB79B):void {
-			TextFormats.setTheme(input, oldMessage, newMessage, system, timestamp, error, help, trace);
+		public function setTextTheme(input:uint = 0xFFD900, oldMessage:uint = 0xBBBBBB, newMessage:uint = 0xFFFFFF, system:uint = 0x00DD00, timestamp:uint = 0xAAAAAA, error:uint = 0xEE0000, help:uint = 0xbbbbbb, trace:uint = 0x9CB79B,event:uint = 0x009900,warning:uint = 0xFFD900):void {
+			TextFormats.setTheme(input, oldMessage, newMessage, system, timestamp, error, help, trace,event,warning);
 			inputTextField.defaultTextFormat = TextFormats.debugTformatInput;
 			infoField.defaultTextFormat = TextFormats.debugTformatHelp;
 			drawMessages();
+		}
+		
+		/* INTERFACE no.doomsday.console.core.interfaces.ILogger */
+		
+		public function log(...args:Array):void
+		{
+			trace.apply(this, args);
 		}
 	}
 	

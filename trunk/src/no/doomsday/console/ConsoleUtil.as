@@ -1,8 +1,12 @@
 ﻿package no.doomsday.console
 {
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Stage;
 	import flash.utils.describeType;
 	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.DConsole;
+	import no.doomsday.console.utilities.ContextMenuUtil;
+	import no.doomsday.console.utilities.ContextMenuUtilAir;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
 	import no.doomsday.console.core.messages.MessageTypes;
 	
@@ -81,6 +85,9 @@
 		public static function get trace():Function {
 			return instance.trace;
 		}
+		public static function log(...args):void {
+			instance.log.apply(instance, args);
+		}
 		/**
 		 * Clears the trace buffer
 		 */
@@ -109,6 +116,10 @@
 		 */
 		public static function dock(position:String):void {
 			instance.dock(position);
+		}
+		
+		public static function set pass(s:String):void {
+			instance.setPassword(s);
 		}
 	}
 }

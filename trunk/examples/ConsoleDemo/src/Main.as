@@ -11,9 +11,11 @@
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFieldType;
+	import flash.utils.getDefinitionByName;
 	import no.doomsday.console.ConsoleUtil;
-	import no.doomsday.console.gui.Window;
-	import no.doomsday.utilities.loaders.QuickLoader;
+	import no.doomsday.console.core.DLogger;
+	import no.doomsday.console.LoggerUtil;
 	
 	/**
 	 * ...
@@ -30,6 +32,8 @@
 		
 		private function init(e:Event = null):void 
 		{	
+			addChild(ConsoleUtil.instance);
+			ConsoleUtil.pass = "mypass";
 			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
@@ -52,15 +56,14 @@
 			tf.text = "shift-tab to toggle console";
 			tf.x = 10;
 			tf.y = stage.stageHeight -tf.height;
+			tf.type = TextFieldType.INPUT;
 			addChild(tf);
 			
 			//add the console instance using ConsoleUtil
-			addChild(ConsoleUtil.instance);
+			//ContextMenuUtil.setUp(ConsoleUtil.instance,this);
 			
 			//ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
 			//ConsoleUtil.linkFunction("out", outputTest);
-			addChild(new Window("This is an extremely long title for no reason at all", new Rectangle(50, 50, 100, 100),new QuickLoader("http://www.google.no/intl/no_no/images/logo.gif")));
-			addChild(new Window("horses", new Rectangle(120, 250, 100, 100)));
 		}
 		
 		private function outputTest(input:String):String {
@@ -78,6 +81,7 @@
 			var ct:ColorTransform = new ColorTransform();
 			ct.color = Math.random() * 0xFFFFFF;
 			testButton.transform.colorTransform = ct;
+			ConsoleUtil.log("Click!");
 		}
 		
 	}
