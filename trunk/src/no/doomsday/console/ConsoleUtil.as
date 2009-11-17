@@ -1,10 +1,14 @@
 ﻿package no.doomsday.console
 {
+	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.utils.describeType;
+	import no.doomsday.console.core.AbstractConsole;
 	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.DConsole;
+	import no.doomsday.console.core.DLogger;
+	import no.doomsday.console.core.interfaces.IConsole;
 	import no.doomsday.console.utilities.ContextMenuUtil;
 	import no.doomsday.console.utilities.ContextMenuUtilAir;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
@@ -17,21 +21,33 @@
 	public class ConsoleUtil 
 	{
 		
-		private static var console:DConsole;
-		
+		public static const MODE_CONSOLE:String = "console";
+		public static const MODE_LOGGER:String = "logger";
+		private static var _instance:AbstractConsole;
 		public function ConsoleUtil() 
 		{
-			throw new Error("Abstract class, don't instance");
+			throw new Error("Use static methods");
 		}
 		/**
 		 * Get the singleton console instance
 		 */
-		public static function get instance():DConsole {
-			if (!console) {
-				console = new DConsole();
+		public static function get instance():AbstractConsole {
+			return getInstance();
+		}
+		
+		public static function getInstance(type:String = MODE_CONSOLE):AbstractConsole {
+			if (!_instance) {
+				switch(type) {
+					case MODE_LOGGER:
+					_instance = new DLogger();
+					instance.print("Logger mode set", MessageTypes.SYSTEM);
+					break;
+					default:
+					_instance = new DConsole();
+					instance.print("Console mode set", MessageTypes.SYSTEM);
+				}
 			}
-			return console;
-			//return DConsole.instance;
+			return _instance;
 		}
 		/**
 		 * Add a message
@@ -88,12 +104,6 @@
 		public static function log(...args):void {
 			instance.log.apply(instance, args);
 		}
-		/**
-		 * Clears the trace buffer
-		 */
-		public static function get clearTrace():Function {
-			return instance.clearTrace;
-		}
 		public static function get clear():Function {
 			return instance.clear;
 		}
@@ -118,7 +128,7 @@
 			instance.dock(position);
 		}
 		
-		public static function set pass(s:String):void {
+		public static function set password(s:String):void {
 			instance.setPassword(s);
 		}
 	}

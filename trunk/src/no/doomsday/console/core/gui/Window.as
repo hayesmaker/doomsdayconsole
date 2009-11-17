@@ -27,12 +27,12 @@
 		private var titleField:TextField = new TextField();
 		public const BAR_HEIGHT:int = 12;
 		public const SCALE_HANDLE_SIZE:int = 10;
+		private const GRADIENT_MATRIX:Matrix = new Matrix();
 		private var resizeHandle:Sprite = new Sprite();
 		private var clickOffset:Point = new Point();
 		private var resizeRect:Rectangle = new Rectangle();
 		private var maxRect:Rectangle;
 		private var minRect:Rectangle;
-		private static const GRADIENT_MATRIX:Matrix = new Matrix();
 		private var maxScrollV:Number = 0;
 		private var maxScrollH:Number = 0;
 		private var scrollBarBottom:SimpleScrollbar = new SimpleScrollbar(SimpleScrollbar.HORIZONTAL);
@@ -42,6 +42,7 @@
 		private var background:Shape = new Shape();
 		public function Window(title:String, rect:Rectangle, contents:DisplayObject = null, maxRect:Rectangle = null, minRect:Rectangle = null,enableClose:Boolean = true, enableScroll:Boolean = true,enableScale:Boolean = true)
 		{
+			tabEnabled = tabChildren = false;
 			scrollBarBottom.addEventListener(Event.CHANGE, onScroll);
 			scrollBarRight.addEventListener(Event.CHANGE, onScroll);
 			

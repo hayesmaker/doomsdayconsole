@@ -1,12 +1,14 @@
 ﻿package no.doomsday.console.core.interfaces 
 {
+	import flash.display.DisplayObject;
 	
 	/**
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public interface ILogger 
+	public interface IDisplayable 
 	{
+		function getDisplayObject():DisplayObject;
 	}
 	
 }

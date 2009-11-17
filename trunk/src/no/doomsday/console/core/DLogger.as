@@ -9,6 +9,8 @@
 
 package no.doomsday.console.core
 {
+	import no.doomsday.console.core.messages.Message;
+	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.ContextMenuEvent;
@@ -29,13 +31,16 @@ package no.doomsday.console.core
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;
 	import flash.xml.XMLNode;
+	import no.doomsday.console.core.commands.ConsoleCommand;
+	import no.doomsday.console.core.interfaces.IConsole;
+	import no.doomsday.console.core.interfaces.IDisplayable;
 	import no.doomsday.console.core.interfaces.ILogger;
 	import no.doomsday.console.core.events.DLoggerEvent;
 	import no.doomsday.console.core.messages.MessageTypes;
 	import no.doomsday.console.core.text.TextFormats;
 	import no.doomsday.console.core.text.TextUtils;
 	
-	public final class DLogger extends Sprite implements ILogger
+	public final class DLogger extends AbstractConsole
 	{
 		private static const WELCOME_MESSAGE:String		= "Welcome to DLogger by Øyvind Nordhagen - www.oyvindnordhagen.com";
 		private static const VERSION:String 			= "1.0";
@@ -94,7 +99,7 @@ package no.doomsday.console.core
 			addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 		}
 		
-		public function setPassword(pass:String):void {
+		override public function setPassword(pass:String):void {
 			_password = pass;
 		}
 		
@@ -270,7 +275,7 @@ package no.doomsday.console.core
 			_write("\n");
 		}
 		
-		public function log(...args:Array):void {
+		override public function log(...args:Array):void {
 			for (var i:int = 0; i < args.length; i++) 
 			{
 				addMessage(args[i]);
@@ -869,14 +874,19 @@ package no.doomsday.console.core
 		
 		/* INTERFACE no.doomsday.console.core.interfaces.ILogger */
 		
-		public function show():void
+		override public function show():void
 		{
 			_setVisible(true);
 		}
 		
-		public function hide():void
+		override public function hide():void
 		{
 			_setVisible(false);
+		}
+		
+		override public function trace(...args:Array):void 
+		{
+			log.apply(this, args);
 		}
 	}
 }

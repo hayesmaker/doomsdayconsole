@@ -71,9 +71,8 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class DConsole extends Sprite implements ILogger, IConsole
+	public class DConsole extends AbstractConsole implements ILogger, IConsole
 	{
-		private static const VERSION:String = "1.05a";
 			
 		private var consoleBg:Shape;
 		private var textOutput:TextField;
@@ -245,7 +244,7 @@
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
-		public function dock(value:String):void {
+		override public function dock(value:String):void {
 			value = value.toLowerCase();
 			if (value == "bot" || value == "bottom") {
 				persistence.dockState = DOCK_BOTTOM;
@@ -257,7 +256,7 @@
 			redraw();
 		}
 		
-		public function setInvokeKeys(...keyCodes:Array):void {
+		override public function setInvokeKeys(...keyCodes:Array):void {
 			if (keyCodes.length > 0) {
 				invokeKeyStroke.keyCodes = keyCodes;
 			}
@@ -268,7 +267,7 @@
 		 * @param	filter
 		 * One of the 3 modes described in the no.doomsday.console.core.messages.MessageRepeatMode enum
 		 */
-		public function setRepeatFilter(filter:int):void {
+		override public function setRepeatFilter(filter:int):void {
 			switch(filter) {
 				case MessageRepeatMode.IGNORE:
 				print("Repeat mode: Repeated messages are now ignored",MessageTypes.SYSTEM);
@@ -400,7 +399,7 @@
 		/**
 		 * Toggle display of mrDoob stats
 		 */
-		public function toggleStats(e:Event = null):void {
+		override public function toggleStats(e:Event = null):void {
 			if (mainConsoleContainer.contains(stats)) {
 				mainConsoleContainer.removeChild(stats);
 				print("Stats off", MessageTypes.SYSTEM);
@@ -511,7 +510,7 @@
 		/**
 		 * Toggle: Route all print statements to javascript console.log through externalinterface
 		 */
-		public function routeToJS():void {
+		override public function routeToJS():void {
 			if (ExternalInterface.available) {
 				routingToJS = !routingToJS;
 				if (routingToJS) {
@@ -526,7 +525,7 @@
 		/**
 		 * Route errors to javascript console.log through externalinterface
 		 */
-		public function alertErrors():void {
+		override public function alertErrors():void {
 			if (ExternalInterface.available) {
 				alertingErrors = !alertingErrors;
 				if (alertingErrors ) {
@@ -543,7 +542,7 @@
 		 * Get a screenshot of the stage and save as a png
 		 * @param	e
 		 */
-		public function screenshot(e:Event = null):void
+		override public function screenshot(e:Event = null):void
 		{
 			var bmd:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, true, 0);
 			visible = false;
@@ -596,7 +595,7 @@
 		 * Alternative trace method
 		 * @param	...values
 		 */
-		public function trace(...values):void {
+		override public function trace(...values):void {
 			if (traceValues) {
 				var str:String = "";
 				for (var i:int = 0; i < values.length; i++) 
@@ -758,7 +757,7 @@
 		 * @param	command
 		 * An instance of FunctionCallCommand or ConsoleEventCommand
 		 */
-		public function addCommand(command:ConsoleCommand):void {
+		override public function addCommand(command:ConsoleCommand):void {
 			globalDictionary.addToDictionary(command.trigger);
 			commandManager.addCommand(command);
 		}
@@ -767,7 +766,7 @@
 		 * A generic function to add as listener to events you want logged
 		 * @param	e
 		 */
-		public function onEvent(e:Event):void {
+		override public function onEvent(e:Event):void {
 			print("Event: "+e.toString(),MessageTypes.OUTPUT);
 		}
 		/**
@@ -775,7 +774,7 @@
 		 * @param	str
 		 * The string to be added. A timestamp is automaticaly prefixed
 		 */
-		public function print(str:String, type:uint = MessageTypes.OUTPUT):Message{
+		override public function print(str:String, type:uint = MessageTypes.OUTPUT):Message{
 			var split:Array = str.split("\n").join("\r").split("\r");
 			if (split.join("").length < 1) return new Message("", "", 0);
 			var date:String = String(new Date().getTime());
@@ -820,7 +819,7 @@
 		/**
 		 * Clear the console
 		 */
-		public function clear():void {
+		override public function clear():void {
 			messageLog = new Vector.<Message>;
 			drawMessages();
 		}
@@ -934,7 +933,7 @@
 		/**
 		 * Save the current console contents to an xml file
 		 */
-		public function saveLog(e:Event = null):void {
+		override public function saveLog(e:Event = null):void {
 			var logDoc:XML = <log/>;
 			for (var i:int = 0; i < messageLog.length; i++) 
 			{
@@ -1271,10 +1270,10 @@
 			return b.bytesAvailable;
 		}
 		
-		public function show():void {
+		override public function show():void {
 			if(!visible) toggleDisplay();
 		}
-		public function hide():void {
+		override public function hide():void {
 			if (visible) toggleDisplay();
 		}
 		public function toggleDisplay(e:Event = null):void
@@ -1318,7 +1317,6 @@
 			onInputFieldChange();
 			stage.focus = inputTextField;
 		}
-		
 		private function fadeInClip(e:Event):void 
 		{
 			var d:DisplayObject = DisplayObject(e.target);
@@ -1422,7 +1420,7 @@
 		}
 		
 		
-		public function setPassword(pwd:String):void {
+		override public function setPassword(pwd:String):void {
 			commandManager.setupAuthentication(pwd);
 		}
 		
@@ -1432,7 +1430,7 @@
 		}
 		
 		//batch
-		public function runBatch(batch:String):Boolean {
+		override public function runBatch(batch:String):Boolean {
 			locked = true;
 			print("Starting batch", MessageTypes.SYSTEM);
 			var split:Array = batch.split("\n").join("\r").split("\r");
@@ -1451,7 +1449,7 @@
 			drawMessages();
 			return result;
 		}
-		public function runBatchFromUrl(url:String):void {
+		override public function runBatchFromUrl(url:String):void {
 			var batchLoader:URLLoader = new URLLoader(new URLRequest(url));
 			batchLoader.addEventListener(Event.COMPLETE, onBatchLoaded, false, 0, true);
 		}
@@ -1480,12 +1478,12 @@
 		}
 		
 		//minmaxing size
-		public function maximize():void {
+		override public function maximize():void {
 			if (!stage) return;
 			var maxHeight:int = Math.floor(stage.stageHeight / 14)-1;
 			setHeight(maxHeight-1);
 		}
-		public function minimize():void
+		override public function minimize():void
 		{
 			setHeight(1);
 		}
@@ -1545,7 +1543,7 @@
 		}
 		
 		//theming
-		public function setChromeTheme(backgroundColor:uint = 0, backgroundAlpha:Number = 0.8, borderColor:uint = 0x333333, inputBackgroundColor:uint = 0, helpBackgroundColor:uint = 0x222222):void {
+		override public function setChromeTheme(backgroundColor:uint = 0, backgroundAlpha:Number = 0.8, borderColor:uint = 0x333333, inputBackgroundColor:uint = 0, helpBackgroundColor:uint = 0x222222):void {
 			
 			inputTextField.borderColor = borderColor;
 			inputTextField.backgroundColor = inputBackgroundColor;
@@ -1556,7 +1554,7 @@
 				redraw();
 			}
 		}
-		public function setTextTheme(input:uint = 0xFFD900, oldMessage:uint = 0xBBBBBB, newMessage:uint = 0xFFFFFF, system:uint = 0x00DD00, timestamp:uint = 0xAAAAAA, error:uint = 0xEE0000, help:uint = 0xbbbbbb, trace:uint = 0x9CB79B,event:uint = 0x009900,warning:uint = 0xFFD900):void {
+		override public function setTextTheme(input:uint = 0xFFD900, oldMessage:uint = 0xBBBBBB, newMessage:uint = 0xFFFFFF, system:uint = 0x00DD00, timestamp:uint = 0xAAAAAA, error:uint = 0xEE0000, help:uint = 0xbbbbbb, trace:uint = 0x9CB79B,event:uint = 0x009900,warning:uint = 0xFFD900):void {
 			TextFormats.setTheme(input, oldMessage, newMessage, system, timestamp, error, help, trace,event,warning);
 			inputTextField.defaultTextFormat = TextFormats.debugTformatInput;
 			infoField.defaultTextFormat = TextFormats.debugTformatHelp;
@@ -1565,7 +1563,7 @@
 		
 		/* INTERFACE no.doomsday.console.core.interfaces.ILogger */
 		
-		public function log(...args:Array):void
+		override public function log(...args:Array):void
 		{
 			trace.apply(this, args);
 		}
