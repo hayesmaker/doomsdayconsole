@@ -4,6 +4,7 @@
 	import flash.display.DisplayObjectContainer;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.text.TextField;
@@ -117,7 +118,9 @@
 					properties.unshift("text");
 					properties.unshift("autoSize");
 				}
-				controllerManager.createController(scopeManager.currentScope.obj, properties, e.mouseTarget.x + 20, e.mouseTarget.y + 20);
+				var p:Point = new Point(e.mouseTarget.x, e.mouseTarget.y);
+				p = e.mouseTarget.localToGlobal(p);
+				controllerManager.createController(scopeManager.currentScope.obj, properties, p.x + 20, p.y + 20);
 				console.minimize();
 				console.print("Controller created. Type values to alter, or use the mousewheel on numbers.");
 			}

@@ -22,6 +22,15 @@
 			this.scopeManager = scopeMgr;
 			monitorTimer.addEventListener(TimerEvent.TIMER, update);
 		}
+		public function set interval(n:int):void {
+			if (n < 1000/console.stage.frameRate) {
+				n = 1000/console.stage.frameRate;
+			}
+			monitorTimer.delay = n;
+		}
+		public function get interval():int {
+			return monitorTimer.delay;
+		}
 		public function start():void {
 			monitorTimer.start();
 		}

@@ -25,8 +25,8 @@
 		private var outlines:Shape = new Shape();
 		private var header:Sprite = new Sprite();
 		private var titleField:TextField = new TextField();
-		private const BAR_HEIGHT:int = 12;
-		private const SCALE_HANDLE_SIZE:int = 10;
+		public const BAR_HEIGHT:int = 12;
+		public const SCALE_HANDLE_SIZE:int = 10;
 		private var resizeHandle:Sprite = new Sprite();
 		private var clickOffset:Point = new Point();
 		private var resizeRect:Rectangle = new Rectangle();
@@ -40,7 +40,7 @@
 		private var viewRect:Rectangle;
 		private var closeButton:Sprite = new Sprite();
 		private var background:Shape = new Shape();
-		public function Window(title:String, rect:Rectangle, contents:DisplayObject = null, maxRect:Rectangle = null, minRect:Rectangle = null)
+		public function Window(title:String, rect:Rectangle, contents:DisplayObject = null, maxRect:Rectangle = null, minRect:Rectangle = null,enableClose:Boolean = true, enableScroll:Boolean = true,enableScale:Boolean = true)
 		{
 			scrollBarBottom.addEventListener(Event.CHANGE, onScroll);
 			scrollBarRight.addEventListener(Event.CHANGE, onScroll);
@@ -57,7 +57,7 @@
 			this.maxRect = maxRect;
 			this.minRect = minRect;
 			
-			rect.height += BAR_HEIGHT;
+			//rect.height += BAR_HEIGHT;
 			titleField.height = BAR_HEIGHT+3;
 			titleField.selectable = false;
 			titleField.defaultTextFormat = TextFormats.windowTitleFormat;
@@ -83,10 +83,12 @@
 			addChild(chrome);
 			header.addChild(titleField);
 			chrome.addChild(header);
-			chrome.addChild(scrollBarBottom);
-			chrome.addChild(scrollBarRight);
-			chrome.addChild(resizeHandle);
-			chrome.addChild(closeButton);
+			if (enableScroll) {
+				chrome.addChild(scrollBarBottom);
+				chrome.addChild(scrollBarRight);
+			}
+			if(enableScale) chrome.addChild(resizeHandle);
+			if(enableClose) chrome.addChild(closeButton);
 			chrome.addChild(outlines);
 			
 			resizeHandle.buttonMode = header.buttonMode = true;

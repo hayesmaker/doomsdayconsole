@@ -288,10 +288,6 @@
 			var a:Array = [];
 			return [scopeManager, referenceManager, controllerManager, measureBracket];
 		}
-		
-		
-		
-		
 		private function setupDefaultCommands(addMath:Boolean = true):void {
 			addCommand(new FunctionCallCommand("consoleheight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			addCommand(new FunctionCallCommand("clear", clear, "View", "Clear the console"));
@@ -311,7 +307,7 @@
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "System", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
 			addCommand(new FunctionCallCommand("toggleLineNumbers", toggleLineNumbers, "System", "Toggles the display of line numbers"));
 			addCommand(new FunctionCallCommand("repeat", repeatCommand, "System", "Repeats command string X Y times"));
-			
+
 			if (Capabilities.isDebugger) {
 				print("	Debugplayer commands added", MessageTypes.SYSTEM);
 				addCommand(new FunctionCallCommand("debug_gc", System.gc, "System", "Forces a garbage collection cycle"));
@@ -481,7 +477,7 @@
 		
 		private function createController(...properties:Array):void
 		{
-			controllerManager.createController(scopeManager.currentScope.obj, properties);
+			controllerManager.createController(scopeManager.currentScope.obj, properties, 0, y + mainConsoleContainer.height);
 		}
 		
 		private function onScaleHandleDrag(e:Event):void 
