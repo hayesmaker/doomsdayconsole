@@ -47,7 +47,8 @@
 			add(_lastValue);
 		}
 		public function get average():Number {
-			return sum / count;
+			if (count > 0) return sum / count;
+			return 0;
 		}
 		public function get sum():Number {
 			var v:GraphValue = values;

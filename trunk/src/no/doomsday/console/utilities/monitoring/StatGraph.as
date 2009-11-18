@@ -2,6 +2,7 @@
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
@@ -21,7 +22,7 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class StatGraph extends Window
+	public class StatGraph extends Sprite
 	{
 		private const valueHistory:Vector.<Number> = new Vector.<Number>();
 		public var maxValues:int = 60;
@@ -48,6 +49,9 @@
 		private var _disposed:Boolean = false;
 		private var switchMode:Boolean;
 		private var acceptDuplicateValues:Boolean;
+		private var _bg:uint = 0x00000000;
+		private var _graphColor:uint = 0xFFAAAAAA;
+		private var _barColor:uint = 0x88000000;
 		public function get disposed():Boolean {
 			return _disposed;
 		}
@@ -56,14 +60,7 @@
 			values.storeHistory = storeHistory;
 			content.addChild(tagDisplay);
 			content.addChild(graphDisplay);
-			//content.graphics.beginFill(0);
-			//content.graphics.drawRect(0, 0, dims.width, dims.height);
-			content.graphics.endFill();
 			
-			var windowDims:Rectangle = dims.clone();
-			windowDims.width += 50;
-			var windowName:String = booleanMode ? "Boolean graph" : "Graph";
-			super(windowName, windowDims, content, windowDims, windowDims, true, false, false);
 			this.switchMode = booleanMode;
 			this.acceptDuplicateValues = acceptDuplicateValues;
 			
@@ -103,9 +100,52 @@
 				item.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, saveXML, false, 0, true);
 				menu.customItems.push(item);
 			}
+			content.contextMenu = menu;
+			addChild(content);
 			
-			contextMenu = menu;
+		}
+		public function set current(b:Boolean):void {
+			visible = b;
+			paused = !b;
+			//maxTF.visible = minTF.visible = midTF.visible = b;
+			if (b) parent.setChildIndex(this, parent.numChildren - 1);
+		}
+		public function get current():Boolean {
+			return visible;
+		}
+		private function initialize():void {
+			graphBitmap.dispose();
+			tagBitmap.dispose();
+			median = dims.height >> 1;
+			graphBitmap = new BitmapData(dims.width - 50, dims.height);
+			tagBitmap = new BitmapData(dims.width - 50, dims.height);
+			tagDisplay.bitmapData = tagBitmap;
+			graphDisplay.bitmapData = graphBitmap;
 			
+			maxTF.x = dims.width-50;
+			minTF.x = dims.width-50;
+			midTF.x = dims.width-50;
+			minTF.y = dims.height-13;
+			midTF.y = median - 8;
+			
+			//content.removeChild(tagDisplay);
+			//content.removeChild(graphDisplay);
+			//graphDisplay = new Bitmap(graphBitmap);
+			//tagDisplay = new Bitmap(tagBitmap);
+			//content.addChild(tagDisplay);
+			//content.addChild(graphDisplay);
+			render();
+		}
+		public function resize(dims:Rectangle):void {
+			this.dims.height = dims.height;
+			this.dims.width = dims.width;
+			initialize();
+		}
+		public function set graphColor(color:uint):void {
+			_graphColor = color;
+		}
+		public function set barColor(color:uint):void {
+			_barColor = color;
 		}
 		
 		private function saveXML(e:ContextMenuEvent):void 
@@ -124,7 +164,7 @@
 			}
 			return out;
 		}
-		override protected function onClose(e:MouseEvent):void 
+		public function kill(e:Event = null):void 
 		{
 			_disposed = true;
 			content.removeEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClick);
@@ -135,7 +175,6 @@
 			graphBitmap.dispose();
 			tagBitmap.dispose();
 			parent.removeChild(this);
-			super.onClose(e);
 		}
 		
 		private function onDoubleClick(e:Event):void 
@@ -215,8 +254,8 @@
 			graphBitmap.lock();
 			tagBitmap.lock();
 			
-			graphBitmap.fillRect(dims, 0x00000000);
-			tagBitmap.fillRect(dims, 0x00000000);
+			graphBitmap.fillRect(dims, _bg);
+			tagBitmap.fillRect(dims, _bg);
 			
 			renderStart.x = renderStart.y = 0;
 			values.forEach(drawLines);
@@ -227,7 +266,7 @@
 		
 		private function drawLines(value:Number,index:int):void
 		{
-			var x:int = index / (values.totalValues-1) * dims.width;
+			var x:int = index / (values.totalValues-1) * (dims.width-50);
 			var mul:Number = (value-min) / (max - min);
 			var y:int = (1-mul) * (dims.height-1);
 			if (index == 0) {
@@ -236,19 +275,23 @@
 			}else {
 				renderEnd.x = x;
 				renderEnd.y = y
-				Bresenham.line_pixel32(renderStart, renderEnd, graphBitmap, 0xFF000000);
+				Bresenham.line_pixel32(renderStart, renderEnd, graphBitmap, _graphColor);
 				renderStart.y = median;
 				renderStart.x = x;
-				Bresenham.line_pixel32(renderStart, renderEnd, tagBitmap, 0xFFbbbbbb);
+				//Bresenham.line_pixel32(renderStart, renderEnd, tagBitmap, _barColor);
 				renderStart.y = y;
 			}
 		}
 		public function getValueAt(x:int):Number {
-			var idx:int = x / dims.width * (values.totalValues-1);
+			x = Math.min(x, dims.width-50);
+			var idx:int = x / (dims.width-50) * (values.totalValues - 1);
 			prevQueryIndex = idx;
 			prevQuery = values.getValueAt(idx);
-			queryTF.y = median;
-			queryTF.x = idx / (values.totalValues-1) * dims.width;
+			var mul:Number = (prevQuery.value-min) / (max - min);
+			var y:int = (1-mul) * (dims.height-25);
+			//queryTF.y = median;
+			queryTF.y = y;
+			queryTF.x = idx / (values.totalValues-1) * (dims.width-50);
 			queryTF.text = (prevQuery.creationTime/1000)+"\n"+prevQuery.value.toString();
 			return prevQuery.value;
 		}

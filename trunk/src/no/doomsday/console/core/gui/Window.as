@@ -37,7 +37,7 @@
 		private var maxScrollH:Number = 0;
 		private var scrollBarBottom:SimpleScrollbar = new SimpleScrollbar(SimpleScrollbar.HORIZONTAL);
 		private var scrollBarRight:SimpleScrollbar = new SimpleScrollbar(SimpleScrollbar.VERTICAL);
-		private var viewRect:Rectangle;
+		protected var viewRect:Rectangle;
 		private var closeButton:Sprite = new Sprite();
 		private var background:Shape = new Shape();
 		public function Window(title:String, rect:Rectangle, contents:DisplayObject = null, maxRect:Rectangle = null, minRect:Rectangle = null,enableClose:Boolean = true, enableScroll:Boolean = true,enableScale:Boolean = true)
@@ -167,7 +167,17 @@
 			var newMaxY:Number = Math.max(SCALE_HANDLE_SIZE + BAR_HEIGHT, mouseY + clickOffset.y);
 			resizeRect.width = newMaxX;
 			resizeRect.height = newMaxY - BAR_HEIGHT;
+			if (minRect) {
+				resizeRect.width = Math.max(minRect.width, resizeRect.width);
+				resizeRect.height = Math.max(minRect.height, resizeRect.height);
+			}
+			onResize();
 			redraw(resizeRect);
+		}
+		
+		protected function onResize():void
+		{
+			
 		}
 		protected function scroll(x:int = 0, y:int = 0):void {
 			if (contents.scrollRect.x + x >= 0) {
