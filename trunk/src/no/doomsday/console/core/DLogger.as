@@ -9,10 +9,7 @@
 
 package no.doomsday.console.core
 {
-	import no.doomsday.console.core.messages.Message;
-	import flash.display.DisplayObject;
 	import flash.display.Shape;
-	import flash.display.Sprite;
 	import flash.events.ContextMenuEvent;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -27,22 +24,16 @@ package no.doomsday.console.core
 	import flash.ui.ContextMenuItem;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
-	import flash.utils.Timer;
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;
 	import flash.xml.XMLNode;
-	import no.doomsday.console.core.commands.ConsoleCommand;
-	import no.doomsday.console.core.interfaces.IConsole;
-	import no.doomsday.console.core.interfaces.IDisplayable;
-	import no.doomsday.console.core.interfaces.ILogger;
+	
 	import no.doomsday.console.core.events.DLoggerEvent;
 	import no.doomsday.console.core.messages.MessageTypes;
 	import no.doomsday.console.core.text.TextFormats;
-	import no.doomsday.console.core.text.TextUtils;
 	
 	public final class DLogger extends AbstractConsole
 	{
-		private static const WELCOME_MESSAGE:String		= "Welcome to DLogger by Øyvind Nordhagen - www.oyvindnordhagen.com";
 		private static const VERSION:String 			= "1.0";
 		private static const OPEN_LOGGER_LABEL:String 	= "Show DLogger";
 		private static const CLOSE_LOGGER_LABEL:String 	= "Close DLogger";
@@ -50,7 +41,8 @@ package no.doomsday.console.core
 		
 		public var detailedLogging			:Boolean;
 		public var disablePassword			:Boolean;
-		public var disableSenderLabels		:Boolean;
+		public var disableOriginLabels		:Boolean;
+		public var disableUnknownOriginLabels:Boolean;
 		public var alwaysOnTop				:Boolean = true;
 		public var scrollOnNewLine			:Boolean = true;
 		
@@ -67,14 +59,14 @@ package no.doomsday.console.core
 		private var _passwordField			:TextField;
 		private var _txt					:TextField;
 		private var _bg						:Shape 		= new Shape();
-		private var _passwordTimer			:Timer;
 		private var _lastMessage			:String;
 		private var _lastMessageRepeat		:uint;
 		private var _maxHeight				:uint;
 		private var _width					:uint;
 		private var _height					:uint;
-		private var _txtBounds				:Rectangle;
-		private var _fadeTarget:Number = 1;
+		private var _fadeTarget				:Number		= 1;
+		private var _txtBounds				:Rectangle = new Rectangle();
+		private var _curLogLine:uint;
 		
 		/**
 		 * Constructor function
@@ -88,14 +80,9 @@ package no.doomsday.console.core
 			_password = $password;
 			_width = $width;
 			_height = $height;
-			
 			_setColorScheme();
-			
-			//_senderFmt = _getFmt(0xFFFFFF);
 			_describeFmt = TextFormats.debugTformatSystem;
-			
 			_createTraceWindow();
-			
 			addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 		}
 		
@@ -109,9 +96,7 @@ package no.doomsday.console.core
 			_setColorScheme();
 			
 			if (_bg != null)
-			{
 				_redrawBg();
-			}
 		}
 		
 		protected function _setColorScheme():void
@@ -130,13 +115,6 @@ package no.doomsday.console.core
 			_fmt[MessageTypes.SYSTEM] 	= TextFormats.getInverse(TextFormats.debugTformatSystem);
 			_fmt[MessageTypes.EVENT] 	= TextFormats.getInverse(TextFormats.debugTformatEvent);
 			_fmt[MessageTypes.TRACE] 	= TextFormats.getInverse(TextFormats.debugTformatTrace);
-			
-			//_fmt[MessageTypes.OUTPUT] 	= _getFmt(0xFFFFFF);
-			//_fmt[MessageTypes.WARNING] 	= _getFmt(0xFF6600);
-			//_fmt[MessageTypes.ERROR] 	= _getFmt(0xFF0000);
-			//_fmt[MessageTypes.SYSTEM] 	= _getFmt(0x00FF00);
-			//_fmt[MessageTypes.EVENT] 	= _getFmt(0x0099FF);
-			//_fmt[MessageTypes.TRACE] 	= _getFmt(0x999999);
 		}
 		
 		protected function _setRegularColor():void
@@ -147,13 +125,6 @@ package no.doomsday.console.core
 			_fmt[MessageTypes.SYSTEM] 	= TextFormats.debugTformatSystem;
 			_fmt[MessageTypes.EVENT] 	= TextFormats.debugTformatEvent;
 			_fmt[MessageTypes.TRACE] 	= TextFormats.debugTformatTrace;
-			
-			//_fmt[MessageTypes.OUTPUT] = _getFmt(0x000000);
-			//_fmt[MessageTypes.WARNING] = _getFmt(0x996600);
-			//_fmt[MessageTypes.ERROR] = _getFmt(0xCC0000);
-			//_fmt[MessageTypes.SYSTEM] = _getFmt(0x009900);
-			//_fmt[MessageTypes.EVENT] = _getFmt(0x000099);
-			//_fmt[MessageTypes.TRACE] = _getFmt(0x666666);
 		}
 		
 		public function get inverseColorScheme():Boolean
@@ -169,11 +140,7 @@ package no.doomsday.console.core
 		public function set coloring($val:Boolean):void
 		{
 			_logColoring = $val;
-			
-			if (!$val)
-			{
-				_resetLogColoring();
-			}
+			if (!$val) _resetLogColoring();
 		}
 		
 		public function get enableContextMenu():Boolean
@@ -208,18 +175,13 @@ package no.doomsday.console.core
 			return _isVisible;
 		}
 		
-		public function toggle():void
-		{
-			_toggleVisible();
-		}
-		
 		public function describe($obj:Object, $objectName:String = ""):void
 		{
 			if ($objectName == "")
 			{
 				if ($obj.toString() != "[object Object]")
 				{
-					_log(_getClassName($obj) + ":\n", "", true, false);
+					_log(_getOriginName($obj) + ":\n", "", true, false);
 				}
 				else
 				{
@@ -303,11 +265,21 @@ package no.doomsday.console.core
 					case DLoggerEvent.LOG:
 					$severity = aie.severity;
 					append = aie.appendLast;
-					sender = (aie.origin is String) ? aie.origin as String : _getEventTargetName(aie);
+					sender = (aie.origin is String) ? aie.origin as String : _getOriginName(aie);
 					break;
 				
 					case DLoggerEvent.DESCRIBE:
 					describe($msg);
+					return;
+					break;
+					
+					case DLoggerEvent.HEADER:
+					header(String(aie.message), aie.severity);
+					return;
+					break;
+				
+					case DLoggerEvent.CR:
+					cr(uint(aie.message))
 					return;
 					break;
 				
@@ -340,7 +312,7 @@ package no.doomsday.console.core
 			}
 			else if ($msg is Array)
 			{
-				str = (detailedLogging) ? ($msg as Array).join() + "(" + ($msg as Array).length + " elements)" : ($msg as Array).join();
+				str = ($msg as Array).join() + " (" + ($msg as Array).length + " elements)";
 			}
 			else if ($msg is XML || $msg is XMLNode || $msg is XMLList)
 			{
@@ -353,14 +325,14 @@ package no.doomsday.console.core
 			}
 			else if ($msg is ErrorEvent)
 			{
-				sender = _getEventTargetName($msg as ErrorEvent);
+				sender = _getOriginName($msg as ErrorEvent);
 				str = _getClassName($msg) + ": " + ($msg as ErrorEvent).text;
 				$severity = MessageTypes.ERROR;
 			}
 			else if ($msg is Event)
 			{
 				var e:Event = $msg as Event;
-				sender = _getEventTargetName(e);
+				sender = _getOriginName(e);
 				str = "EVENT: " + e.toString();
 				$severity = MessageTypes.EVENT;
 			}
@@ -399,7 +371,7 @@ package no.doomsday.console.core
 		
 		private function _appendLast($str:String):void
 		{
-			_write(" â€º " + $str);
+			_write(" › " + $str);
 		}
 		
 		private function _appendRepeat($repeatCount:uint):void
@@ -556,9 +528,64 @@ package no.doomsday.console.core
 			
 			addChild(_bg);
 			addChild(_txt);
+		}
+		
+		public function systemInfo():void
+		{
+			_write("SYSTEM INFORMATION:\n");
+			_write("AILogger version: " + VERSION + "\n");
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			_write("Booted at: " + new Date().toString() + "\n")
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			_write("Platform: " + Capabilities.os + "\n");
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			var type:String = (Capabilities.isDebugger) ? "Debugger" : "Standard";
+			_write("Player: " + Capabilities.version + " (" + Capabilities.playerType + ", " + type + ")\n");
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			_write("Screen: " + Capabilities.screenResolutionX + "x" + Capabilities.screenResolutionY + "\n");
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			_write("Stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			cr();
+		}
+		
+		public function loggerVersion():void
+		{
+			_write("DLogger version: " + VERSION);
+			_applySeverityColor(DLoggerEvent.CODE_TRACE);
+			cr();
+		}
+		
+		
+		private function _getOriginName(origin:Object):String
+		{
+			if (origin is Event)
+			{
+				if (origin is DLoggerEvent && (origin as DLoggerEvent).origin != null)
+				{
+					origin = (origin as DLoggerEvent).origin;
+				}
+				else if (origin is Event)
+				{
+					if (origin.target != null)
+						origin = origin.target
+					else if (origin.currentTarget != null)
+						origin.currentTarget;
+				}
+			}
 			
-			log("Welcome to DLogger v" + VERSION + " |  Booted at " + new Date().toString() + "\n");
-			log("Player version is " + Capabilities.version + "\n");
+			var origin_s:String = _getClassName(origin)
+			
+			try
+			{
+				if (String(origin.name).substr(0, 8) != "instance")
+				{
+					origin_s += " (" + origin.target.name + ")";
+				}
+			}
+			catch (origin:ReferenceError) { /* Why bother...*/ }
+			
+			return origin_s;
 		}
 		
 		private function _getClassName(o:Object):String
@@ -578,49 +605,13 @@ package no.doomsday.console.core
 			return ret;
 		}
 		
-		private function _getEventTargetName(e:Object):String
-		{
-			var tgt:String = "";
-			
-			if (e is Event && e.target != null || e.currentTarget != null)
-			{
-				var tg:Object;
-				
-				if (e is DLoggerEvent && (e as DLoggerEvent).origin != null)
-				{
-					tg = (e as DLoggerEvent).origin;
-				}
-				else if (e is Event)
-				{
-					tg = (e.currentTarget == null) ? e.target : e.currentTarget;
-				}
-				else
-				{
-					tg = e;
-				}
-				
-				var tgs:String = tg.toString();
-				tgt = tgs.substring(tgs.lastIndexOf(" ") + 1, tgs.length - 1);
-				
-				try
-				{
-					if (String(tg.name).substr(0, 8) != "instance")
-					{
-						tgt += " (" + e.target.name + ")";
-					}
-				}
-				catch (e:ReferenceError) { /* Why bother...*/ }
-			}
-			
-			return tgt;
-		}
-		
 		private function _log($msg:String, $sender:String = null, $useTimeStamp:Boolean = true, $useSenderLabel:Boolean = true):void
 		{
 			if ($msg != _lastMessage)
 			{
 				if ($msg != "\n\n" && $msg != "\n")
 				{
+					var lineIndex:String = "[" + (++_curLogLine) + "] @ ";
 					var now:String = new Date().toTimeString().substr(0, 8);
 					var lastChar:uint = $msg.length;
 					var returns:Array = new Array();
@@ -631,7 +622,7 @@ package no.doomsday.console.core
 						returns.push("\n");
 					}
 					
-					if (!disableSenderLabels && $useSenderLabel)
+					if (!disableOriginLabels && $useSenderLabel)
 					{
 						if ($sender != "")
 						{
@@ -650,11 +641,11 @@ package no.doomsday.console.core
 					
 					if ($useTimeStamp)
 					{
-						_write("\n" + now + "   " + $msg.substr(0, lastChar) + $sender + returns.join(""));
+						_write("\n" + lineIndex + now + ": " + $msg.substr(0, lastChar) + $sender + returns.join(""));
 					}
 					else
 					{
-						_write("\n\t" + $msg.substr(0, lastChar) + $sender + returns.join(""));
+						_write("\n" + lineIndex + ":\t" + $msg.substr(0, lastChar) + $sender + returns.join(""));
 					}
 					
 					_lastMessage = $msg;
@@ -681,10 +672,32 @@ package no.doomsday.console.core
 		private function _onAddedToStage(e:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
-			
 			_createContextMenuItems();
-			
+			addEventListener(Event.REMOVED, _onRemoved);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+			stage.addEventListener(Event.RESIZE, _resize);
+		}
+		
+		private function _onRemoved(e:Event):void
+		{
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+			stage.removeEventListener(Event.RESIZE, _resize);
+			removeEventListener(Event.REMOVED, _onRemoved);
+			_removeContextMenuItems();
+		}
+		
+		private function _resize(e:Event = null):void
+		{
+			if (_width == 0)
+			{
+				_bg.width = stage.stageWidth - 10
+				_txt.width = _bg.width - 10;
+			}
+			if (_height == 0);
+			{
+				_bg.height = stage.stageHeight - 10
+				_txt.height = _bg.height - 10;
+			}
 		}
 		
 		// Making the trace window accessible by pressing SHIFT + ENTER
@@ -720,7 +733,10 @@ package no.doomsday.console.core
 		
 		private function _redrawBg():void
 		{
+			removeChild(_bg);
+			_bg = null;
 			_createBg();
+			addChildAt(_bg, 0);
 		}
 		
 		private function _removeContextMenuItems():void

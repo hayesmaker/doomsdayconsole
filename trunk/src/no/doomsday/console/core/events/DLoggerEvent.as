@@ -6,6 +6,8 @@ package no.doomsday.console.core.events
 	{
 		public static const LOG:String 			= "log";
 		public static const DESCRIBE:String 	= "describe";
+		public static const HEADER:String 		= "header";
+		public static const CR:String 			= "cr";
 		
 		public static const CODE_SUCCESS:uint 	= 0;
 		public static const CODE_INFO:uint 		= 2;
