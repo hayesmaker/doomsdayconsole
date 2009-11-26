@@ -11,8 +11,8 @@
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuBuiltInItems;
 	import flash.ui.ContextMenuItem;
+	import no.doomsday.console.core.AbstractConsole;
 	import no.doomsday.console.utilities.controller.ControllerManager;
-	import no.doomsday.console.core.DConsole;
 	import no.doomsday.console.core.introspection.ScopeManager;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
 	import no.doomsday.console.core.messages.MessageTypes;
@@ -23,7 +23,7 @@
 	 */
 	public class ContextMenuUtil
 	{
-		private static var console:DConsole;
+		private static var console:AbstractConsole;
 		private static var referenceManager:ReferenceManager;
 		private static var scopeManager:ScopeManager;
 		private static var controllerManager:ControllerManager;
@@ -33,7 +33,7 @@
 		{
 			
 		}
-		public static function setUp(console:DConsole, root:DisplayObjectContainer = null):void {
+		public static function setUp(console:AbstractConsole, root:DisplayObjectContainer = null):void {
 			getReferences(console);
 			
 			consoleMenu = new ContextMenu();
@@ -73,7 +73,7 @@
 			if (!root.contextMenu) root.contextMenu = new ContextMenu();
 			root.contextMenu = baseMenu;
 		}
-		private static function getReferences(c:DConsole):void {
+		private static function getReferences(c:AbstractConsole):void {
 			console = c;
 			var a:Array = console.getManagerRefs();
 			scopeManager = a[0];

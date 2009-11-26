@@ -1,6 +1,7 @@
 ﻿package no.doomsday.console.core 
 {
 	import flash.display.DisplayObject;
+	import no.doomsday.console.core.AbstractConsole;
 	import no.doomsday.console.core.interfaces.ILogger;
 	import no.doomsday.console.core.messages.Message;
 	import no.doomsday.console.core.commands.ConsoleCommand;
@@ -134,6 +135,17 @@
 		}
 		
 		public function setTextTheme(input:uint = 0xFFD900, oldMessage:uint = 0xBBBBBB, newMessage:uint = 0xFFFFFF, system:uint = 0x00DD00, timestamp:uint = 0xAAAAAA, error:uint = 0xEE0000, help:uint = 0xbbbbbb, trace:uint = 0x9CB79B, event:uint = 0x009900, warning:uint = 0xFFD900):void
+		{
+			throw new Error("Not implemented");
+		}
+		public function getManagerRefs():Array
+		{
+			throw new Error("Not implemented");
+		}
+		
+		/* INTERFACE no.doomsday.console.core.interfaces.IConsole */
+		
+		public function toggleDisplay(e:Event = null):void
 		{
 			throw new Error("Not implemented");
 		}

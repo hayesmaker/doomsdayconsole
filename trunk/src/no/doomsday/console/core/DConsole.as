@@ -24,6 +24,7 @@
 	import no.doomsday.console.core.introspection.InspectionUtils;
 	import no.doomsday.console.core.introspection.MethodDesc;
 	import no.doomsday.console.core.introspection.VariableDesc;
+	import no.doomsday.console.utilities.colorpicker.ColorPicker;
 	import no.doomsday.console.utilities.controller.ControllerManager;
 	import no.doomsday.console.utilities.math.MathUtils;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
@@ -143,6 +144,7 @@
 		
 		private var showLineNum:Boolean = true;
 		private var extrasContainer:Sprite;
+		private var colorPicker:ColorPicker;
 		
 		
 		/**
@@ -205,12 +207,16 @@
 			measureBracket = new MeasurementTool(this,scopeManager);
 			measureBracket.visible = false;
 			
+			colorPicker = new ColorPicker();
+			colorPicker.addEventListener(Event.CHANGE, onColorPicked);
+			
 			extrasContainer = new Sprite();
 			addChild(extrasContainer);
 			
 			addChild(mainConsoleContainer);
 			extrasContainer.addChild(measureBracket);
 			extrasContainer.addChild(controllerManager);
+			extrasContainer.addChild(colorPicker);
 			
 			mainConsoleContainer.addChild(consoleBg);	
 			mainConsoleContainer.addChild(textOutput);
@@ -242,6 +248,15 @@
 			inputTextField.addEventListener(Event.CHANGE, onInputFieldChange);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function startColorPicker():void {
+			colorPicker.activate();
+			minimize();
+		}
+		private function onColorPicked(e:Event):void 
+		{
+			print("Color sampled: 0x" + colorPicker.color);
 		}
 		
 		override public function dock(value:String):void {
@@ -283,7 +298,7 @@
 			}
 			repeatMessageMode = filter;
 		}
-		public function getManagerRefs():Array {
+		override public function getManagerRefs():Array {
 			var a:Array = [];
 			return [scopeManager, referenceManager, controllerManager, measureBracket];
 		}
@@ -335,6 +350,7 @@
 			addCommand(new FunctionCallCommand("stats", toggleStats, "Utility", "Toggles display of mrdoob Stats"));
 			addCommand(new FunctionCallCommand("log", saveLog, "Utility", "Save the complete console log for this session to an xml document"));
 			addCommand(new FunctionCallCommand("measure", measureBracket.invoke, "Utility", "Toggles a scalable measurement bracket and selection widget. If X is true, bracketing an object sets it as scope."));
+			addCommand(new FunctionCallCommand("colorpicker", startColorPicker, "Utility", "Starts a utility that grabs and outputs a color off the stage on a mouseclick"));
 			addCommand(new FunctionCallCommand("screenshot", screenshot, "Utility", "Save a png screenshot (sans console)"));
 			addCommand(new FunctionCallCommand("enumerateFonts", listFonts, "Utility", "Lists font names available to this swf"));
 			addCommand(new FunctionCallCommand("find", searchLog, "Utility", "Searches the log for a specified string and scrolls to the first matching line"));
@@ -1276,7 +1292,7 @@
 		override public function hide():void {
 			if (visible) toggleDisplay();
 		}
-		public function toggleDisplay(e:Event = null):void
+		override public function toggleDisplay(e:Event = null):void
 		{
 			visible = !visible;
 			var i:int;
