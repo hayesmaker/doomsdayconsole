@@ -349,7 +349,7 @@
 			addCommand(new FunctionCallCommand("commands", commandManager.listCommands, "Utility", "Output a list of available commands. Add a second argument to search."));
 			addCommand(new FunctionCallCommand("stats", toggleStats, "Utility", "Toggles display of mrdoob Stats"));
 			addCommand(new FunctionCallCommand("log", saveLog, "Utility", "Save the complete console log for this session to an xml document"));
-			addCommand(new FunctionCallCommand("measure", measureBracket.invoke, "Utility", "Toggles a scalable measurement bracket and selection widget. If X is true, bracketing an object sets it as scope."));
+			addCommand(new FunctionCallCommand("measure", startMeasure, "Utility", "Toggles a scalable measurement bracket and selection widget. If X is true, bracketing an object sets it as scope."));
 			addCommand(new FunctionCallCommand("colorpicker", startColorPicker, "Utility", "Starts a utility that grabs and outputs a color off the stage on a mouseclick"));
 			addCommand(new FunctionCallCommand("screenshot", screenshot, "Utility", "Save a png screenshot (sans console)"));
 			addCommand(new FunctionCallCommand("enumerateFonts", listFonts, "Utility", "Lists font names available to this swf"));
@@ -395,6 +395,15 @@
 			addCommand(new FunctionCallCommand("subtract", MathUtils.subtract, "Math", "Returns X - Y"));
 			addCommand(new FunctionCallCommand("divide", MathUtils.divide, "Math", "Returns X / Y"));
 			addCommand(new FunctionCallCommand("multiply", MathUtils.multiply, "Math", "Returns X * Y"));
+		}
+		
+		private function startMeasure(selectMode:Boolean = false):void
+		{
+			if(scopeManager.currentScope.obj is DisplayObject){
+				measureBracket.invoke(selectMode, scopeManager.currentScope.obj as DisplayObject);
+			}else {
+				measureBracket.invoke(selectMode, stage);
+			}
 		}
 				
 		private function alias(methodName:String, commandString:String):void {

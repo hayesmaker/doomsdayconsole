@@ -37,6 +37,7 @@ package no.doomsday.console.utilities.measurement
 		private var previousObj:Object;
 		private var scopeManager:ScopeManager;
 		private var selectMode:Boolean = false;
+		private var currentSpace:DisplayObject;
 		public function MeasurementTool(console:DConsole,scopeManager:ScopeManager) 
 		{
 			this.console = console;
@@ -49,7 +50,10 @@ package no.doomsday.console.utilities.measurement
 		{
 			//stage.removeEventListener(Event.RESIZE, getValues);
 		}
-		public function invoke(doSelect:Boolean = false):void {
+		public function invoke(doSelect:Boolean = false, space:DisplayObject = null):void {
+			if (space) {
+				currentSpace = space;
+			}
 			if (doSelect) {
 				selectMode = doSelect;
 				visible = true;
@@ -251,7 +255,7 @@ package no.doomsday.console.utilities.measurement
 				}
 			}
 			
-			render();
+			render(me.altKey);
 		}
 		/**
 		 * sets x/y and width to the specified display object
@@ -267,7 +271,7 @@ package no.doomsday.console.utilities.measurement
 		public function getMeasurements():String {
 			return rect.toString();
 		}
-		private function render():void
+		private function render(local:Boolean = false):void
 		{
 			rectSprite.graphics.clear();
 			rectSprite.graphics.beginFill(0, 0.2);
@@ -279,7 +283,13 @@ package no.doomsday.console.utilities.measurement
 			topLeftCornerHandle.x = rect.x;
 			topLeftCornerHandle.y = rect.y;
 			
-			xyField.text = "x:" + rect.x + " y:" + rect.y;
+			
+			var p:Point = new Point(rect.x, rect.y);
+			if (currentSpace&&local) {
+				p = currentSpace.globalToLocal(p);
+			}
+			xyField.text = "x:" + p.x + " y:" + p.y;
+			
 			xyField.x = rect.x+5;
 			xyField.y = rect.y - 14;
 			heightField.text = String(rect.height);
@@ -314,8 +324,10 @@ package no.doomsday.console.utilities.measurement
 				console.print("Measuring bracket active: " + visible, MessageTypes.SYSTEM);
 				console.print("	Hold shift to round to values of 10", MessageTypes.SYSTEM);
 				console.print("	Hold ctrl to snap to mouse target", MessageTypes.SYSTEM);
+				console.print("	Hold alt to display coordinates local to current scope (if it is a DisplayObject)", MessageTypes.SYSTEM);
 			}else {
 				previousObj = null;
+				currentSpace = null;
 			}
 		}
 		
