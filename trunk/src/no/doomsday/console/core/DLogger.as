@@ -1,6 +1,6 @@
 ﻿/** Tool for displaying a trace window in a released/uploaded SWF
   *
-  * Created by Ã˜yvind Nordhagen, www.oyvindnordhagen.com.
+  * Created by Øyvind Nordhagen, www.oyvindnordhagen.com.
   * Released for use, change and distribution free of charge as
   * long as this author credit is left as is.
   * 
@@ -27,6 +27,7 @@ package no.doomsday.console.core
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;
 	import flash.xml.XMLNode;
+	import no.doomsday.console.core.messages.Message;
 	
 	import no.doomsday.console.core.events.DLoggerEvent;
 	import no.doomsday.console.core.messages.MessageTypes;
@@ -673,7 +674,7 @@ package no.doomsday.console.core
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 			_createContextMenuItems();
-			addEventListener(Event.REMOVED, _onRemoved);
+			addEventListener(Event.REMOVED_FROM_STAGE, _onRemoved);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 			stage.addEventListener(Event.RESIZE, _resize);
 		}
@@ -703,9 +704,10 @@ package no.doomsday.console.core
 		// Making the trace window accessible by pressing SHIFT + ENTER
 		private function _onKeyDown(e:KeyboardEvent):void
 		{
-			if (e.shiftKey && e.keyCode == Keyboard.ENTER)
-			{
+			if (invokeKeyStroke.valid) {
+				//toggleDisplay();
 				_validateOpen();
+				return;
 			}
 			else if (e.charCode == Keyboard.ENTER && _passwordField != null)
 			{
@@ -743,10 +745,13 @@ package no.doomsday.console.core
 		{
 			if (parent != null && parent.contextMenu != null)
 			{
-				parent.contextMenu.customItems[1].removeEventListener(ContextMenuEvent.MENU_ITEM_SELECT,
-																	  _validateOpen);
-				parent.contextMenu.customItems = null;
-				parent.contextMenu = null;
+				try{
+					parent.contextMenu.customItems[1].removeEventListener(ContextMenuEvent.MENU_ITEM_SELECT, _validateOpen);
+					parent.contextMenu.customItems = null;
+					parent.contextMenu = null;
+				}catch (e:Error) {
+					
+				}
 			}
 		}
 		
@@ -839,15 +844,18 @@ package no.doomsday.console.core
 			return visibility;
 		}
 		
-		private function _toggleVisible():void
+		override public function toggleDisplay(e:Event = null):void 
 		{
 			_isVisible = !_isVisible;
 			//_bg.visible = !_bg.visible;
 			//_txt.visible = !_txt.visible;
 			_handleVisibility();
 		}
-		
-		private function _validateOpen(e:ContextMenuEvent = null):void
+		override public function print(str:String, type:uint = MessageTypes.OUTPUT):void
+		{
+			addMessage(str, type);
+		}
+		private function _validateOpen(e:Event = null):void
 		{
 			if (_passwordEntered != _password && !disablePassword)
 			{
@@ -862,7 +870,7 @@ package no.doomsday.console.core
 			}
 			else
 			{
-				_toggleVisible();
+				toggleDisplay();
 			}
 		}
 		
@@ -872,7 +880,7 @@ package no.doomsday.console.core
 			{
 				disablePassword = true;
 				_removePasswordField();
-				_toggleVisible();
+				toggleDisplay();
 			}
 		}
 		

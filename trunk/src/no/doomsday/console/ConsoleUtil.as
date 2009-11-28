@@ -40,11 +40,11 @@
 				switch(type) {
 					case MODE_LOGGER:
 					_instance = new DLogger();
-					instance.print("Logger mode set", MessageTypes.SYSTEM);
+					trace("Logger mode set");
 					break;
 					default:
 					_instance = new DConsole();
-					instance.print("Console mode set", MessageTypes.SYSTEM);
+					trace("Console mode set");
 				}
 			}
 			return _instance;
@@ -130,6 +130,9 @@
 		
 		public static function set password(s:String):void {
 			instance.setPassword(s);
+		}
+		public static function setKeyStroke(...keyCodes:Array):void {
+			instance.setInvokeKeys.apply(instance, keyCodes);
 		}
 	}
 }

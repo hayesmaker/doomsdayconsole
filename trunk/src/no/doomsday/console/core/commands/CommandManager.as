@@ -1,6 +1,7 @@
 ﻿package no.doomsday.console.core.commands 
 {
 	import no.doomsday.console.core.DConsole;
+	import no.doomsday.console.core.errors.ConsoleAuthError;
 	import no.doomsday.console.core.introspection.InspectionUtils;
 	import no.doomsday.console.core.messages.MessageTypes;
 	import no.doomsday.console.core.persistence.PersistenceManager;
@@ -49,9 +50,9 @@
 				throw e;
 			}
 			var str:String = args.shift().toLowerCase();
-			if (!authenticated&&str!=authCommand.trigger) {
+			if (!authenticated && str != authCommand.trigger) {
 				if(!sub) console.print("Not authenticated", MessageTypes.ERROR);
-				throw new Error("Not authenticated");
+				throw new ConsoleAuthError();
 			}
 			if (str != authCommand.trigger&&!sub) {
 				persistence.addtoHistory(input);

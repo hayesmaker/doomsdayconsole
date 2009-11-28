@@ -13,6 +13,7 @@
 	import no.doomsday.console.core.commands.CommandManager;
 	import no.doomsday.console.core.commands.ConsoleCommand;
 	import no.doomsday.console.core.commands.FunctionCallCommand;
+	import no.doomsday.console.core.errors.ConsoleAuthError;
 	import no.doomsday.console.core.events.ConsoleEvent;
 	import no.doomsday.console.core.gui.KeyStroke;
 	import no.doomsday.console.core.gui.ScaleHandle;
@@ -72,7 +73,7 @@
 	 * ...
 	 * @author Andreas Rønning
 	 */
-	public class DConsole extends AbstractConsole implements ILogger, IConsole
+	public class DConsole extends AbstractConsole
 	{
 			
 		private var consoleBg:Shape;
@@ -134,9 +135,6 @@
 		private var previousPrintValues:String;
 		private var previousMessage:Message;
 		private var repeatMessageMode:int = MessageRepeatMode.STACK;
-		private var keyboardManager:KeyboardManager;
-		
-		private var invokeKeyStroke:KeyStroke;
 		
 		private var DOCK_TOP:int = 0;
 		private var DOCK_BOTTOM:int = 1;
@@ -154,10 +152,7 @@
 		 * To toggle console visibility, hit shift+tab 
 		 */
 		public function DConsole() 
-		{
-			keyboardManager = new KeyboardManager();
-			invokeKeyStroke = new KeyStroke(keyboardManager, Keyboard.TAB, Keyboard.SHIFT);
-			
+		{			
 			visible = false;
 			mainConsoleContainer = new Sprite();
 			
@@ -269,12 +264,6 @@
 				print("Docking to top", MessageTypes.SYSTEM);
 			}
 			redraw();
-		}
-		
-		override public function setInvokeKeys(...keyCodes:Array):void {
-			if (keyCodes.length > 0) {
-				invokeKeyStroke.keyCodes = keyCodes;
-			}
 		}
 		
 		/**
@@ -799,9 +788,9 @@
 		 * @param	str
 		 * The string to be added. A timestamp is automaticaly prefixed
 		 */
-		override public function print(str:String, type:uint = MessageTypes.OUTPUT):Message{
+		override public function print(str:String, type:uint = MessageTypes.OUTPUT):void {
 			var split:Array = str.split("\n").join("\r").split("\r");
-			if (split.join("").length < 1) return new Message("", "", 0);
+			if (split.join("").length < 1) return;
 			var date:String = String(new Date().getTime());
 			var msg:Message;
 			for (var i:int = 0; i < split.length; i++) 
@@ -839,7 +828,7 @@
 				ExternalInterface.call("console.log", str);
 			}
 			drawMessages();
-			return msg;
+			//return msg;
 		}
 		/**
 		 * Clear the console
@@ -940,7 +929,6 @@
 			if (score > 0) {
 				print("Use the setupStage command to temporarily alleviate these problems",MessageTypes.ERROR);
 			}
-			keyboardManager.setup(stage);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -1231,9 +1219,11 @@
 				}
 				var success:Boolean = false;
 				if (echo) print("'" + inputTextField.text + "'", MessageTypes.USER);
-				try{
+				try {
 					var attempt:* = commandManager.tryCommand(inputTextField.text);
 					success = true;
+				}catch (error:ConsoleAuthError) {
+					//TODO: This needs a more graceful solution. Dual auth error prints = lame
 				}catch (error:Error) {
 					print(error.message,MessageTypes.ERROR);
 				}

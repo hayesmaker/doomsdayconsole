@@ -12,6 +12,7 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
+	import flash.ui.Keyboard;
 	import flash.utils.getDefinitionByName;
 	import no.doomsday.console.ConsoleUtil;
 	import no.doomsday.console.core.DLogger;
@@ -32,10 +33,10 @@
 		
 		private function init(e:Event = null):void 
 		{	
-			
-			LoggerUtil.log("Text");
-			addChild(LoggerUtil.instance);
-			//LoggerUtil.pass = "mypass";
+			addChild(ConsoleUtil.getInstance(ConsoleUtil.MODE_CONSOLE));
+			//addChild(ConsoleUtil.getInstance(ConsoleUtil.MODE_LOGGER));
+			ConsoleUtil.password = "Hello world";			
+			ConsoleUtil.setKeyStroke(Keyboard.SHIFT,Keyboard.ENTER); //The keycodes to validate for invocation. These are the defaults.
 			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
@@ -55,7 +56,7 @@
 			
 			var tf:TextField = new TextField();
 			tf.width = 200;
-			tf.text = "shift-tab to toggle console";
+			tf.text = "shift-enter to toggle console";
 			tf.x = 10;
 			tf.y = stage.stageHeight -tf.height;
 			tf.type = TextFieldType.INPUT;
@@ -83,7 +84,7 @@
 			var ct:ColorTransform = new ColorTransform();
 			ct.color = Math.random() * 0xFFFFFF;
 			testButton.transform.colorTransform = ct;
-			LoggerUtil.log("Click!");
+			ConsoleUtil.log("Click!");
 		}
 		
 	}
