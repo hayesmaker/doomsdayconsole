@@ -1,6 +1,7 @@
 ﻿package no.doomsday.console.core 
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.ui.Keyboard;
 	import no.doomsday.console.core.AbstractConsole;
 	import no.doomsday.console.core.errors.NotImplementedError;
@@ -155,6 +156,9 @@
 		}
 		public function getManagerRefs():Array
 		{
+			throw new NotImplementedError();
+		}
+		public function get pluginContainer():DisplayObjectContainer {
 			throw new NotImplementedError();
 		}
 		

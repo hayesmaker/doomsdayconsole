@@ -144,6 +144,7 @@
 		private var extrasContainer:Sprite;
 		private var colorPicker:ColorPicker;
 		
+		private var _pluginContainer:Sprite = new Sprite();
 		
 		/**
 		 * Creates a new DConsole instance. 
@@ -212,6 +213,7 @@
 			extrasContainer.addChild(measureBracket);
 			extrasContainer.addChild(controllerManager);
 			extrasContainer.addChild(colorPicker);
+			extrasContainer.addChild(pluginContainer);
 			
 			mainConsoleContainer.addChild(consoleBg);	
 			mainConsoleContainer.addChild(textOutput);
@@ -1576,12 +1578,14 @@
 			drawMessages();
 		}
 		
-		/* INTERFACE no.doomsday.console.core.interfaces.ILogger */
-		
 		override public function log(...args:Array):void
 		{
 			trace.apply(this, args);
 		}
+		
+		override public function get pluginContainer():DisplayObjectContainer { return _pluginContainer; }
+		
+		
 	}
 	
 }
