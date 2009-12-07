@@ -68,6 +68,7 @@
 			matrix.identity();
 			matrix.translate( -stage.mouseX, -stage.mouseY);
 			sample();
+			e.updateAfterEvent();
 		}
 		
 		private function sample():void
