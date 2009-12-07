@@ -7,12 +7,10 @@
 	import no.doomsday.console.core.errors.NotImplementedError;
 	import no.doomsday.console.core.gui.KeyStroke;
 	import no.doomsday.console.core.input.KeyboardManager;
-	import no.doomsday.console.core.interfaces.ILogger;
 	import no.doomsday.console.core.messages.Message;
 	import no.doomsday.console.core.commands.ConsoleCommand;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import no.doomsday.console.core.interfaces.IConsole;
 	import no.doomsday.console.core.messages.MessageTypes;
 	/**
 	 * ...

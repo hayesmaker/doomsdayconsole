@@ -17,8 +17,6 @@
 	import no.doomsday.console.core.events.ConsoleEvent;
 	import no.doomsday.console.core.gui.KeyStroke;
 	import no.doomsday.console.core.gui.ScaleHandle;
-	import no.doomsday.console.core.interfaces.IConsole;
-	import no.doomsday.console.core.interfaces.ILogger;
 	import no.doomsday.console.core.introspection.AccessorDesc;
 	import no.doomsday.console.core.introspection.ChildScopeDesc;
 	import no.doomsday.console.core.introspection.ScopeManager;

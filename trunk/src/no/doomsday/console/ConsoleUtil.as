@@ -8,7 +8,6 @@
 	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.DConsole;
 	import no.doomsday.console.core.DLogger;
-	import no.doomsday.console.core.interfaces.IConsole;
 	import no.doomsday.console.utilities.ContextMenuUtil;
 	import no.doomsday.console.utilities.ContextMenuUtilAir;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
