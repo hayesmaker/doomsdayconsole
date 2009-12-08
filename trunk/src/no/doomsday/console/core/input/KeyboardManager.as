@@ -28,7 +28,8 @@
 			return INSTANCE;
 		}
 		private var keyboardSource:* = null;
-		public var keydict:Dictionary;
+		public var keycodedict:Dictionary;
+		public var charcodedict:Dictionary;
 		
 		/**
 		 * Start tracking keyboard events
@@ -43,7 +44,8 @@
 			{
 				
 			}
-			keydict = new Dictionary(false);
+			keycodedict = new Dictionary(false);
+			charcodedict = new Dictionary(false);
 			keyboardSource = eventSource;
 			eventSource.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, Number.POSITIVE_INFINITY, true);
 			eventSource.addEventListener(KeyboardEvent.KEY_UP, onKeyUp,false,Number.POSITIVE_INFINITY,true);
@@ -55,7 +57,8 @@
 			keyboardSource.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			keyboardSource.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			keyboardSource = null;
-			keydict = new Dictionary(false);
+			keycodedict = new Dictionary(false);
+			charcodedict = new Dictionary(false);
 		}
 		public function get isTracking():Boolean {
 			if (keyboardSource) {
@@ -65,19 +68,24 @@
 		}
 		private function onKeyUp(e:KeyboardEvent):void 
 		{
-			keydict[e.keyCode] = false;
+			keycodedict[e.keyCode] = false;
+			charcodedict[e.charCode] = false;
 		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
-			keydict[e.keyCode] = true;
+			keycodedict[e.keyCode] = true;
+			charcodedict[e.charCode] = true;
 		}
 		/**
 		 * Check wether a given key is currently pressed
 		 * @param	keyCode
 		 * @return
 		 */
-		public function keyIsDown(keyCode:int):Boolean {
-			return keydict[keyCode];
+		public function keyCodeIsDown(keyCode:int):Boolean {
+			return keycodedict[keyCode];
+		}
+		public function charCodeIsDown(charCode:int):Boolean {
+			return charcodedict[charCode];
 		}
 	}
 	

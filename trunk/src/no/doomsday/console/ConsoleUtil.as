@@ -130,8 +130,10 @@
 		public static function set password(s:String):void {
 			instance.setPassword(s);
 		}
-		public static function setKeyStroke(...keyCodes:Array):void {
-			instance.setInvokeKeys.apply(instance, keyCodes);
+		public static function setKeyStroke(keyCodes:Array = null, charCodes:Array = null):void {
+			if (!charCodes) charCodes = [];
+			if (!keyCodes) keyCodes = [];
+			instance.setInvokeKeys(keyCodes, charCodes);
 		}
 	}
 }

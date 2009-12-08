@@ -18,14 +18,14 @@
 	 */
 	public class AbstractConsole extends DSprite
 	{
-		protected static const VERSION:String = "1.06a";
+		protected static const VERSION:String = "1.061a";
 		protected var keyboardManager:KeyboardManager;
 		protected var invokeKeyStroke:KeyStroke;
 		
 		public function AbstractConsole() 
 		{
 			keyboardManager = new KeyboardManager();
-			invokeKeyStroke = new KeyStroke(keyboardManager, Keyboard.ENTER, Keyboard.SHIFT); //default keystroke
+			invokeKeyStroke = new KeyStroke(keyboardManager, [Keyboard.ENTER, Keyboard.SHIFT]); //default keystroke
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -47,9 +47,12 @@
 			throw new NotImplementedError();
 		}
 		
-		public function setInvokeKeys(...keyCodes:Array):void {
+		public function setInvokeKeys(keyCodes:Array,charCodes:Array):void {
 			if (keyCodes.length > 0) {
 				invokeKeyStroke.keyCodes = keyCodes;
+			}
+			if (charCodes.length > 0) {
+				invokeKeyStroke.charCodes = charCodes;
 			}
 		}
 		

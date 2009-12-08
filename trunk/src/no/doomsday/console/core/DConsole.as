@@ -1294,6 +1294,7 @@
 		override public function toggleDisplay(e:Event = null):void
 		{
 			visible = !visible;
+			dispatchEvent(new ConsoleEvent(ConsoleEvent.VISIBILITY_CHANGE));
 			var i:int;
 			var bounds:Rectangle = redraw();
 			monitorManager.stop();

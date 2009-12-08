@@ -11,6 +11,7 @@
 		public static const COMMAND:String = "consolecommand";
 		public static const MESSAGE:String = "consolemessage";
 		public static const PROPERTY_UPDATE:String = "onpropertyupdate";
+		public static const VISIBILITY_CHANGE:String = "visibilitychange";
 		public var args:Array;
 		public var text:String;
 		/**
