@@ -1,11 +1,20 @@
 #summary Customizing your invocation keystroke
 
-The default keystroke for toggling the console is shift+tab, but you are free to change this to any combination of held down keys.
+The default keystroke for toggling the console is shift+enter, but you are free to change this to any combination of held down keys.
 
-To do this, use the setInvokeKeys method of the DConsole class in the following way
+To do this, use the setKeyStroke method of the ConsoleUtil class.
 
 {{{
-ConsoleUtil.instance.setInvokeKeys(KeyBoard.SPACE,KeyBoard.CTRL,KeyBoard.SHIFT,KeyBoard.ENTER);
+public static function setKeyStroke(keyCodes:Array = null, charCodes:Array = null):void
 }}}
 
-At least one key code is required.
+Example use:
+
+{{{
+//The default keystroke
+ConsoleUtil.setKeyStroke([KeyBoard.SHIFT,KeyBoard.ENTER]);
+//Quake style
+ConsoleUtil.setKeyStroke(null,["|".charCodeAt()]);
+}}}
+
+At least one key or char code is required.
