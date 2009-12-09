@@ -17,6 +17,7 @@
 	import no.doomsday.console.ConsoleUtil;
 	import no.doomsday.console.core.DLogger;
 	import no.doomsday.console.LoggerUtil;
+	import no.doomsday.console.utilities.ContextMenuUtil;
 	
 	/**
 	 * ...
@@ -33,17 +34,15 @@
 		
 		private function init(e:Event = null):void 
 		{	
-			addChild(ConsoleUtil.getInstance(ConsoleUtil.MODE_CONSOLE));
-			//addChild(ConsoleUtil.getInstance(ConsoleUtil.MODE_LOGGER));
-			ConsoleUtil.password = "Hello world";			
-			ConsoleUtil.setKeyStroke(Keyboard.SHIFT,Keyboard.ENTER); //The keycodes to validate for invocation. These are the defaults.
-			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// entry point
+			
+			addChild(ConsoleUtil.getInstance());
+			//ConsoleUtil.password = "Hello world";
+			ConsoleUtil.setKeyStroke([Keyboard.SHIFT,Keyboard.ENTER]); //The keycodes to validate for invocation. These are the defaults.
+			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			
-			
+						
 			//some stage elements
 			testButton = new Sprite();
 			testButton.graphics.beginFill(0xFF0000);
@@ -63,10 +62,7 @@
 			addChild(tf);
 			
 			//add the console instance using ConsoleUtil
-			//ContextMenuUtil.setUp(ConsoleUtil.instance,this);
-			
-			//ConsoleUtil.linkFunction("buttonClickCommand", buttonClick);
-			//ConsoleUtil.linkFunction("out", outputTest);
+			ContextMenuUtil.setUp(ConsoleUtil.instance,this);
 		}
 		
 		private function outputTest(input:String):String {
