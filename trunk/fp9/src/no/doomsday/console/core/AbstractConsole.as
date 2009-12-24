@@ -18,7 +18,7 @@
 	 */
 	public class AbstractConsole extends DSprite
 	{
-		protected static const VERSION:String = "FP10 1.061a";
+		protected static const VERSION:String = "FP9 1.061a";
 		protected var keyboardManager:KeyboardManager;
 		protected var invokeKeyStroke:KeyStroke;
 		
