@@ -458,9 +458,9 @@ package no.doomsday.console.core
 			{
 				var openItem:ContextMenuItem = new ContextMenuItem(OPEN_LOGGER_LABEL);
 					openItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, _validateOpen);
-									
+				
 				parent.contextMenu = new ContextMenu();
-				parent.contextMenu.customItems = [openItem];
+				(parent.contextMenu as ContextMenu).customItems = [openItem];
 			}
 		}
 		
@@ -745,11 +745,11 @@ package no.doomsday.console.core
 		{
 			if (parent != null && parent.contextMenu != null)
 			{
-				try{
-					parent.contextMenu.customItems[1].removeEventListener(ContextMenuEvent.MENU_ITEM_SELECT, _validateOpen);
-					parent.contextMenu.customItems = null;
+				try {
+					(parent.contextMenu as ContextMenu).customItems[1].removeEventListener(ContextMenuEvent.MENU_ITEM_SELECT, _validateOpen);
+					(parent.contextMenu as ContextMenu).customItems = null;
 					parent.contextMenu = null;
-				}catch (e:Error) {
+				} catch (e:Error) {
 					
 				}
 			}
@@ -801,12 +801,13 @@ package no.doomsday.console.core
 			
 			if (_enableContextMenu)
 			{
-				if (parent != null && parent.contextMenu.customItems.length > 0) {
+				var cm:ContextMenu = parent.contextMenu as ContextMenu;
+				if (parent != null && cm.customItems.length > 0) {
 					//trace(parent.contextMenu.customItems);
-					for (var i:int = 0; i < parent.contextMenu.customItems.length; i++) 
+					for (var i:int = 0; i < cm.customItems.length; i++) 
 					{
-						if (parent.contextMenu.customItems[i].caption == CLOSE_LOGGER_LABEL || parent.contextMenu.customItems[i].caption == OPEN_LOGGER_LABEL) {
-							parent.contextMenu.customItems[i].caption = _isVisible ? CLOSE_LOGGER_LABEL : OPEN_LOGGER_LABEL;
+						if (cm.customItems[i].caption == CLOSE_LOGGER_LABEL || cm.customItems[i].caption == OPEN_LOGGER_LABEL) {
+							cm.customItems[i].caption = _isVisible ? CLOSE_LOGGER_LABEL : OPEN_LOGGER_LABEL;
 							break;
 						}
 					}
