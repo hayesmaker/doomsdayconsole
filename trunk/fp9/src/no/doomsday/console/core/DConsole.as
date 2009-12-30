@@ -22,6 +22,7 @@
 	import no.doomsday.console.core.introspection.MethodDesc;
 	import no.doomsday.console.core.introspection.VariableDesc;
 	import no.doomsday.console.utilities.colorpicker.ColorPicker;
+	import no.doomsday.console.utilities.ContextMenuUtil;
 	import no.doomsday.console.utilities.controller.ControllerManager;
 	import no.doomsday.console.utilities.math.MathUtils;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
@@ -885,6 +886,7 @@
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			ContextMenuUtil.setUp(this, parent);
 			try{
 				parentTabChildren = parent.tabChildren;
 				parentTabEnabled = parent.tabEnabled;
