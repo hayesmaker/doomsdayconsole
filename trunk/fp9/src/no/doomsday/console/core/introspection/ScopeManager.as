@@ -37,9 +37,9 @@
 			_currentScope = c;
 			return _currentScope;
 		}
-		public function setScope(o:*,force:Boolean = false):void {
+		public function setScope(o:*,force:Boolean = false,printResults:Boolean = true):void {
 			if (!force && currentScope.obj === o) {
-				printScope();
+				if(printResults) printScope();
 				return;
 			}
 			try {
@@ -49,8 +49,10 @@
 			}catch (e:Error) {
 				throw e;
 			}
-			printScope();
-			printDownPath();
+			if(printResults){
+				printScope();
+				printDownPath();
+			}
 		}
 		
 		public function getScopeByName(str:String):*{
@@ -75,10 +77,22 @@
 			}
 		}		
 		public function setScopeByName(str:String):void {
-			try {
-				setScope(getScopeByName(str));
-			}catch (e:Error) {
-				throw e;
+			if (str.indexOf(".") > -1) {
+				//path
+				var found:Boolean = false;
+				var split:Array = str.split(".");
+				for (var i:int = 0; i < split.length; i++) 
+				{
+					setScope(getScopeByName(split[i]), false, i == split.length - 1);
+				}
+				
+			}else {
+				//name
+				try {
+					setScope(getScopeByName(str));
+				}catch (e:Error) {
+					throw e;
+				}
 			}
 		}		
 		public function printMethods():void {
