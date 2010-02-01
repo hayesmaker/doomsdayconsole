@@ -44,6 +44,13 @@ Returns the current value of _property_ on the current scope
 *call _methodname_ _...args_*
 Will attempt to call _methodName_ on the current scope with the supplied arguments
 
+
+===Byte arrays===
+*hexDump* _address_ _length_
+If the current scope is a byte array, dump the byte array to the console.
+
+Dumps are displayed in a paged fashion, with a default start address of zero and a page size of 256 bytes.  Repeated calls will dump additional pages to the console, incrementing the start address as it goes.  A start address and a page length can optionally be specified.  Decimal, octal (with leading "0") and hexadecimal (with leading "0x") values are all accepted.
+
 ===Controllers===
 *createController _...properties_*
 
