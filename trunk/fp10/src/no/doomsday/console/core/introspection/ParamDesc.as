@@ -8,8 +8,8 @@
 	{
 		//<parameter index="1" type="flash.display::DisplayObject" optional="false"/>
 		public var index:int;
-		public var type:int;
-		public var optional:int;
+		public var type:String;
+		public var optional:Boolean;
 		public function ParamDesc(xml:XML) 
 		{
 			index = xml.@index;

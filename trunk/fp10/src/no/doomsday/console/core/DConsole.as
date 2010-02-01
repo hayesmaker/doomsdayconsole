@@ -1,46 +1,13 @@
 ﻿package no.doomsday.console.core
 {
+	import com.adobe.images.PNGEncoder;
+	
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
-	import flash.display.Loader;
-	import flash.media.SoundMixer;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import com.adobe.images.PNGEncoder;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getTimer;
-	import net.hires.debug.ConsoleStats;
-	import no.doomsday.console.core.commands.CommandManager;
-	import no.doomsday.console.core.commands.ConsoleCommand;
-	import no.doomsday.console.core.commands.FunctionCallCommand;
-	import no.doomsday.console.core.errors.ConsoleAuthError;
-	import no.doomsday.console.core.events.ConsoleEvent;
-	import no.doomsday.console.core.gui.KeyStroke;
-	import no.doomsday.console.core.gui.ScaleHandle;
-	import no.doomsday.console.core.introspection.AccessorDesc;
-	import no.doomsday.console.core.introspection.ChildScopeDesc;
-	import no.doomsday.console.core.introspection.ScopeManager;
-	import no.doomsday.console.core.introspection.InspectionUtils;
-	import no.doomsday.console.core.introspection.MethodDesc;
-	import no.doomsday.console.core.introspection.VariableDesc;
-	import no.doomsday.console.utilities.colorpicker.ColorPicker;
-	import no.doomsday.console.utilities.ContextMenuUtil;
-	import no.doomsday.console.utilities.controller.ControllerManager;
-	import no.doomsday.console.utilities.math.MathUtils;
-	import no.doomsday.console.utilities.measurement.MeasurementTool;
-	import no.doomsday.console.core.messages.Message;
-	import no.doomsday.console.core.messages.MessageRepeatMode;
-	import no.doomsday.console.core.messages.MessageTypes;
-	import no.doomsday.console.utilities.monitoring.MonitorManager;
-	import no.doomsday.console.core.persistence.PersistenceManager;
-	import no.doomsday.console.core.references.ReferenceManager;
-	import no.doomsday.console.core.text.autocomplete.AutocompleteDictionary;
-	import no.doomsday.console.core.text.autocomplete.AutocompleteManager;
-	import no.doomsday.console.core.text.TextFormats;
-	import no.doomsday.console.core.text.TextUtils;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Loader;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -53,7 +20,8 @@
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
 	import flash.net.FileReference;
-	import flash.net.SharedObject;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
 	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.text.GridFitType;
@@ -63,10 +31,35 @@
 	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
 	import flash.utils.ByteArray;
-	import flash.utils.describeType;
-	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import no.doomsday.console.core.input.KeyboardManager;
+	import flash.utils.getDefinitionByName;
+	
+	import net.hires.debug.ConsoleStats;
+	
+	import no.doomsday.console.core.commands.CommandManager;
+	import no.doomsday.console.core.commands.ConsoleCommand;
+	import no.doomsday.console.core.commands.FunctionCallCommand;
+	import no.doomsday.console.core.errors.ConsoleAuthError;
+	import no.doomsday.console.core.events.ConsoleEvent;
+	import no.doomsday.console.core.gui.ScaleHandle;
+	import no.doomsday.console.core.introspection.InspectionUtils;
+	import no.doomsday.console.core.introspection.ScopeManager;
+	import no.doomsday.console.core.messages.Message;
+	import no.doomsday.console.core.messages.MessageRepeatMode;
+	import no.doomsday.console.core.messages.MessageTypes;
+	import no.doomsday.console.core.persistence.PersistenceManager;
+	import no.doomsday.console.core.references.ReferenceManager;
+	import no.doomsday.console.core.text.TextFormats;
+	import no.doomsday.console.core.text.TextUtils;
+	import no.doomsday.console.core.text.autocomplete.AutocompleteDictionary;
+	import no.doomsday.console.core.text.autocomplete.AutocompleteManager;
+	import no.doomsday.console.utilities.ContextMenuUtil;
+	import no.doomsday.console.utilities.ProductInfoUtil;
+	import no.doomsday.console.utilities.colorpicker.ColorPicker;
+	import no.doomsday.console.utilities.controller.ControllerManager;
+	import no.doomsday.console.utilities.math.MathUtils;
+	import no.doomsday.console.utilities.measurement.MeasurementTool;
+	import no.doomsday.console.utilities.monitoring.MonitorManager;
 	import no.doomsday.utilities.text.Lipsum;
 	/**
 	 * ...
@@ -349,6 +342,7 @@
 			addCommand(new FunctionCallCommand("getClass", getClassByName, "Utility", "Returns a reference to the Class object of the specified classname"));
 			addCommand(new FunctionCallCommand("getLoader", getLoader, "Utility", "Returns a 'dumb' Loader getting data from the url X"));
 			addCommand(new FunctionCallCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)"));
+			addCommand(new FunctionCallCommand("productInfo", getProductInfo, "Utility", "Displays the contents of Flex ProductInfo tag (Flex SWFs only)"));
 				
 			addCommand(new FunctionCallCommand("addMonitor", monitorManager.createMonitor, "Monitoring", "Begins monitoring ..values of the current scope"));
 			addCommand(new FunctionCallCommand("removeMonitor", monitorManager.destroyMonitor, "Monitoring", "Stops monitoring the current scope"));
@@ -364,6 +358,7 @@
 			
 			addCommand(new FunctionCallCommand("root", scopeManager.selectBaseScope, "Introspection", "Selects the stage as the current introspection scope"));
 			addCommand(new FunctionCallCommand("parent", scopeManager.up, "Introspection", "(if the current scope is a display object) changes scope to the parent object"));
+			addCommand(new FunctionCallCommand("hexDump", scopeManager.hexDump, "Introspection", "(if the current scope is a byte array) outputs the scope in paged hexadecimal view "));
 			addCommand(new FunctionCallCommand("children", scopeManager.printChildren, "Introspection", "Get available children in the current scope"));
 			addCommand(new FunctionCallCommand("variables", scopeManager.printVariables, "Introspection", "Get available simple variables in the current scope"));
 			addCommand(new FunctionCallCommand("complex", scopeManager.printComplexObjects, "Introspection", "Get available complex variables in the current scope"));
@@ -411,6 +406,23 @@
 		{
 			return Lipsum.getText(length);
 		}
+		
+		private function getProductInfo():void
+		{
+			var pi:ProductInfoUtil = new ProductInfoUtil(this);
+			print("Product info:", MessageTypes.SYSTEM);
+			if (pi.available) {
+				print(" ProductID : " + pi.productID);
+				print(" Edition : " + pi.edition);
+				print(" Version : " + pi.sdkVersion);
+				print(" Compilation Date : " + pi.compilationDate);
+			}
+			else {
+				print(" Product info not available for this SWF (tag not found).");
+			}
+		}
+
+		
 		/**
 		 * Toggle display of mrDoob stats
 		 */
@@ -656,7 +668,7 @@
 		{
 			print("Help", MessageTypes.SYSTEM);
 			print("	Keyboard commands", MessageTypes.SYSTEM);
-			print("		Shift-Tab (default) -> Toggle console", MessageTypes.SYSTEM);
+			print("		Shift-Enter (default) -> Toggle console", MessageTypes.SYSTEM);
 			print("		Tab -> (When out of focus) Set the keyboard focus to the input field", MessageTypes.SYSTEM);
 			print("		Tab -> (When in focus) Skip to end of line and append a space", MessageTypes.SYSTEM);
 			print("		Tab -> (While caret is on an unknown term) Context sensitive search of commands, methods and accessors", MessageTypes.SYSTEM);
@@ -898,6 +910,7 @@
 					textOutput.setTextFormat(fmt, idx, idx + messageLog[i].text.length);
 				}catch (e:Error) {
 					//clear();
+					trace(e.getStackTrace());
 					messageLog.splice(i, 1);
 					print("The console encountered a message draw error. Did you attempt to print a ByteArray?", MessageTypes.ERROR);
 					drawMessages();

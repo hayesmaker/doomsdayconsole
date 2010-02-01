@@ -2,10 +2,10 @@
 {
 	import flash.display.DisplayObject;
 	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
+	
 	import no.doomsday.console.core.DConsole;
-	import no.doomsday.console.core.messages.MessageTypes;
 	import no.doomsday.console.core.text.autocomplete.AutocompleteManager;
+	import no.doomsday.console.utilities.HexUtil;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -18,6 +18,8 @@
 		
 		private var _currentScope:IntrospectionScope = createScope( { } );
 		private var _previousScope:IntrospectionScope;
+		private var _hexDumpPos:uint;
+		
 		private var console:DConsole;
 		private var autoCompleteManager:AutocompleteManager;
 		public function ScopeManager(console:DConsole,autoCompleteManager:AutocompleteManager) 
@@ -35,6 +37,7 @@
 			c.variables = InspectionUtils.getVariables(o);
 			c.obj = o;
 			_currentScope = c;
+			_hexDumpPos = 0;
 			return _currentScope;
 		}
 		public function setScope(o:*,force:Boolean = false,printResults:Boolean = true):void {
@@ -71,9 +74,14 @@
 		public function get currentScope():IntrospectionScope { return _currentScope; }
 		
 		public function up():void {
-			if (!_currentScope) return;
+			if (!_currentScope) {
+				throw new Error("No current scope; cannot switch to parent");
+			}
 			if (_currentScope.obj is DisplayObject) {
 				setScope(_currentScope.obj.parent);
+			}
+			else {
+				throw new Error("Current scope is not a DisplayObject; cannot switch to parent");
 			}
 		}
 		private function traverseFor(obj:Object, name:String):Object {
@@ -120,7 +128,7 @@
 				console.print("		" + vd.name + ": " + vd.type);
 				try{
 					cv = currentScope.obj[vd.name];
-					console.print("			value: " + cv.toString());
+					console.print("			value: " + ((cv is ByteArray) ? "[ByteArray]" : cv.toString()));
 				}catch (e:Error) {
 					
 				}
@@ -133,7 +141,7 @@
 				console.print("		" + ad.name + ": " + ad.type);
 				try{
 					cv = currentScope.obj[ad.name];
-					console.print("			value: " + cv.toString());
+					console.print("			value: " + ((cv is ByteArray) ? "[ByteArray]" : cv.toString()));
 				}catch (e:Error) {
 					
 				}
@@ -192,6 +200,36 @@
 				console.print("scope : " + currentScope.obj.toString());
 			}
 		}
+		
+		public function hexDump(startIndex:String = "", len:String = ""):String {
+			var _startIndex:int, _endIndex:int, _len:int;
+			var b:ByteArray = currentScope.obj as ByteArray;
+			var result:String;
+			
+			if (b) {
+				try {
+					_startIndex = ((startIndex == "") ? _hexDumpPos : parseInt(startIndex));				
+					_len = ((len == "") ? -1 : parseInt(len));
+					
+					if (isNaN(_startIndex) || isNaN(_len)) {
+						throw new Error();
+					}				
+					_endIndex = (_len == -1) ? (_startIndex + 160) : (_startIndex + _len);
+					result = HexUtil.dumpByteArray(b, _startIndex, _endIndex);
+					_hexDumpPos = _endIndex;	
+				}
+				catch(e:Error)
+				{
+					throw new Error("Parameters are invalid");
+				}
+				
+				return result;
+			}
+			else {
+				throw new Error("Current scope is not a byte array");
+			}
+		}
+		
 		public function setAccessorOnObject(accessorName:String, arg:*):*
 		{
 			if (arg == "true") {
