@@ -1,4 +1,4 @@
-#summary Viewing the !ProductInfo Tag
+#summary Viewing the ProductInfo Tag
 
 This is implemented via the *productInfo* command.
 
