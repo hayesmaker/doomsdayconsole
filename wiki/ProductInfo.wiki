@@ -6,4 +6,4 @@ SWFs compiled with Flex Builder or the  Flex SDK include an undocumented !Produc
 
 Note that this tag is typically found only in SWFs compiled with Flex, and not those built from the Flash IDE or other tools.  If your SWF does not contain a !ProductInfo tag, the console will report that such details are not available.
 
-For more information on this tag, see Claus Wahlers' discussion of [http://wahlers.com.br/claus/blog/undocumented-swf-tags-written-by-mxmlc/ Undocumented SWF Tags written by MXMLC]
+For more information on this tag, see Claus Wahlers' discussion of [http://wahlers.com.br/claus/blog/undocumented-swf-tags-written-by-mxmlc/ Undocumented SWF Tags written by MXMLC].
