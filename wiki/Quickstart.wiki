@@ -1,7 +1,7 @@
 #summary A fast introduction to getting the console running
 #labels Phase-Deploy,Phase-Implementation
 
-==Via ActionScript 3==
+==Via !ActionScript 3==
 
 {{{
 package 
