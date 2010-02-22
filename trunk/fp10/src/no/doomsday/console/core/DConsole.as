@@ -1198,11 +1198,18 @@
 		{
 			if (invokeKeyStroke.valid) {
 				toggleDisplay();
+				e.stopImmediatePropagation();
+				e.stopPropagation();
+				keyboardManager.releaseAll();
 				return;
 			}
 			if (!visible) return;
 			if (e.keyCode == Keyboard.TAB) {
-				if (visible && stage.focus != inputTextField) stage.focus = inputTextField;
+				if (visible && stage.focus != inputTextField) {
+					stage.focus = inputTextField;
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+				}
 				doTab();
 				return;
 			}

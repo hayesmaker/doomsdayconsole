@@ -41,18 +41,8 @@
 			colors.push(0xFF8000FF);
 			colors.push(0xFF000080);
 			
-			addEventListener(Event.ENTER_FRAME, test);
-			
 			//TODO: Render all graphs to same bitmapdata
 			
-		}
-		
-		private function test(e:Event):void 
-		{
-			for (var i:int = 0; i < graphs.length; i++) 
-			{
-				graphs[i].add(Math.random());
-			}
 		}
 		
 		private function onSelection(e:DropDownEvent):void 

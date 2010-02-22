@@ -87,6 +87,13 @@
 		public function charCodeIsDown(charCode:int):Boolean {
 			return charcodedict[charCode];
 		}
+		/**
+		 * releases all keycodes
+		 */
+		public function releaseAll():void {
+			keycodedict = new Dictionary(false);
+			charcodedict = new Dictionary(false);
+		}
 	}
 	
 }

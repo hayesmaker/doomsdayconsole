@@ -8,7 +8,9 @@
 	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.DConsole;
 	import no.doomsday.console.core.DLogger;
+	import no.doomsday.console.core.gui.Window;
 	import no.doomsday.console.utilities.ContextMenuUtil;	
+	import no.doomsday.console.utilities.monitoring.GraphWindow;
 	// import no.doomsday.console.utilities.ContextMenuUtilAir;
 	import no.doomsday.console.utilities.measurement.MeasurementTool;
 	import no.doomsday.console.core.messages.MessageTypes;
@@ -134,6 +136,15 @@
 			if (!charCodes) charCodes = [];
 			if (!keyCodes) keyCodes = [];
 			instance.setInvokeKeys(keyCodes, charCodes);
+		}
+		public static function getGraph(title:String = "Graph"):GraphWindow {
+			var w:GraphWindow = new GraphWindow(title);
+			instance.pluginContainer.addChild(w);
+			w.y = w.x = 50;
+			return w;
+		}
+		public static function destroyWindow(w:Window):Boolean {
+			return false;
 		}
 	}
 }
