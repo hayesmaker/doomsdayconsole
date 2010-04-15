@@ -32,8 +32,6 @@
 		
 		/* @group Magic Methods */
 		
-		// TODO: Add support for Modifier NONE and tracking of keystroke characters only. 
-		
 		/**
 		 * Gets a singleton instance of the input manager
 		 * @return
