@@ -132,11 +132,7 @@
 		public static function set password(s:String):void {
 			instance.setPassword(s);
 		}
-		public static function setKeyStroke(keyCodes:Array = null, charCodes:Array = null):void {
-			if (!charCodes) charCodes = [];
-			if (!keyCodes) keyCodes = [];
-			instance.setInvokeKeys(keyCodes, charCodes);
-		}
+		
 		public static function getGraph(title:String = "Graph"):GraphWindow {
 			var w:GraphWindow = new GraphWindow(title);
 			instance.pluginContainer.addChild(w);
