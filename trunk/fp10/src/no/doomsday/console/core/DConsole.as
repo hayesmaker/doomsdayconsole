@@ -1196,13 +1196,6 @@
 		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
-			if (invokeKeyStroke.valid) {
-				toggleDisplay();
-				e.stopImmediatePropagation();
-				e.stopPropagation();
-				keyboardManager.releaseAll();
-				return;
-			}
 			if (!visible) return;
 			if (e.keyCode == Keyboard.TAB) {
 				if (visible && stage.focus != inputTextField) {

@@ -694,7 +694,7 @@ package no.doomsday.console.core
 				_bg.width = stage.stageWidth - 10
 				_txt.width = _bg.width - 10;
 			}
-			if (_height == 0);
+			if (_height == 0)
 			{
 				_bg.height = stage.stageHeight - 10
 				_txt.height = _bg.height - 10;
@@ -704,7 +704,7 @@ package no.doomsday.console.core
 		// Making the trace window accessible by pressing SHIFT + ENTER
 		private function _onKeyDown(e:KeyboardEvent):void
 		{
-			if (invokeKeyStroke.valid) {
+/*			if (invokeKeyStroke.valid) {
 				//toggleDisplay();
 				_validateOpen();
 				return;
@@ -716,7 +716,7 @@ package no.doomsday.console.core
 			else if (e.charCode == Keyboard.ESCAPE && _passwordField != null)
 			{
 				_removePasswordField();
-			}
+			}*/
 		}
 		
 		private function _onPasswordKeyDown(e:Event):void

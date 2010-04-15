@@ -1,15 +1,15 @@
 ﻿package no.doomsday.console.core.text 
 {
-	import no.doomsday.console.core.DConsole;
 	import flash.text.Font;
 	import flash.text.TextField;
+	
+	import no.doomsday.console.core.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning
 	 */
 	public class TextUtils
 	{
-		
 		public function TextUtils() 
 		{
 			
@@ -69,6 +69,23 @@
 			}
 			return "";
 		}
+		
+		/**
+		 * Trim 
+		 *	- http://blog.stevenlevithan.com/archives/faster-trim-javascript
+		 * 
+		 * @param str 	The string to trim.
+		 * 
+		 * @return
+		 * 	Returns the trimmed str value with whitespace removed at the start and end of the string. 
+		 */
+		public static function trim(str:String):String {
+			str = str.replace(/^\s\s*/, '');
+			var ws:RegExp = /\s/,i:int = str.length;
+			while (ws.test(str.charAt(--i))){};
+			return str.slice(0, i + 1);
+		}
+
 		
 	}
 

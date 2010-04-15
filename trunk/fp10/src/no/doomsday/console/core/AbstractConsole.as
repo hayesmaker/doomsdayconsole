@@ -2,16 +2,18 @@
 {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
-	import flash.ui.Keyboard;
-	import no.doomsday.console.core.AbstractConsole;
-	import no.doomsday.console.core.errors.NotImplementedError;
-	import no.doomsday.console.core.gui.KeyStroke;
-	import no.doomsday.console.core.input.KeyboardManager;
-	import no.doomsday.console.core.messages.Message;
-	import no.doomsday.console.core.commands.ConsoleCommand;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.ui.Keyboard;
+	
+	import no.doomsday.console.core.AbstractConsole;
+	import no.doomsday.console.core.commands.ConsoleCommand;
+	import no.doomsday.console.core.errors.NotImplementedError;
+	import no.doomsday.console.core.input.KeyBindings;
+	import no.doomsday.console.core.input.KeyboardManager;
+	import no.doomsday.console.core.messages.Message;
 	import no.doomsday.console.core.messages.MessageTypes;
+
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -19,20 +21,17 @@
 	public class AbstractConsole extends DSprite
 	{
 		protected static const VERSION:String = "FP10 1.061a";
-		protected var keyboardManager:KeyboardManager;
-		protected var invokeKeyStroke:KeyStroke;
 		
 		public function AbstractConsole() 
 		{
-			keyboardManager = new KeyboardManager();
-			invokeKeyStroke = new KeyStroke(keyboardManager, [Keyboard.ENTER, Keyboard.SHIFT]); //default keystroke
+			KeyboardManager.addShorcut(KeyBindings.ENTER, KeyBindings.ALT_SHIFT, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function onAddedToStage(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			keyboardManager.setup(stage); //Setup keyboard listeners
+			KeyboardManager.instance.setup(stage); //Setup keyboard listeners
 		}
 		
 		/* INTERFACE no.doomsday.console.core.interfaces.IConsole */
@@ -45,15 +44,6 @@
 		public function hide():void
 		{
 			throw new NotImplementedError();
-		}
-		
-		public function setInvokeKeys(keyCodes:Array,charCodes:Array):void {
-			if (keyCodes.length > 0) {
-				invokeKeyStroke.keyCodes = keyCodes;
-			}
-			if (charCodes.length > 0) {
-				invokeKeyStroke.charCodes = charCodes;
-			}
 		}
 		
 		public function setRepeatFilter(filter:int):void
