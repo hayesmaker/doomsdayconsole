@@ -432,7 +432,7 @@
 		 * 	Returns trur or false depending on wether the keyboard shortcut contains the keystroke, modifier combination.
 		 */ 
 		private function isKeyboardShortcut(keyboardShortcut:KeyboardShortcut, keystroke:uint, modifier:uint):Boolean{
-			return ((keyboardShortcut.keystroke == keystroke) && (keyboardShortcut.modifier == keyboardShortcut.modifier));
+			return ((keyboardShortcut.keystroke == keystroke) && (keyboardShortcut.modifier == modifier));
 		}
 		
 		/**
