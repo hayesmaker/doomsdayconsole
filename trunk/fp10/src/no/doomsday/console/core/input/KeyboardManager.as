@@ -7,6 +7,7 @@
 	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
@@ -181,6 +182,19 @@
 			return success;
 		}
 		
+		/**
+		 * If is valid Keyboardshortcut.
+		 * 
+		 * @param keystroke The keystroke an valid keycode 
+		 * @param modifier	The modifier can be either ALT, CTR, SHIFT or ALT+SHIFT, CTR+ALT. CTR+SHIFT
+		 * 
+		 * @return
+		 * 	Returns true or false wether the keyboard shortcut is valid or not. 
+		 */ 
+		public static function isValidKeyboardShortcut(keystroke:uint, modifier:uint):Boolean {
+			return instance.validateKeystrokeWithModifier(keystroke, modifier);
+		}
+		
 		/* @end */
 		
 		
@@ -232,7 +246,9 @@
 		}
 		
 		/**
+		 * Handle Key up.
 		 * 
+		 * @param event The keyboard event
 		 */ 
 		private function handleKeyUp(event:KeyboardEvent):void {
 			// If the list is empty return.
@@ -263,6 +279,9 @@
 		private function validateKeystroke(keystroke:uint):Boolean {
 			var success:Boolean = true;
 			switch(keystroke){
+				case KeyBindings.ALT:
+				case KeyBindings.SHIFT:
+				case KeyBindings.CTRL:
 				case Keyboard.BACKSPACE:
 				case Keyboard.CAPS_LOCK:
 				case Keyboard.INSERT:
@@ -312,6 +331,12 @@
 		private function validateKeystrokeWithModifier(keystroke:uint, modifier:uint):Boolean {
 			var success:Boolean = false;
 			
+			/*
+			 * 1. ENTER | TAB must satisfy at least 2 modifiers.
+			 * 2. ESC	can only have 1 modifier
+			 * 3. FN*   can not have a  modifier
+			 * 4. SPACE must have at least one modifier.
+			 */
 			if((keystroke == KeyBindings.ENTER) || (keystroke == KeyBindings.TAB)){
 				success = isCombinedModifier(modifier);
 			}
@@ -323,8 +348,13 @@
 			if(modifier == KeyBindings.NONE){
 				success = !isKeystrokeFN(keystroke);
 			}
+			
+			if((keystroke == KeyBindings.SPACE)){
+				success = (modifier != KeyBindings.NONE);
+			}
 			return success;
 		}
+		private static var flag:int = 0; 
 		
 		/**
 		 * Is combined modifier.

@@ -3,17 +3,20 @@
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
+	import flash.external.ExternalInterface;
 	import flash.utils.describeType;
+	
 	import no.doomsday.console.core.AbstractConsole;
-	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.DConsole;
 	import no.doomsday.console.core.DLogger;
+	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.gui.Window;
-	import no.doomsday.console.utilities.ContextMenuUtil;	
-	import no.doomsday.console.utilities.monitoring.GraphWindow;
-	// import no.doomsday.console.utilities.ContextMenuUtilAir;
-	import no.doomsday.console.utilities.measurement.MeasurementTool;
+	import no.doomsday.console.core.input.KeyBindings;
+	import no.doomsday.console.core.input.KeyboardManager;
 	import no.doomsday.console.core.messages.MessageTypes;
+	import no.doomsday.console.utilities.ContextMenuUtil;
+	import no.doomsday.console.utilities.measurement.MeasurementTool;
+	import no.doomsday.console.utilities.monitoring.GraphWindow;
 	
 	/**
 	 * ...
@@ -25,6 +28,9 @@
 		public static const MODE_CONSOLE:String = "console";
 		public static const MODE_LOGGER:String = "logger";
 		private static var _instance:AbstractConsole;
+		
+		private static var keyboardShortcut:Array = [];
+		
 		public function ConsoleUtil() 
 		{
 			throw new Error("Use static methods");
@@ -46,6 +52,9 @@
 					default:
 					_instance = new DConsole();
 					trace("Console mode set");
+				}
+				if(keyboardShortcut.length > 0){
+					instance.changeKeyboardShortcut(keyboardShortcut[0], keyboardShortcut[1]);
 				}
 			}
 			return _instance;
@@ -142,5 +151,41 @@
 		public static function destroyWindow(w:Window):Boolean {
 			return false;
 		}
+		
+		/**
+		 * Set keyboard shortcut
+		 * 
+		 * @param keystroke	The keystroke
+		 * @param modifier	The modifier
+		 */ 
+		public static function setKeyboardShortcut(keystroke:uint, modifier:uint):Boolean {
+			var success:Boolean = false;
+			/*
+			 * If is a valid keyboard shortcut
+			 *
+			 * 1. If the console is not initialized store for later, and modify after creation.
+			 * 2. If the console is initialized called instance->changeKeyboardShortcut
+			 */
+			if(KeyboardManager.isValidKeyboardShortcut(keystroke, modifier)){
+				if(!_instance){
+					keyboardShortcut = [keystroke, modifier];
+				} else {
+					instance.changeKeyboardShortcut(keystroke, modifier);
+				}
+				success = true;
+			}
+			return success;
+		}
+		
+		/**
+		 * Change keyboard shortcut.
+		 * 
+		 * @param keystroke	The keystroke
+		 * @param modifier	The modifier 
+		 */ 
+		private static function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
+			instance.changeKeyboardShortcut(keystroke, modifier);
+		}
+		
 	}
 }

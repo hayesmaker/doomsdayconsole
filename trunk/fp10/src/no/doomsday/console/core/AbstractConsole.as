@@ -6,6 +6,7 @@
 	import flash.events.Event;
 	import flash.ui.Keyboard;
 	
+	import no.doomsday.console.ConsoleUtil;
 	import no.doomsday.console.core.AbstractConsole;
 	import no.doomsday.console.core.commands.ConsoleCommand;
 	import no.doomsday.console.core.errors.NotImplementedError;
@@ -21,10 +22,12 @@
 	public class AbstractConsole extends DSprite
 	{
 		protected static const VERSION:String = "FP10 1.061a";
+		protected var keystroke:uint = KeyBindings.ENTER;
+		protected var modifier:uint = KeyBindings.ALT_SHIFT;
 		
 		public function AbstractConsole() 
 		{
-			KeyboardManager.addShorcut(KeyBindings.ENTER, KeyBindings.ALT_SHIFT, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
+			KeyboardManager.addShorcut(keystroke, modifier, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -158,6 +161,12 @@
 			throw new NotImplementedError();
 		}
 		
+		/**
+		 * Change keyboard shortcut
+		 */ 
+		public function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
+			KeyboardManager.addShorcut(keystroke, modifier, this.toggleDisplay, null, true);
+		}
 	}
 
 }
