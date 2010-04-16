@@ -12,7 +12,7 @@ Example use:
 
 {{{
 //The default keystroke
-ConsoleUtil.setKeyboardShortcut([KeyBindings.ENTER,KeyBindings.ALT_SHIFT]);
+ConsoleUtil.setKeyboardShortcut([KeyBindings.ENTER,KeyBindings.CTRL_SHIFT]);
 //Quake style
 ConsoleUtil.setKeyStroke(KeyBindings.toKeyCode("|"),KeyBindings.NONE]);
 }}}
@@ -33,8 +33,8 @@ ConsoleUtil.setKeyStroke(KeyBindings.toKeyCode("|"),KeyBindings.NONE]);
 ==== Valid keystrokes:====
 
  * ALL F1, F2 and so on can only be used as keystroke with no modifiers. 
- * KeyBindings.ENTER can only be used as keystroke + 2 modifiers. 
- * KeyBindings.TAB can only be used as keystroke + 2 modifiers 
+ * KeyBindings.ENTER can only be used as keystroke + 2 modifiers but can not be used with ALT_SHIFT since it is a reserved keystroke i Windows for Fullscreen.
+ * KeyBindings.TAB can only be used as keystroke with ALT_SHIFT as the modifier. 
  * KeyBindings.ESC can only be used as keystroke + 1 modifier 
  * KeyBindings.SPACE must have at least on valid modifier.
  * KeyBindings.UP|DOWN|RIGHT|LEFT
