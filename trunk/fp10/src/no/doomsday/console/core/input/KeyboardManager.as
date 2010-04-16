@@ -204,11 +204,6 @@
 		 * @param event	The keyboard event.
 		 */ 
 		private function handleKeyDown(event:KeyboardEvent):void{
-			// If the list is empty return.
-			if(emptyKeyboardShortcuts()){
-				return;
-			}
-			
 			// Get the modifier
 			var modifier:uint = 0;
 			if(event.altKey){
@@ -220,15 +215,16 @@
 			if(event.shiftKey){
 				modifier += Keyboard.SHIFT;
 			}
+			if(!emptyKeyboardShortcuts()){
 			/*
 			 * 1. Loop over the keyboard shortcuts, on the first keyboard shortcut that match the criteria break out, but make sure that it is released if one wants .
 			 * 2. If the keyboard shortcut is in the state released trigger it and set the released state to false.
 			 */
-			var keystroke:uint = event.keyCode;
+			var keyCode:uint = event.keyCode;
 			var i:int = 0;
 			var success:Boolean = false;
 			for(var l:int = keyboardShortcuts.length; i < l; i++){
-				if(isKeyboardShortcut(keyboardShortcuts[i], keystroke, modifier)){
+				if(isKeyboardShortcut(keyboardShortcuts[i], keyCode, modifier)){
 					success = true;
 					break;
 				}
@@ -241,6 +237,9 @@
 					}catch(error:Error){ /* suppress warning. */ }
 				}
 			}
+			}
+			
+			KeyboardSequences.instance.onKeyDown(keyCode, modifier, event);
 		}
 		
 		/**
@@ -249,19 +248,31 @@
 		 * @param event The keyboard event
 		 */ 
 		private function handleKeyUp(event:KeyboardEvent):void {
-			// If the list is empty return.
-			if(emptyKeyboardShortcuts()){
-				return;
+			// Get the modifier
+			var modifier:uint = 0;
+			if(event.altKey){
+				modifier += KeyBindings.ALT;
 			}
-			var keystroke:uint = event.keyCode
-			/*
-			 * Loop over the keyboard shortcuts and release the respective if they have the keystroke and are not already released.
-			 */
-			for(var i:int = 0, l:int = keyboardShortcuts.length; i < l; i++){
-				if((keystroke == keyboardShortcuts[i].keystroke) && !keyboardShortcuts[i].released){
-					keyboardShortcuts[i].released = true;
+			if(event.ctrlKey){
+				modifier += KeyBindings.CTRL;
+			}
+			if(event.shiftKey){
+				modifier += Keyboard.SHIFT;
+			}
+			var keyCode:uint = event.keyCode
+			if(!emptyKeyboardShortcuts()){
+		    	/*
+				 * Loop over the keyboard shortcuts and release the respective if they have the keystroke and are not already released.
+				 */
+				for(var i:int = 0, l:int = keyboardShortcuts.length; i < l; i++){
+					if((keyCode == keyboardShortcuts[i].keystroke) && !keyboardShortcuts[i].released){
+						keyboardShortcuts[i].released = true;
+					}
 				}
 			}
+			
+			KeyboardSequences.instance.onKeyUp(keyCode, modifier, event);
+			
 		}
 		
 		/* @end */

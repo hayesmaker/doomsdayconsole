@@ -2,9 +2,11 @@ package no.doomsday.console.core.input
 {
 	/**
 	 * Keyboardshortcut
-	 * 	Wrapper class for a keyboard shortcut used by the KeyboardManager class only.
+	 * POAO class for a keyboard shortcut used and manipulated by the KeyboardShortcutsManager class only.
+	 * 
+	 * @author Cristobal Dabed
 	 */ 
-	public final class KeyboardShortcut
+	public final class KeyboardShortcut 
 	{
 		public var keystroke:uint;
 		public var modifier:uint;
