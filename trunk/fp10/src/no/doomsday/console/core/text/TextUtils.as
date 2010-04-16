@@ -46,7 +46,9 @@
 			var str:String = tf.text;
 			var first:int = str.lastIndexOf(" ", index)+1;
 			var last:int = str.indexOf(" ", first);
-			if (last == -1) last = str.length;
+			if (last == -1) {
+				last = str.length;
+			}
 			return str.slice(first, last);
 		}
 		public static function getFirstIndexOfWordAtCaretIndex(tf:TextField):int 

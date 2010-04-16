@@ -52,11 +52,13 @@
 						monitors[i].properties.push(properties[j]);
 					}
 					console.print("Existing monitor found, appending properties", MessageTypes.SYSTEM);
+					m.update(true);
 				}
 			}
 			if (!m) {
-				m = new Monitor(scope, properties);
+				m = new Monitor(this, scope, properties);
 				monitors.push(m);
+				console.pluginContainer.addChild(m);
 				console.print("New monitor created", MessageTypes.SYSTEM);
 			}
 			return m;
@@ -66,6 +68,7 @@
 			for (var i:int = 0; i < monitors.length; i++) 
 			{
 				if (monitors[i].scope == scope) {
+					console.pluginContainer.removeChild(monitors[i]);
 					monitors.splice(i, 1);
 					return true;
 				}
@@ -81,8 +84,14 @@
 		
 		public function destroyMonitors():void
 		{
+			var count:int = 0;
+			for (var i:int = 0; i < monitors.length; i++) 
+			{
+				console.pluginContainer.removeChild(monitors[i]);
+				count++;
+			}
 			monitors = new Vector.<Monitor>;
-			console.print("All monitors destroyed",MessageTypes.SYSTEM);
+			console.print(count+" monitors destroyed",MessageTypes.SYSTEM);
 		}
 		
 		public function destroyMonitor():void

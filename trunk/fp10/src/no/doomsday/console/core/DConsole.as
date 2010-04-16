@@ -1,6 +1,11 @@
 ﻿package no.doomsday.console.core
 {
 	import com.adobe.images.PNGEncoder;
+	import no.doomsday.console.core.gui.GUIArea;
+	import no.doomsday.console.core.input.KeyboardManager;
+	import no.doomsday.console.misc.Credits;
+	import no.doomsday.console.utilities.monitoring.GraphWindow;
+	import no.doomsday.console.utilities.monitoring.StatGraph;
 	
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
@@ -130,6 +135,8 @@
 		
 		private var DOCK_TOP:int = 0;
 		private var DOCK_BOTTOM:int = 1;
+		private var DOCK_RELEASED:int = 2;
+		
 		private var monitorManager:MonitorManager;
 		
 		private var showLineNum:Boolean = true;
@@ -137,6 +144,8 @@
 		private var colorPicker:ColorPicker;
 		
 		private var _pluginContainer:Sprite = new Sprite();
+		public var ignoreBlankLines:Boolean = true;
+		private var guiArea:GUIArea;
 		
 		/**
 		 * Creates a new DConsole instance. 
@@ -169,7 +178,6 @@
 			commandManager = new CommandManager(this, persistence, referenceManager);
 			monitorManager = new MonitorManager(this, scopeManager);
 			
-			
 			tabTimer = new Timer(50, 1);
 			messageLog = new Vector.<Message>;
 			fileRef = new FileReference();
@@ -201,13 +209,17 @@
 			extrasContainer = new Sprite();
 			addChild(extrasContainer);
 			
+			guiArea = new GUIArea(this);
+			
 			addChild(mainConsoleContainer);
+			extrasContainer.addChild(pluginContainer);
 			extrasContainer.addChild(measureBracket);
 			extrasContainer.addChild(controllerManager);
 			extrasContainer.addChild(colorPicker);
-			extrasContainer.addChild(pluginContainer);
 			
-			mainConsoleContainer.addChild(consoleBg);	
+			pluginContainer.addChild(guiArea);
+			
+			mainConsoleContainer.addChild(consoleBg);
 			mainConsoleContainer.addChild(textOutput);
 			mainConsoleContainer.addChild(infoField);
 			mainConsoleContainer.addChild(inputTextField);
@@ -222,7 +234,7 @@
 			getCommand = new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope");
 			selectCommand = new FunctionCallCommand("select", doSelect, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
 			
-			print("Welcome to Doomsday Console by Doomsday device labs - www.doomsday.no",MessageTypes.SYSTEM);
+			print("Welcome to Doomsday Console by Doomsday Device Labs - www.doomsday.no",MessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),MessageTypes.SYSTEM);
 			print("Console version " + VERSION, MessageTypes.SYSTEM);
 			print("Player version " + Capabilities.version, MessageTypes.SYSTEM);
@@ -259,6 +271,7 @@
 			}
 			redraw();
 		}
+		
 		
 		/**
 		 * Sets the handling method for repeated messages with identical values
@@ -304,6 +317,7 @@
 			addCommand(new FunctionCallCommand("setRepeatFilter", setRepeatFilter, "System", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough"));
 			addCommand(new FunctionCallCommand("toggleLineNumbers", toggleLineNumbers, "System", "Toggles the display of line numbers"));
 			addCommand(new FunctionCallCommand("repeat", repeatCommand, "System", "Repeats command string X Y times"));
+			addCommand(new FunctionCallCommand("credits", Credits.getCreditsString, "Misc", "Lists team members"));
 
 			if (Capabilities.isDebugger) {
 				print("	Debugplayer commands added", MessageTypes.SYSTEM);
@@ -344,8 +358,8 @@
 			addCommand(new FunctionCallCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)"));
 			addCommand(new FunctionCallCommand("productInfo", getProductInfo, "Utility", "Displays the contents of Flex ProductInfo tag (Flex SWFs only)"));
 				
-			addCommand(new FunctionCallCommand("addMonitor", monitorManager.createMonitor, "Monitoring", "Begins monitoring ..values of the current scope"));
-			addCommand(new FunctionCallCommand("removeMonitor", monitorManager.destroyMonitor, "Monitoring", "Stops monitoring the current scope"));
+			addCommand(new FunctionCallCommand("watch", monitorManager.createMonitor, "Monitoring", "Begins monitoring ..values of the current scope"));
+			addCommand(new FunctionCallCommand("stopwatching", monitorManager.destroyMonitor, "Monitoring", "Stops monitoring the current scope"));
 			addCommand(new FunctionCallCommand("removeAllMonitors", monitorManager.destroyMonitors, "Monitoring", "Destroys all monitors"));
 			addCommand(new FunctionCallCommand("setMonitorInterval", monitorManager.setMonitorInterval, "Monitoring", "Sets the monitor polling interval in milliseconds (defaults to 300)"));
 			
@@ -804,12 +818,13 @@
 		override public function print(str:String, type:uint = MessageTypes.OUTPUT):void {
 			var split:Array = str.split("\n").join("\r").split("\r");
 			if (split.join("").length < 1) return;
+			var i:int;
 			var date:String = String(new Date().getTime());
 			var msg:Message;
-			for (var i:int = 0; i < split.length; i++) 
+			for (i = 0; i < split.length; i++) 
 			{
-				if (split[i].indexOf("no.doomsday.console") > -1 || split[i].indexOf("adobe.com/AS3") > -1) continue;
 				var txt:String = split[i];
+				if (txt.indexOf("no.doomsday.console") > -1 || txt.indexOf("adobe.com/AS3") > -1 || (ignoreBlankLines && txt.length<1)) continue;
 				if (previousPrintValues == txt && previousMessage) {
 					switch(repeatMessageMode) {
 						case MessageRepeatMode.STACK:
@@ -824,7 +839,7 @@
 					}
 				}
 				previousPrintValues = txt;
-				msg = new Message(split[i], date, type);
+				msg = new Message(txt, date, type);
 				previousMessage = msg;
 				if (msg.type != MessageTypes.USER) {
 					var evt:ConsoleEvent = new ConsoleEvent(ConsoleEvent.MESSAGE);
@@ -909,10 +924,9 @@
 				try{
 					textOutput.setTextFormat(fmt, idx, idx + messageLog[i].text.length);
 				}catch (e:Error) {
-					//clear();
 					trace(e.getStackTrace());
 					messageLog.splice(i, 1);
-					print("The console encountered a message draw error. Did you attempt to print a ByteArray?", MessageTypes.ERROR);
+					print("The console encountered a message draw error.", MessageTypes.ERROR);
 					drawMessages();
 				}
 			}
@@ -945,6 +959,8 @@
 				print("Use the setupStage command to temporarily alleviate these problems",MessageTypes.ERROR);
 			}
 			
+			guiArea.scale();
+			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			stage.addEventListener(Event.RESIZE, onStageResize);
@@ -954,6 +970,7 @@
 		private function onStageResize(e:Event = null):void 
 		{
 			redraw();
+			guiArea.scale();
 			if(mainConsoleContainer.contains(stats)) stats.x = textOutput.width - stats.width;
 		}
 		
@@ -1194,6 +1211,7 @@
 				inputTextField.setSelection(inputTextField.length, inputTextField.length);
 			}
 		}
+		//TODO: Invoke properly
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return;
@@ -1413,7 +1431,10 @@
 					stats.y = 0;
 					mainConsoleContainer.y = 0;
 					
-					stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);	
+					stats.scrollRect = new Rectangle(0, 0, stats.width, textOutput.height);
+					
+					guiArea.y = stage.stageHeight - guiArea.height;
+					
 				break;
 				case DOCK_BOTTOM:
 					consoleBg.graphics.clear();
@@ -1443,7 +1464,9 @@
 					
 					mainConsoleContainer.y = stage.stageHeight - consoleHeight;
 					
-					stats.scrollRect = new Rectangle(0,0,stats.width,textOutput.height);	
+					stats.scrollRect = new Rectangle(0, 0, stats.width, textOutput.height);	
+					
+					guiArea.y = 0;
 				break;
 			}
 			infoTargetY = inputTextField.y;

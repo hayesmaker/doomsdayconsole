@@ -21,16 +21,15 @@
 	 */
 	public class AbstractConsole extends DSprite
 	{
-		protected static const VERSION:String = "FP10 1.061a";
+		protected static const VERSION:String = "FP10 1.062a";
 		protected var keystroke:uint = KeyBindings.ENTER;
-		protected var modifier:uint = KeyBindings.ALT_SHIFT;
+		protected var modifier:uint = KeyBindings.CTRL_SHIFT;
 		
 		public function AbstractConsole() 
 		{
-			KeyboardManager.addShorcut(keystroke, modifier, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
+			KeyboardManager.addShortcut(keystroke, modifier, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-		
 		private function onAddedToStage(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -138,6 +137,10 @@
 		{
 			throw new NotImplementedError();
 		}
+		public function release():void 
+		{
+			throw new NotImplementedError();
+		}
 		
 		public function setChromeTheme(backgroundColor:uint = 0, backgroundAlpha:Number = 0.8, borderColor:uint = 0x333333, inputBackgroundColor:uint = 0, helpBackgroundColor:uint = 0x222222):void
 		{
@@ -165,7 +168,7 @@
 		 * Change keyboard shortcut
 		 */ 
 		public function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
-			KeyboardManager.addShorcut(keystroke, modifier, this.toggleDisplay, null, true);
+			KeyboardManager.addShortcut(keystroke, modifier, this.toggleDisplay, null, true);
 		}
 	}
 

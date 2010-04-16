@@ -289,6 +289,11 @@
 			}
 			contents.addChild(d);
 		}
+		protected function scaleToContents():void {
+			viewRect = getContentsRect();
+			redraw(viewRect);
+			onResize();
+		}
 		
 	}
 

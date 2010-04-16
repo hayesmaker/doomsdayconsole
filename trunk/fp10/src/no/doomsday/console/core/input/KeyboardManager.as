@@ -86,7 +86,7 @@
 		 * @return
 		 * 	Return true or false depending on wether the shortcut was successfully added or not.
 		 */ 
-		public static function addShorcut(keystroke:uint, modifier:uint, callback:Function, source:Object=null, override:Boolean=false):Boolean {
+		public static function addShortcut(keystroke:uint, modifier:uint, callback:Function, source:Object=null, override:Boolean=false):Boolean {
 			var success:Boolean;
 			
 			/* 
@@ -327,8 +327,7 @@
 		 * 	Returns true or false depending on wether the keystroke + modifier is a valid combination. 
 		 */ 
 		private function validateKeystrokeWithModifier(keystroke:uint, modifier:uint):Boolean {
-			var success:Boolean = false;
-			
+			var success:Boolean = true;
 			/*
 			 * 1. ENTER | TAB must satisfy at least 2 modifiers.
 			 * 2. ESC	can only have 1 modifier
@@ -343,7 +342,7 @@
 				success = !isCombinedModifier(modifier);
 			}
 			
-			if(modifier == KeyBindings.NONE){
+			if (modifier == KeyBindings.NONE) {
 				success = !isKeystrokeFN(keystroke);
 			}
 			
@@ -383,7 +382,7 @@
 		 * 	Returns true or false depending on wether the keeystroke is a FN key code or not.
 		 */ 
 		private function isKeystrokeFN(modifier:uint):Boolean {
-			var success:Boolean = true;
+			var success:Boolean = false;
 			switch(modifier){
 				case KeyBindings.F1:
 				case KeyBindings.F2:
@@ -400,7 +399,7 @@
 				case KeyBindings.F13:
 				case KeyBindings.F14:
 				case KeyBindings.F15:
-					success = false;
+					success = true;
 					break;
 			}
 			return success;
