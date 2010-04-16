@@ -329,13 +329,20 @@
 		private function validateKeystrokeWithModifier(keystroke:uint, modifier:uint):Boolean {
 			var success:Boolean = true;
 			/*
-			 * 1. ENTER | TAB must satisfy at least 2 modifiers.
-			 * 2. ESC	can only have 1 modifier
+			 * 1. ENTER must satisfy at least 2 modifiers but can not be used with ALT_SHIFT since it is a reserved keystroke i Windows for Fullscreen.
+			 * 2. TAB must satisfy at least 2 modifier and can only used with ALT_SHIFT.
+			 * 3. ESC	can only have 1 modifier
 			 * 3. FN*   can not have a  modifier
 			 * 4. SPACE must have at least one modifier.
 			 */
-			if((keystroke == KeyBindings.ENTER) || (keystroke == KeyBindings.TAB)){
-				success = isCombinedModifier(modifier);
+			if(keystroke == KeyBindings.ENTER){
+				if(modifier != KeyBindings.ALT_SHIFT){
+					success = isCombinedModifier(modifier);
+				}
+			}
+			
+			if(keystroke == KeyBindings.TAB){
+				success = (modifier == KeyBindings.ALT_SHIFT);
 			}
 			
 			if(keystroke == KeyBindings.ESC){

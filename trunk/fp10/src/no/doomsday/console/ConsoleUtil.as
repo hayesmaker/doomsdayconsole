@@ -164,7 +164,7 @@
 			 * If is a valid keyboard shortcut
 			 *
 			 * 1. If the console is not initialized store for later, and modify after creation.
-			 * 2. If the console is initialized called instance->changeKeyboardShortcut
+			 * 2. If the console is initialized call instance.changeKeyboardShortcut
 			 */
 			if(KeyboardManager.isValidKeyboardShortcut(keystroke, modifier)){
 				if(!_instance){
