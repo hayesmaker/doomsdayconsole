@@ -139,6 +139,7 @@
 		}
 		
 		public static function set password(s:String):void {
+			// TODO: Refactor Command Manager + Password Authentication.
 			instance.setPassword(s);
 		}
 		
@@ -166,7 +167,7 @@
 			 * 1. If the console is not initialized store for later, and modify after creation.
 			 * 2. If the console is initialized call instance.changeKeyboardShortcut
 			 */
-			if(KeyboardManager.isValidKeyboardShortcut(keystroke, modifier)){
+			if(KeyboardManager.instance.validateKeyboardShortcut(keystroke, modifier)){
 				if(!_instance){
 					keyboardShortcut = [keystroke, modifier];
 				} else {

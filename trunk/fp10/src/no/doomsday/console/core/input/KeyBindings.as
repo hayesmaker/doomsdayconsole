@@ -102,8 +102,46 @@ package no.doomsday.console.core.input
 		 * @return
 		 * 	Returns the char code for the character passed.
 		 */ 
+		public static function toCharCode(char:String):uint{
+			return char.charCodeAt(0);
+		}
+		
+		/**
+		 * To char codes.
+		 * 
+		 * @param str	The string values to retrieve the char codes for.
+		 * 
+		 * @return
+		 * 	Returns an array of the char codes from the passed string.
+		 */ 
+		public static function toCharCodes(str:String):Array {
+			var keyCodes:Array = [];
+			return keyCodes;			
+		}
+		
+		/**
+		 * To key code
+		 * 
+		 * @param char The char value to get the char code for.
+		 * 
+		 * @return
+		 * 	Returns the char code for the character passed.
+		 */ 
 		public static function toKeyCode(char:String):uint{
 			return char.toUpperCase().charCodeAt(0);
+		}
+		
+		/**
+		 * To key codes
+		 * 
+		 * @param str The string values to retrieve the key codes for.
+		 * 
+		 * @return
+		 * 	Returns an array of the key codes from the passed string.
+		 */ 
+		public static function toKeyCodes(str:String):Array {
+			var keyCodes:Array = [];
+			return keyCodes;
 		}
 	}
 }

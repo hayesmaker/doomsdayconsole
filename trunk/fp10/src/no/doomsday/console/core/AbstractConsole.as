@@ -27,7 +27,7 @@
 		
 		public function AbstractConsole() 
 		{
-			KeyboardManager.addShortcut(keystroke, modifier, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
+			KeyboardManager.instance.addKeyboardShortcut(keystroke, modifier, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		private function onAddedToStage(e:Event):void 
@@ -168,7 +168,7 @@
 		 * Change keyboard shortcut
 		 */ 
 		public function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
-			KeyboardManager.addShortcut(keystroke, modifier, this.toggleDisplay, null, true);
+			KeyboardManager.instance.addKeyboardShortcut(keystroke, modifier, this.toggleDisplay, true);
 		}
 	}
 

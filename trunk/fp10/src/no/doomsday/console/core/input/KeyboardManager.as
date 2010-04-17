@@ -28,9 +28,8 @@
 		/*  Variables */
 		private static var INSTANCE:KeyboardManager;
 		private var keyboardSource:InteractiveObject = null;
-		private var keyboardShortcuts:Vector.<KeyboardShortcut> = new Vector.<KeyboardShortcut>();
-		
-		/* @group Magic Methods */
+			
+		/* @group  API */	
 		
 		/**
 		 * Gets a singleton instance of the input manager
@@ -42,11 +41,6 @@
 			}
 			return INSTANCE;
 		}
-		
-		/* @end */
-		
-			
-		/* @group  API */	
 		
 		/**
 		 * Start tracking keyboard events
@@ -71,61 +65,26 @@
 			keyboardSource.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
 			keyboardSource.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			keyboardSource = null;
-			removeAll();
+			KeyboardSequences.instance.removeAll();
+			KeyboardShortcuts.instance.removeAll();
 		}
 		
+		// Keyboard Shortcuts Functions
 		/**
-		 * Add shortcut
+		 * Add keyboard shortcut
 		 * 
 		 * @param keystroke The keystroke an valid keycode 
 		 * @param modifier	The modifier can be either ALT, CTR, SHIFT or ALT+SHIFT, CTR+ALT. CTR+SHIFT
 		 * @param callback	The callback function to call when the shortcut has been triggered.
-		 * @param source	The event source to listen on if none listens to stage automatically(NOT IMPLEMENTED YET).
 		 * @param override	Wether to override an existing shortcut with the same name.
 		 * 
 		 * @return
 		 * 	Return true or false depending on wether the shortcut was successfully added or not.
 		 */ 
-		public static function addShortcut(keystroke:uint, modifier:uint, callback:Function, source:Object=null, override:Boolean=false):Boolean {
-			var success:Boolean;
-			
-			/* 
-			 *	Throw errors if.
-			 *		1. Not an valid keystroke
-			 *		2. Not an valid modifier.
-			 *		3. Not an valid keystroke + modifier combination.
-			 *		4. Not an valid callback. 
-			 */
-			
-			if(!instance.validateKeystroke(keystroke)){
-				throw new Error("Invalid keystroke");
-			}
-			
-			if(!instance.validateModifier(modifier)){
-				throw new Error("Invalid modifier");
-			}
-			
-			if(!instance.validateKeystrokeWithModifier(keystroke, modifier)){
-				throw new Error("Invalid keystroke + modifier combination");
-			}
-			
-			if(typeof(callback) != "function"){
-				throw new Error("Invalid callback function");
-			}
-			
-			if(!instance.hasKeyboardShortcut(keystroke, modifier)){
-				instance.addKeyboardShortcut(keystroke, modifier, callback);
-			}else if(override){
-				instance.removeKeyboardShortcut(keystroke, modifier);
-				instance.addKeyboardShortcut(keystroke, modifier, callback);
-			} else {
-				trace("Warn: keystroke, modifier combination already exists and was not set to be overriden.");
-			} 
-		
-			
-			return success;
+		public function addKeyboardShortcut(keystroke:uint, modifier:uint, callback:Function, override:Boolean=false):Boolean {
+			return KeyboardShortcuts.instance.add(keystroke, modifier, callback, override);
 		}
-		
+
 		/**
 		 * Remove shortcut
 		 * 
@@ -133,37 +92,9 @@
 		 * 
 		 * @return
 		 * 	Returns true or false depending on wether it managed to release the shortcut or not.
-		 */
-		public static function removeShortcut(keystroke:uint, modifier:uint):Boolean {
-			var success:Boolean = true;
-			/* 
-			*	Warn if.
-			*		1. Not an valid keystroke
-			*		2. Not an valid modifier.
-			*		3. Not an valid keystroke + modifier combination.
-			*/
-			
-			if(!instance.validateKeystroke(keystroke)){
-				success = false;
-			}
-			
-			if(!instance.validateModifier(modifier)){
-				success = false;
-			}
-			
-			if(!instance.validateKeystrokeWithModifier(keystroke, modifier)){
-				success = false;
-			}
-			if(success){
-				if(instance.hasKeyboardShortcut(keystroke, modifier)){
-					instance.removeKeyboardShortcut(keystroke, modifier);
-				} else {
-					trace("Trying to remove an keystroke + modifier combination that is no present");
-				}
-			} else {
-				trace("Trying to remove an invalid keystroke + modifier combination");
-			}
-			return success;
+		 */		
+		public function removeKeyboardShortcut(keystroke:uint, modifier:uint):Boolean {
+			return KeyboardShortcuts.instance.remove(keystroke, modifier);
 		}
 		
 		/**
@@ -174,23 +105,46 @@
 		 * @return
 		 * 	Returns true or false depending on wether it managed release all the shortcuts or not.
 		 */ 
-		public static function removeAll(source:Object=null):Boolean {
-			var success:Boolean = true;
-			instance.keyboardShortcuts = new Vector.<KeyboardShortcut>(); // reset
-			return success;
+		public function removeAll(source:Object=null):void {
+			KeyboardSequences.instance.removeAll();
+			KeyboardShortcuts.instance.removeAll();
 		}
 		
 		/**
-		 * If is valid Keyboardshortcut.
+		 * Validate Keyboard Shortcut
 		 * 
-		 * @param keystroke The keystroke an valid keycode 
+ 		 * @param keystroke The keystroke an valid keycode 
 		 * @param modifier	The modifier can be either ALT, CTR, SHIFT or ALT+SHIFT, CTR+ALT. CTR+SHIFT
 		 * 
 		 * @return
 		 * 	Returns true or false wether the keyboard shortcut is valid or not. 
+		 */  
+		public function validateKeyboardShortcut(keystroke:uint, modifier:uint):Boolean {
+			return KeyboardShortcuts.instance.validateKeystrokeWithModifier(keystroke, modifier);
+		}
+		
+		// Keyboard Sequences Functions.
+		/**
+		 * Add keyboard sequence.
+		 * 
+		 * @param keyCodes	The list of keycodes to trigger a callback.
+		 * @param callback	The callback function to call.
+		 * @param override	Optional override for an existing keyboard sequence with the new function.
 		 */ 
-		public static function isValidKeyboardShortcut(keystroke:uint, modifier:uint):Boolean {
-			return instance.validateKeystrokeWithModifier(keystroke, modifier);
+		public function addKeyboardSequence(keyCodes:Array, callback:Function, override:Boolean = false):Boolean {
+			return KeyboardSequences.instance.add(keyCodes, callback, override);
+		}
+		
+		/**
+		 * Remove keyboard sequence.
+		 * 
+		 * @param keyCodes	The keyCodes to stop listening on. 
+		 * 
+		 * @return
+		 * 	Returns true or false depending on wether it successfully removed the keyCode sequence from the list or not.
+		 */ 
+		public function removeKeyboardSequence(keyCodes:Array):Boolean {
+			return KeyboardSequences.instance.remove(keyCodes);
 		}
 		
 		/* @end */
@@ -204,42 +158,8 @@
 		 * @param event	The keyboard event.
 		 */ 
 		private function handleKeyDown(event:KeyboardEvent):void{
-			// Get the modifier
-			var modifier:uint = 0;
-			if(event.altKey){
-				modifier += KeyBindings.ALT;
-			}
-			if(event.ctrlKey){
-				modifier += KeyBindings.CTRL;
-			}
-			if(event.shiftKey){
-				modifier += Keyboard.SHIFT;
-			}
-			if(!emptyKeyboardShortcuts()){
-			/*
-			 * 1. Loop over the keyboard shortcuts, on the first keyboard shortcut that match the criteria break out, but make sure that it is released if one wants .
-			 * 2. If the keyboard shortcut is in the state released trigger it and set the released state to false.
-			 */
-			var keyCode:uint = event.keyCode;
-			var i:int = 0;
-			var success:Boolean = false;
-			for(var l:int = keyboardShortcuts.length; i < l; i++){
-				if(isKeyboardShortcut(keyboardShortcuts[i], keyCode, modifier)){
-					success = true;
-					break;
-				}
-			}	
-			if(success){
-				if(keyboardShortcuts[i].released){
-					keyboardShortcuts[i].released = false;
-					try {
-						keyboardShortcuts[i].callback();
-					}catch(error:Error){ /* suppress warning. */ }
-				}
-			}
-			}
-			
-			KeyboardSequences.instance.onKeyDown(keyCode, modifier, event);
+			KeyboardSequences.instance.onKeyDown(event);
+			KeyboardShortcuts.instance.onKeyDown(event);
 		}
 		
 		/**
@@ -248,247 +168,10 @@
 		 * @param event The keyboard event
 		 */ 
 		private function handleKeyUp(event:KeyboardEvent):void {
-			// Get the modifier
-			var modifier:uint = 0;
-			if(event.altKey){
-				modifier += KeyBindings.ALT;
-			}
-			if(event.ctrlKey){
-				modifier += KeyBindings.CTRL;
-			}
-			if(event.shiftKey){
-				modifier += Keyboard.SHIFT;
-			}
-			var keyCode:uint = event.keyCode
-			if(!emptyKeyboardShortcuts()){
-		    	/*
-				 * Loop over the keyboard shortcuts and release the respective if they have the keystroke and are not already released.
-				 */
-				for(var i:int = 0, l:int = keyboardShortcuts.length; i < l; i++){
-					if((keyCode == keyboardShortcuts[i].keystroke) && !keyboardShortcuts[i].released){
-						keyboardShortcuts[i].released = true;
-					}
-				}
-			}
-			
-			KeyboardSequences.instance.onKeyUp(keyCode, modifier, event);
-			
+			KeyboardSequences.instance.onKeyUp(event);
+			KeyboardShortcuts.instance.onKeyUp(event);
 		}
 		
-		/* @end */
-		
-		
-		/* @group Internal Functions */
-		
-		/**
-		 * Validate keystroke
-		 * 
-		 * @param keystroke	The keystroke to validate.
-		 */ 
-		private function validateKeystroke(keystroke:uint):Boolean {
-			var success:Boolean = true;
-			switch(keystroke){
-				case KeyBindings.ALT:
-				case KeyBindings.SHIFT:
-				case KeyBindings.CTRL:
-				case Keyboard.BACKSPACE:
-				case Keyboard.CAPS_LOCK:
-				case Keyboard.INSERT:
-				case Keyboard.DELETE:
-				case Keyboard.HOME:
-				case Keyboard.PAGE_UP:
-				case Keyboard.PAGE_DOWN:
-					success = false;
-				break;
-			}
-			return success;
-		}
-		
-		/**
-		 * Validate shortcut
-		 * 
-		 * @param shortcut	The shortcut to validate.
-		 * 
-		 * @return
-		 * 	Returns true or false depedending on wether it was an valid shortcut or not.
-		 */ 
-		private function validateModifier(modifier:uint):Boolean{
-			var success:Boolean = false;
-			switch(modifier){
-				case KeyBindings.NONE:
-				case KeyBindings.ALT:
-				case KeyBindings.SHIFT:
-				case KeyBindings.CTRL:
-				case KeyBindings.ALT_SHIFT:
-				case KeyBindings.CTRL_ALT:
-				case KeyBindings.CTRL_SHIFT:
-					success = true;
-				break;
-			}
-			return success;
-		}
-		
-		/**
-		 * Validate kestroke with modifier
-		 * 
-		 * @param kestroke 	The keystroke 
-		 * @param modifier	The modifier
-		 * 
-		 * @return
-		 * 	Returns true or false depending on wether the keystroke + modifier is a valid combination. 
-		 */ 
-		private function validateKeystrokeWithModifier(keystroke:uint, modifier:uint):Boolean {
-			var success:Boolean = true;
-			/*
-			 * 1. ENTER must satisfy at least 2 modifiers but can not be used with ALT_SHIFT since it is a reserved keystroke i Windows for Fullscreen.
-			 * 2. TAB must satisfy at least 2 modifier and can only used with ALT_SHIFT.
-			 * 3. ESC	can only have 1 modifier
-			 * 3. FN*   can not have a  modifier
-			 * 4. SPACE must have at least one modifier.
-			 */
-			if(keystroke == KeyBindings.ENTER){
-				if(modifier != KeyBindings.ALT_SHIFT){
-					success = isCombinedModifier(modifier);
-				}
-			}
-			
-			if(keystroke == KeyBindings.TAB){
-				success = (modifier == KeyBindings.ALT_SHIFT);
-			}
-			
-			if(keystroke == KeyBindings.ESC){
-				success = !isCombinedModifier(modifier);
-			}
-			
-			if (modifier == KeyBindings.NONE) {
-				success = !isKeystrokeFN(keystroke);
-			}
-			
-			if((keystroke == KeyBindings.SPACE)){
-				success = (modifier != KeyBindings.NONE);
-			}
-			return success;
-		}
-		private static var flag:int = 0; 
-		
-		/**
-		 * Is combined modifier.
-		 * 
-		 * @param modifier The modifier
-		 * 
-		 * @return
-		 * 	Returns true or false depending on wether the modifier is a combined modifier or not. 
-		 */ 
-		private function isCombinedModifier(modifier:uint):Boolean {
-			var success:Boolean = false;
-			switch(modifier){
-				case KeyBindings.ALT_SHIFT:
-				case KeyBindings.CTRL_ALT:
-				case KeyBindings.CTRL_SHIFT:
-					success = true;
-					break;
-			}
-			return success;
-		}
-		
-		/**
-		 * Is keystroke FN
-		 * 
-		 * @param keystroke	The keystroke
-		 * 
-		 * @return
-		 * 	Returns true or false depending on wether the keeystroke is a FN key code or not.
-		 */ 
-		private function isKeystrokeFN(modifier:uint):Boolean {
-			var success:Boolean = false;
-			switch(modifier){
-				case KeyBindings.F1:
-				case KeyBindings.F2:
-				case KeyBindings.F3:
-				case KeyBindings.F4:
-				case KeyBindings.F5:
-				case KeyBindings.F6:
-				case KeyBindings.F7:
-				case KeyBindings.F8:
-				case KeyBindings.F9:
-				case KeyBindings.F10:
-				case KeyBindings.F11:
-				case KeyBindings.F12:
-				case KeyBindings.F13:
-				case KeyBindings.F14:
-				case KeyBindings.F15:
-					success = true;
-					break;
-			}
-			return success;
-		}
-		
-		/**
-		 * Add Keyboard shortcut
-		 * 
-		 * @param keystroke The keystroke code
-		 * @param modifier	The modifier value.
-		 */ 
-		private function addKeyboardShortcut(keystroke:uint, modifier:uint, callback:Function):void {
-			keyboardShortcuts.push(new KeyboardShortcut(keystroke, modifier, callback));
-		}
-		
-		/**
-		 * Remove Keyboard shortcut
-		 * 
-		 * @param keystroke The keystroke code
-		 * @param modifier	The modifier value.
-		 */ 
-		private function removeKeyboardShortcut(keystroke:uint, modifier:uint):void{
-			var i:int = 0;
-			for(var l:int = keyboardShortcuts.length; i < l; i++){
-				if(isKeyboardShortcut(keyboardShortcuts[i], keystroke, modifier)){
-					break;
-				}
-			}
-			keyboardShortcuts.splice(i, 1);
-		}
-		
-		/**
-		 * Has keyboard shortcut
-		 * 
-		 * @return
-		 * 	Returns true or false depending on wether the keystroke, modifier combination already exists or not.
-		 */ 
-		private function hasKeyboardShortcut(keystroke:uint, modifier:uint):Boolean{
-			var success:Boolean = false;
-			for(var i:int =0, l:int = keyboardShortcuts.length; i < l; i++){
-				if(isKeyboardShortcut(keyboardShortcuts[i], keystroke, modifier)){
-					success = true;
-					break;
-				}
-			}
-			return success;
-		}
-		
-		/**
-		 * Is keyboard shortcut
-		 * 
-		 * @param keyboardShortcut	The keyboard shortcut to check on.
-		 * @param keystroke The keystroke value.
-		 * @param modifier	The modifier value.
-		 * 
-		 * @returns
-		 * 	Returns trur or false depending on wether the keyboard shortcut contains the keystroke, modifier combination.
-		 */ 
-		private function isKeyboardShortcut(keyboardShortcut:KeyboardShortcut, keystroke:uint, modifier:uint):Boolean{
-			return ((keyboardShortcut.keystroke == keystroke) && (keyboardShortcut.modifier == modifier));
-		}
-		
-		/**
-		 * Empty keyboard shortcuts
-		 * 
-		 * @return
-		 * 	Returns true or false depending on wether keyboard shortcuts list is empty or not.
-		 */ 
-		private function emptyKeyboardShortcuts():Boolean {
-			return (keyboardShortcuts.length > 0 ? false : true);
-		}
 		/* @end */
 	}	
 	

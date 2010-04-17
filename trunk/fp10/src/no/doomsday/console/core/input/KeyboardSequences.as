@@ -1,14 +1,18 @@
 package no.doomsday.console.core.input
 {
 	import flash.events.KeyboardEvent;
-	import flash.external.ExternalInterface;
 
 	/**
-	 * Keyboard Sequences
-	 * 	A singleton class for the keyboard sequences managed by the Keyboard Manager class.
+	 * Maintains a list of keyboard sequences and dispatches the callback function when a sequence has been triggered.
+	 * 
+	 * @author Cristobal Dabed 
 	 */ 
-	public final class KeyboardSequences
+	public final class KeyboardSequences implements KeyboardList
 	{
+		/* Constants  */
+		public const KEYBOARD_SEQUENCES_MIN_LENGTH:uint = 1; // NOTE: Should min length be 2?
+		
+		/* Variables */
 		private static var INSTANCE:KeyboardSequences = null; 
 		private var keyboardSequences:Vector.<KeyboardSequence> = new Vector.<KeyboardSequence>();
 		
@@ -41,8 +45,8 @@ package no.doomsday.console.core.input
 			 *	1. Must satisfy minimum of length 1
 			 *  2. Must satisfy a valid callback.
 			 */
-			if(keyCodes.length == 0){ // < 2?
-				throw new Error("A keyboard sequence can not be of length 0");
+			if(keyCodes.length < KEYBOARD_SEQUENCES_MIN_LENGTH){ 
+				throw new Error("A keyboard sequence can not have less than " + KEYBOARD_SEQUENCES_MIN_LENGTH + " elements");
 			}
 			
 			if(typeof(callback) != "function"){
@@ -87,7 +91,7 @@ package no.doomsday.console.core.input
 					keyboardSequences.splice(i, 1);
 				}
 			} else {
-				trace("Warn: Empty keyboard sequence none to remove");
+				trace("Warn: Empty keyboard sequences, none to remove");
 			}
 			return success;
 		}
@@ -102,23 +106,32 @@ package no.doomsday.console.core.input
 		 */ 
 		public function has(keyCodes:Array):Boolean {
 			var success:Boolean = false;
-			if(!isEmpty()){
-				for(var i:int = 0, l:int =  keyboardSequences.length; i < l; i++){
-					if(inKeyboardSequence(keyCodes, keyboardSequences[i])){
-						success = true;
-						break;
-					}
+			for(var i:int = 0, l:int =  keyboardSequences.length; i < l; i++){
+				if(inKeyboardSequence(keyCodes, keyboardSequences[i])){
+					success = true;
+					break;
 				}
 			}
 			return success;
 		}
 		
+		/**
+		 * Remove All 
+		 */ 
+		public function removeAll():void{
+			// Reset the internal list.
+			if(!isEmpty()){
+				while(keyboardSequences.length > 0){
+					keyboardSequences.pop();
+				}
+			}
+		}		
 		
 		/**
 		 * Is empty
 		 * 
 		 * @return
-		 * 	Returns true or false depending on wether there are any registered keyboardsequences or not.
+		 * 	Returns true or false depending on wether there are any registered keyboard sequences or not.
 		 */ 
 		public function isEmpty():Boolean {
 			return (keyboardSequences.length == 0 ? true : false);
@@ -127,29 +140,40 @@ package no.doomsday.console.core.input
 		
 		/* @end */
 		
-		/* @group Delegates called  directly by the KeyboardManager */
+		/* @group Delegates called  irectly by the KeyboardManager */
 		// We could have added custom events but do not to save some resources while keyboard input should be as fast as possible. 
 		
 		/**
 		 * On key down.
 		 * 
-		 * @param keyCode 	The keycode
-		 * @param modifier 	The modifier
-		 * @param event		The keyboard event.
+		 * @param event The keyboard event.
 		 */ 
-		public function onKeyDown(keyCode:uint, modifer:uint, event:KeyboardEvent):void {
+		public function onKeyDown(event:KeyboardEvent):void {
 			// Nothing to do here, placeholder function only.
 		}
 		
 		/**
 		 * On key up.
 		 * 
-		 * @param keyCode 	The keycode
-		 * @param modifier 	The modifier
 		 * @param event 	The keyboard event.
 		 */ 
-		public function onKeyUp(keyCode:uint, modifier:uint, event:KeyboardEvent):void {
+		public function onKeyUp(event:KeyboardEvent):void {
 			if(!isEmpty()){
+				var keyCode:uint = event.keyCode;
+				
+				// If either ALT|SHIFT|CTRL key is enabled use the char value as the keycode instead.
+				if(event.altKey || event.shiftKey || event.ctrlKey){
+					keyCode = event.charCode;
+				}
+				
+				/*
+				 * Loop over the keyboard sequences.
+				 *	If the keyCode matches the current keyCode in the keystrokes for the given keyboard sequence 
+				 *	check if it is completed, if it is completed trigger the callback on it, and set the reset flag.
+				 *
+				 *	If the current keyCode did not match and or the reset flag is set, then reset the given keyboard sequence
+				 *  to the default keystrokes state.
+				 */
 				for(var i:int = 0, l:int = keyboardSequences.length, reset:Boolean = true; i < l; i++, reset = true){
 					if(keyCode == keyboardSequences[i].keystrokes.shift()){
 						if(keyboardSequences[i].keystrokes.length == 0){
@@ -160,9 +184,7 @@ package no.doomsday.console.core.input
 							reset = false;
 						}
 					}
-					
 					if(reset){
-						// Reset values if the sequence was not correctly set.
 						keyboardSequences[i].keystrokes = keyboardSequences[i].keyCodes.concat();
 					}
 				}
