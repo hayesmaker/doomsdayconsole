@@ -9,7 +9,7 @@
 			</mx:HBox>
 		</mx:FormItem>
 		<mx:FormItem label="Output">
-			<mx:TextArea id="outputField" width="300" height="400" /> 
+			<mx:TextArea id="outputField" width="400" height="400" /> 
 		</mx:FormItem>
 	</mx:Form>
 	<mx:Script>

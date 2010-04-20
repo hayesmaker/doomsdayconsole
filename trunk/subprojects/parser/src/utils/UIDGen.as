@@ -10,8 +10,8 @@
 		public static function get next():uint {
 			return ++n;
 		}
-		public static function set seed(n:Number):void {
-			this.n = n;
+		public static function set seed(num:Number):void {
+			n = num;
 		}
 		
 	}
