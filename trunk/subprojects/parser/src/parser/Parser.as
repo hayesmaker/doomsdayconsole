@@ -1,5 +1,6 @@
 ﻿package parser 
 {
+	import flash.utils.getTimer;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -12,7 +13,8 @@
 			
 		}
 		public static function parse(input:String):String {
-			return input;
+			var out:String = Tokenizer.tokenize(input);
+			return out;
 		}
 		
 	}
