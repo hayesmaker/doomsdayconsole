@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Form>
+		<mx:FormHeading label="Parser test"></mx:FormHeading>
+		<mx:FormItem label="Expression">
+			<mx:HBox>
+				<mx:TextInput id="expressionInputField" enter="onDoButtonClick()"></mx:TextInput>
+				<mx:Button label="do" click="onDoButtonClick()"></mx:Button>
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:FormItem label="Output">
+			<mx:TextArea id="outputField" width="300"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Script>
+		<![CDATA[
+import parser.Parser;
+		private function onDoButtonClick():void {
+			outputField.text = Parser.parse(expressionInputField.text);
+			expressionInputField.text = "";
+			expressionInputField.setFocus();
+		}
+		]]>
+	</mx:Script>
+</mx:Application>
