@@ -5,6 +5,7 @@ package no.doomsday.console.core.input
 	 * POAO class for a keyboard shortcut used and manipulated by the KeyboardShortcutsManager class only.
 	 * 
 	 * @author Cristobal Dabed
+	 * @version 0.1
 	 */ 
 	public final class KeyboardShortcut 
 	{

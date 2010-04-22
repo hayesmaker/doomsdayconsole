@@ -3,7 +3,6 @@
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
-	import flash.external.ExternalInterface;
 	import flash.utils.describeType;
 	
 	import no.doomsday.console.core.AbstractConsole;
@@ -186,6 +185,25 @@
 		 */ 
 		private static function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
 			instance.changeKeyboardShortcut(keystroke, modifier);
+		}
+		
+		
+		/**
+		 * Lock
+		 * 
+		 * @param secret The secret to lock the console with.
+		 */
+		public static function lock(secret:String):void {
+			lockWithKeyCodes(KeyBindings.toCharCodes(secret));
+		}
+		
+		/**
+		 * Lock with keyCodes
+		 * 
+		 * @param keyCodes The keyCodes to lock the console with.
+		 */ 
+		public static function lockWithKeyCodes(keyCodes:Array):void {
+			instance.lock.lock(keyCodes, instance.toggleDisplay);
 		}
 		
 	}

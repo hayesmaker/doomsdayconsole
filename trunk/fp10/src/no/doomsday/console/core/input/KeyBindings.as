@@ -5,8 +5,12 @@ package no.doomsday.console.core.input
 	/**
 	 * Maintains a list of keyboard bindings. 
 	 * 	Wrapper for the Keyboard class, some extra options and adds set of default keycodes for the characters a-z.
-	 * 
+	 *  
+	 * References:
+	 *	- http://www.signar.se/blog/as-3-charcodes/
+	 *
 	 * @author Cristobal Dabed
+	 * @version 0.2
 	 */
 	public final class KeyBindings
 	{
@@ -67,7 +71,34 @@ package no.doomsday.console.core.input
 		public static const OP_DIV:uint = Keyboard.NUMPAD_DIVIDE;
 		public static const OP_MUL:uint = Keyboard.NUMPAD_MULTIPLY;
 		
-		// Characters
+		// Characters lowercase
+		public static const a:uint = toCharCode("a");
+		public static const b:uint = toCharCode("b");
+		public static const c:uint = toCharCode("c");
+		public static const d:uint = toCharCode("d");
+		public static const e:uint = toCharCode("e");
+		public static const f:uint = toCharCode("f");
+		public static const g:uint = toCharCode("g");
+		public static const h:uint = toCharCode("h");
+		public static const i:uint = toCharCode("i");
+		public static const j:uint = toCharCode("j");
+		public static const k:uint = toCharCode("k");
+		public static const l:uint = toCharCode("l");
+		public static const m:uint = toCharCode("m");
+		public static const n:uint = toCharCode("n");
+		public static const o:uint = toCharCode("o");
+		public static const p:uint = toCharCode("p");
+		public static const q:uint = toCharCode("q");
+		public static const r:uint = toCharCode("r");
+		public static const s:uint = toCharCode("s");
+		public static const t:uint = toCharCode("t");
+		public static const u:uint = toCharCode("u");
+		public static const v:uint = toCharCode("v");
+		public static const x:uint = toCharCode("x");
+		public static const y:uint = toCharCode("y");
+		public static const z:uint = toCharCode("z");
+		
+		// Characters uppercase
 		public static const A:uint = toKeyCode("A");
 		public static const B:uint = toKeyCode("B");
 		public static const C:uint = toKeyCode("C");
@@ -109,13 +140,16 @@ package no.doomsday.console.core.input
 		/**
 		 * To char codes.
 		 * 
-		 * @param str	The string values to retrieve the char codes for.
+		 * @param value	The string values to retrieve the char codes for.
 		 * 
 		 * @return
 		 * 	Returns an array of the char codes from the passed string.
 		 */ 
-		public static function toCharCodes(str:String):Array {
+		public static function toCharCodes(value:String):Array {
 			var keyCodes:Array = [];
+			for(var i:int = 0, l:int = value.length; i < l; i++){
+				keyCodes.push(value.charCodeAt(i));
+			}
 			return keyCodes;			
 		}
 		
@@ -134,13 +168,16 @@ package no.doomsday.console.core.input
 		/**
 		 * To key codes
 		 * 
-		 * @param str The string values to retrieve the key codes for.
+		 * @param value The string values to retrieve the key codes for.
 		 * 
 		 * @return
 		 * 	Returns an array of the key codes from the passed string.
 		 */ 
-		public static function toKeyCodes(str:String):Array {
+		public static function toKeyCodes(value:String):Array {
 			var keyCodes:Array = [];
+			for(var i:int = 0, l:int = value.length; i < l; i++){
+				keyCodes.push(toKeyCode(value.charAt(i)));
+			}
 			return keyCodes;
 		}
 	}

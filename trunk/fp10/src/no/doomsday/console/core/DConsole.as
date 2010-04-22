@@ -1326,6 +1326,11 @@
 		}
 		override public function toggleDisplay(e:Event = null):void
 		{
+			// Return if locked 
+			if(lock.locked){
+				return; 
+			}
+			
 			visible = !visible;
 			dispatchEvent(new ConsoleEvent(ConsoleEvent.VISIBILITY_CHANGE));
 			var i:int;

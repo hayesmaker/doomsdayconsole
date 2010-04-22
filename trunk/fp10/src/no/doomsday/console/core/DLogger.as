@@ -847,6 +847,11 @@ package no.doomsday.console.core
 		
 		override public function toggleDisplay(e:Event = null):void 
 		{
+			// Return if locked 
+			if(lock.locked){
+				return; 
+			}
+			
 			_isVisible = !_isVisible;
 			//_bg.visible = !_bg.visible;
 			//_txt.visible = !_txt.visible;

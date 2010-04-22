@@ -6,9 +6,12 @@ package no.doomsday.console.core.input
 	 * Maintains a list of keyboard sequences and dispatches the callback function when a sequence has been triggered.
 	 * 
 	 * @author Cristobal Dabed 
+	 * @version 0.2
 	 */ 
 	public final class KeyboardSequences implements KeyboardList
 	{
+		// TODO: Add a more robust validator for validateKeyboardSequence
+		
 		/* Constants  */
 		public const KEYBOARD_SEQUENCES_MIN_LENGTH:uint = 1; // NOTE: Should min length be 2?
 		
@@ -45,7 +48,7 @@ package no.doomsday.console.core.input
 			 *	1. Must satisfy minimum of length 1
 			 *  2. Must satisfy a valid callback.
 			 */
-			if(keyCodes.length < KEYBOARD_SEQUENCES_MIN_LENGTH){ 
+			if(!validateKeyboardSequence(keyCodes)){ 
 				throw new Error("A keyboard sequence can not have less than " + KEYBOARD_SEQUENCES_MIN_LENGTH + " elements");
 			}
 			
@@ -83,12 +86,13 @@ package no.doomsday.console.core.input
 			if(!isEmpty()){
 				if(has(keyCodes)){
 					var i:int = 0;
-					for(var l:int = keyboardSequences.length; i < l; i++){
+					for(var l:int = keyboardSequences.length; i < l; i++){						
 						if(inKeyboardSequence(keyCodes, keyboardSequences[i])){
 							break;
 						}
 					}
 					keyboardSequences.splice(i, 1);
+					success = true;
 				}
 			} else {
 				trace("Warn: Empty keyboard sequences, none to remove");
@@ -137,6 +141,17 @@ package no.doomsday.console.core.input
 			return (keyboardSequences.length == 0 ? true : false);
 		}
 		
+		/**
+		 * Validate keyboard sequence
+		 *  - For the moment only validate on the length.
+		 * 
+		 * @return
+		 * 	Returns true or false wether the keyboard sequence is valid or not. 
+		 */ 
+		public function validateKeyboardSequence(keyCodes:Array):Boolean {
+			return (keyCodes.length < KEYBOARD_SEQUENCES_MIN_LENGTH ? false: true);
+		}
+		
 		
 		/* @end */
 		
@@ -159,33 +174,54 @@ package no.doomsday.console.core.input
 		 */ 
 		public function onKeyUp(event:KeyboardEvent):void {
 			if(!isEmpty()){
-				var keyCode:uint = event.keyCode;
 				
-				// If either ALT|SHIFT|CTRL key is enabled use the char value as the keycode instead.
-				if(event.altKey || event.shiftKey || event.ctrlKey){
-					keyCode = event.charCode;
+				var keyCode:uint = event.charCode;
+				var success:Boolean = false;
+				var modifier:Boolean = false;
+				
+				// If either ALT|SHIFT|CTRL key is enabled  or the charCode is 0 use the keycode instead.
+				if((event.altKey || event.shiftKey || event.ctrlKey) || (keyCode == 0)){
+					keyCode = event.keyCode;
 				}
 				
-				/*
-				 * Loop over the keyboard sequences.
-				 *	If the keyCode matches the current keyCode in the keystrokes for the given keyboard sequence 
-				 *	check if it is completed, if it is completed trigger the callback on it, and set the reset flag.
-				 *
-				 *	If the current keyCode did not match and or the reset flag is set, then reset the given keyboard sequence
-				 *  to the default keystrokes state.
-				 */
-				for(var i:int = 0, l:int = keyboardSequences.length, reset:Boolean = true; i < l; i++, reset = true){
-					if(keyCode == keyboardSequences[i].keystrokes.shift()){
-						if(keyboardSequences[i].keystrokes.length == 0){
-							try {
-								keyboardSequences[i].callback();
-							}catch(error:Error){ /* Suppress Warnings */ }
-						} else {
-							reset = false;
+				switch(keyCode){
+					case KeyBindings.ALT:
+				    case KeyBindings.SHIFT:
+					case KeyBindings.CTRL:
+						modifier = true;
+					break;
+				}
+				
+				// Only compare with none modifiers.
+				if(!modifier){
+				   /*
+					* Loop over the keyboard sequences.
+					*	If the keyCode matches the current keyCode in the keystrokes for the given keyboard sequence 
+					*	check if it is completed, if it is completed then set success to true and trigger the callback outside of the loop block.
+					*
+					*	If the current keyCode did not match and or the reset flag is set, then reset the given keyboard sequence
+					*  to the default keystrokes state.
+					* 
+					*  If we had a successful match break out of the loop block and execute the callback on the i-th element which matched.
+					*/
+					for(var i:int = 0, l:int = keyboardSequences.length, reset:Boolean = true; i < l; i++, reset = true){
+						if(keyCode == keyboardSequences[i].keystrokes.shift()){
+							if(keyboardSequences[i].keystrokes.length == 0){
+								success = true;
+							} else {
+								reset = false;
+							}
+							
+						}
+						if(reset){
+							keyboardSequences[i].keystrokes = keyboardSequences[i].keyCodes.concat();
+						}
+						if(success){
+							break;
 						}
 					}
-					if(reset){
-						keyboardSequences[i].keystrokes = keyboardSequences[i].keyCodes.concat();
+					if(success){
+						executeCallback(keyboardSequences[i].callback);
 					}
 				}
 			}
@@ -205,7 +241,7 @@ package no.doomsday.console.core.input
 			var success:Boolean = true;
 			if(keyCodes.length == keyboardSequence.keyCodes.length){	
 				for(var i:int = 0, l:int = keyCodes.length; i < l; i++){
-					if(keyCodes[i] != keyboardSequence[i]){
+					if(keyCodes[i] != keyboardSequence.keyCodes[i]){
 						success = false;
 						break;
 					}
@@ -214,6 +250,20 @@ package no.doomsday.console.core.input
 			return success;
 		}
 		
+		/**
+		 * Execute callback.
+		 * 
+		 * @param callback The callback to execute.
+		 */ 
+		private function executeCallback(callback:Function):void {
+			if(typeof(callback) == "function"){
+				try {
+					callback();
+				}catch(error:Error){ /* supress warning. */ }
+			} else {
+				trace("Warn: could not execute the callback, perhaps not a valid callback function...");
+			}
+		}
 		/* @end */
 	}
 }

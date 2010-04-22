@@ -7,6 +7,7 @@ package no.doomsday.console.core.input
 	 * Maintains a list of keyboard shortcuts and dispatches the callback function when a shortcut has been triggered.
 	 * 
 	 * @author Andreas Rønning, Cristobal Dabed
+	 * @version 0.1
 	 */
 	public final class KeyboardShortcuts implements KeyboardList
 	{

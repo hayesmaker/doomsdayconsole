@@ -22,6 +22,7 @@
 	 * Maintains a list of keyboard shortcuts and dispatches the callback function when a shortcut has been triggered.
 	 * 
 	 * @author Andreas Rønning, Cristobal Dabed
+	 * @version 0.3
 	 */
 	public final class KeyboardManager extends EventDispatcher
 	{
@@ -123,6 +124,7 @@
 			return KeyboardShortcuts.instance.validateKeystrokeWithModifier(keystroke, modifier);
 		}
 		
+		
 		// Keyboard Sequences Functions.
 		/**
 		 * Add keyboard sequence.
@@ -145,6 +147,18 @@
 		 */ 
 		public function removeKeyboardSequence(keyCodes:Array):Boolean {
 			return KeyboardSequences.instance.remove(keyCodes);
+		}
+		
+		/**
+		 * Validate Keyboard Sequence
+		 * 
+		 * @param keyCodes The keyCodes to validate
+		 * 
+		 * @return
+		 * 	Returns true or false wether the keyboard sequence is valid or not. 
+		 */  
+		public function validateKeyboardSequence(keyCodes:Array):Boolean {
+			return KeyboardSequences.instance.validateKeyboardSequence(keyCodes);
 		}
 		
 		/* @end */

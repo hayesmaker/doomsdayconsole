@@ -14,9 +14,10 @@
 	import no.doomsday.console.core.input.KeyboardManager;
 	import no.doomsday.console.core.messages.Message;
 	import no.doomsday.console.core.messages.MessageTypes;
+	import no.doomsday.console.core.security.ConsoleLock;
 
 	/**
-	 * ...
+	 * ...	s	1s'
 	 * @author Andreas Rønning
 	 */
 	public class AbstractConsole extends DSprite
@@ -24,11 +25,12 @@
 		protected static const VERSION:String = "FP10 1.062a";
 		protected var keystroke:uint = KeyBindings.ENTER;
 		protected var modifier:uint = KeyBindings.CTRL_SHIFT;
+		protected var _lock:ConsoleLock = new ConsoleLock();
 		
 		public function AbstractConsole() 
 		{
 			KeyboardManager.instance.addKeyboardShortcut(keystroke, modifier, toggleDisplay); //  [ALT+SHIFT, ENTER]); //default keystroke
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+ 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		private function onAddedToStage(e:Event):void 
 		{
@@ -36,7 +38,15 @@
 			KeyboardManager.instance.setup(stage); //Setup keyboard listeners
 		}
 		
+		/**
+		 * @readonly lock
+		 */ 
+		public function get lock():ConsoleLock{
+			return _lock;
+		}
+		
 		/* INTERFACE no.doomsday.console.core.interfaces.IConsole */
+
 		
 		public function show():void
 		{
