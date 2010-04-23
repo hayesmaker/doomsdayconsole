@@ -28,7 +28,7 @@ This is useful when embedding the `Console` as a _extra utility__ in a *producti
                          KeyBindings.LEFT, KeyBindings.RIGHT, 
                          KeyBindings.LEFT, KeyBindings.RIGHT, 
                          KeyBindings.a, KeyBindings.b ];
-  ConsoleUtil.lockWithSecret(secret);
+  ConsoleUtil.lockWithKeyCodes(keyCodes);
 }}}
 
 
