@@ -1,4 +1,4 @@
-#Locking the Console.
+#summary Locking the Console.
 
 The `Console` can be locked such that only a *keyboard sequence* or *secret password* is the only way to unlock and toggle on the `Console`.
 This is useful when embedding the `Console` as a _extra utility__ in a *production mode application* that is not readily available to the end user.
