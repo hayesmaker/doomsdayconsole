@@ -175,16 +175,19 @@ package no.doomsday.console.core.input
 		public function onKeyUp(event:KeyboardEvent):void {
 			if(!isEmpty()){
 				
-				var keyCode:uint = event.charCode;
+				var value:uint = event.charCode;
 				var success:Boolean = false;
 				var modifier:Boolean = false;
 				
-				// If either ALT|SHIFT|CTRL key is enabled  or the charCode is 0 use the keycode instead.
-				if((event.altKey || event.shiftKey || event.ctrlKey) || (keyCode == 0)){
-					keyCode = event.keyCode;
+				/* 
+				 * If the charCode is 0 use the keycode instead.
+				 * Since the charCode is not an unicode character or is either a modifier.
+				 */
+				if(value == 0){
+					value = event.keyCode;
 				}
 				
-				switch(keyCode){
+				switch(value){
 					case KeyBindings.ALT:
 				    case KeyBindings.SHIFT:
 					case KeyBindings.CTRL:
@@ -196,16 +199,16 @@ package no.doomsday.console.core.input
 				if(!modifier){
 				   /*
 					* Loop over the keyboard sequences.
-					*	If the keyCode matches the current keyCode in the keystrokes for the given keyboard sequence 
-					*	check if it is completed, if it is completed then set success to true and trigger the callback outside of the loop block.
+					*  If the value matches the current keyCode in the keystrokes for the given keyboard sequence 
+					*  check if it is completed, if it is completed then set success to true and trigger the callback outside of the loop block.
 					*
-					*	If the current keyCode did not match and or the reset flag is set, then reset the given keyboard sequence
+					*  If the current value did not match and or the reset flag is set, then reset the given keyboard sequence
 					*  to the default keystrokes state.
 					* 
 					*  If we had a successful match break out of the loop block and execute the callback on the i-th element which matched.
 					*/
 					for(var i:int = 0, l:int = keyboardSequences.length, reset:Boolean = true; i < l; i++, reset = true){
-						if(keyCode == keyboardSequences[i].keystrokes.shift()){
+						if(value == keyboardSequences[i].keystrokes.shift()){
 							if(keyboardSequences[i].keystrokes.length == 0){
 								success = true;
 							} else {
