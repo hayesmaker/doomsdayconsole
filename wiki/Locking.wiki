@@ -34,5 +34,5 @@ This is useful when embedding the `Console` as a _extra utility__ in a *producti
 
 ====Note====
 
-_The functionality described above is not intended to be used when the console is already toggled on, it is meant as to be used when `Console` is being added,
+_The functionality described above is not intended to be used when the console is already toggled on, it is meant to be used when `Console` is being added,
 and should not be visible or available directly to the end user. _
