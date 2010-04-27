@@ -35,6 +35,7 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			KeyboardManager.instance.setup(stage); //Setup keyboard listeners
+			parent.tabEnabled = parent.tabChildren = false;
 		}
 		
 		/**
