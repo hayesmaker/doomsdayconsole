@@ -7,7 +7,6 @@
 	
 	import no.doomsday.console.core.AbstractConsole;
 	import no.doomsday.console.core.DConsole;
-	import no.doomsday.console.core.DLogger;
 	import no.doomsday.console.core.commands.FunctionCallCommand;
 	import no.doomsday.console.core.gui.Window;
 	import no.doomsday.console.core.input.KeyBindings;
@@ -25,7 +24,6 @@
 	{
 		
 		public static const MODE_CONSOLE:String = "console";
-		public static const MODE_LOGGER:String = "logger";
 		private static var _instance:AbstractConsole;
 		
 		private static var keyboardShortcut:Array = [];
@@ -41,19 +39,11 @@
 			return getInstance();
 		}
 		
-		public static function getInstance(type:String = MODE_CONSOLE):AbstractConsole {
+		public static function getInstance():AbstractConsole {
 			if (!_instance) {
-				switch(type) {
-					case MODE_LOGGER:
-					_instance = new DLogger();
-					trace("Logger mode set");
-					break;
-					default:
-					_instance = new DConsole();
-					trace("Console mode set");
-				}
+				_instance = new DConsole();
 				if(keyboardShortcut.length > 0){
-					instance.changeKeyboardShortcut(keyboardShortcut[0], keyboardShortcut[1]);
+					instance.changeKeyboardShortcut(keyboardShortcut[0], keyboardShortcut[1]); //TODO: What's this do?
 				}
 			}
 			return _instance;
@@ -137,12 +127,8 @@
 			instance.dock(position);
 		}
 		
-		public static function set password(s:String):void {
-			// TODO: Refactor Command Manager + Password Authentication.
-			instance.setPassword(s);
-		}
-		
-		public static function getGraph(title:String = "Graph"):GraphWindow {
+		//TODO: Temp stuff for graph windows. This really needs a lot of work, ignore for now
+		/*public static function getGraph(title:String = "Graph"):GraphWindow {
 			var w:GraphWindow = new GraphWindow(title);
 			instance.pluginContainer.addChild(w);
 			w.y = w.x = 50;
@@ -150,7 +136,7 @@
 		}
 		public static function destroyWindow(w:Window):Boolean {
 			return false;
-		}
+		}*/
 		
 		/**
 		 * Set keyboard shortcut

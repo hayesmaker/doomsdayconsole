@@ -1,71 +1,41 @@
 ﻿package no.doomsday.console.core
 {
 	import com.adobe.images.PNGEncoder;
-	import no.doomsday.console.core.gui.GUIArea;
-	import no.doomsday.console.core.input.KeyboardManager;
-	import no.doomsday.console.misc.Credits;
-	import no.doomsday.console.utilities.monitoring.GraphWindow;
-	import no.doomsday.console.utilities.monitoring.StatGraph;
-	
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Loader;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
-	import flash.events.Event;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.external.ExternalInterface;
-	import flash.filters.DropShadowFilter;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.external.*;
 	import flash.geom.Rectangle;
-	import flash.net.FileReference;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.system.Capabilities;
-	import flash.system.System;
-	import flash.text.GridFitType;
-	import flash.text.TextField;
-	import flash.text.TextFieldType;
-	import flash.text.TextFormat;
-	import flash.ui.Keyboard;
-	import flash.ui.Mouse;
-	import flash.utils.ByteArray;
-	import flash.utils.Timer;
-	import flash.utils.getDefinitionByName;
-	
-	import net.hires.debug.ConsoleStats;
-	
-	import no.doomsday.console.core.commands.CommandManager;
-	import no.doomsday.console.core.commands.ConsoleCommand;
-	import no.doomsday.console.core.commands.FunctionCallCommand;
+	import flash.net.*;
+	import flash.system.*;
+	import flash.text.*;
+	import flash.ui.*;
+	import flash.utils.*;
+	import net.hires.debug.*;
+	import no.doomsday.console.core.commands.*;
+	import no.doomsday.console.core.effects.*;
 	import no.doomsday.console.core.errors.ConsoleAuthError;
 	import no.doomsday.console.core.events.ConsoleEvent;
-	import no.doomsday.console.core.gui.ScaleHandle;
-	import no.doomsday.console.core.introspection.InspectionUtils;
-	import no.doomsday.console.core.introspection.ScopeManager;
-	import no.doomsday.console.core.messages.Message;
-	import no.doomsday.console.core.messages.MessageRepeatMode;
-	import no.doomsday.console.core.messages.MessageTypes;
-	import no.doomsday.console.core.persistence.PersistenceManager;
-	import no.doomsday.console.core.references.ReferenceManager;
-	import no.doomsday.console.core.text.TextFormats;
-	import no.doomsday.console.core.text.TextUtils;
-	import no.doomsday.console.core.text.autocomplete.AutocompleteDictionary;
-	import no.doomsday.console.core.text.autocomplete.AutocompleteManager;
+	import no.doomsday.console.core.gui.*;
+	import no.doomsday.console.core.introspection.*;
+	import no.doomsday.console.core.messages.*;
+	import no.doomsday.console.core.persistence.*;
+	import no.doomsday.console.core.references.*;
+	import no.doomsday.console.core.text.*;
+	import no.doomsday.console.core.text.autocomplete.*;
+	import no.doomsday.console.misc.*;
+	import no.doomsday.console.utilities.colorpicker.*;
 	import no.doomsday.console.utilities.ContextMenuUtil;
-	import no.doomsday.console.utilities.ProductInfoUtil;
-	import no.doomsday.console.utilities.colorpicker.ColorPicker;
-	import no.doomsday.console.utilities.controller.ControllerManager;
+	import no.doomsday.console.utilities.controller.*;
 	import no.doomsday.console.utilities.math.MathUtils;
-	import no.doomsday.console.utilities.measurement.MeasurementTool;
-	import no.doomsday.console.utilities.monitoring.MonitorManager;
+	import no.doomsday.console.utilities.measurement.*;
+	import no.doomsday.console.utilities.monitoring.*;
+	import no.doomsday.console.utilities.ProductInfoUtil;
 	import no.doomsday.utilities.text.Lipsum;
+	
+	
+	
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -96,9 +66,6 @@
 		
 		private var measureBracket:MeasurementTool;
 		
-		private var parentTabEnabled:Boolean = true;
-		private var parentTabChildren:Boolean = true;
-		private var tabTimer:Timer;
 		private var fileRef:FileReference;
 		
 		private var routingToJS:Boolean;
@@ -128,7 +95,7 @@
 		private var backgroundColor:uint = 0;
 		private var backgroundAlpha:Number = 0.8;
 		
-		//temp; rough mechanic to ignore repeated prints
+		//TODO: Andreas: This rough mechanic to ignore repeated prints. Perhaps it can be more elegant?
 		private var previousPrintValues:String;
 		private var previousMessage:Message;
 		private var repeatMessageMode:int = MessageRepeatMode.STACK;
@@ -159,8 +126,7 @@
 			mainConsoleContainer = new Sprite();
 			
 			consoleBg = new Shape();
-			var dropshadow:DropShadowFilter = new DropShadowFilter(4, 90, 0, 0.3, 0, 10);
-			consoleBg.filters = [dropshadow];		
+			consoleBg.filters = [Filters.CONSOLE_DROPSHADOW];		
 			
 			textOutput = new TextField();
 			textOutput.gridFitType = GridFitType.PIXEL;
@@ -178,7 +144,6 @@
 			commandManager = new CommandManager(this, persistence, referenceManager);
 			monitorManager = new MonitorManager(this, scopeManager);
 			
-			tabTimer = new Timer(50, 1);
 			messageLog = new Vector.<Message>;
 			fileRef = new FileReference();
 			scaleHandle = new ScaleHandle();	
@@ -226,9 +191,7 @@
 			mainConsoleContainer.addChild(scaleHandle);
 						
 			stats = new ConsoleStats(this);
-			
-			tabTimer.addEventListener(TimerEvent.TIMER_COMPLETE, resetTab, false, 0, true);
-			
+						
 			callCommand = new FunctionCallCommand("call", scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
 			setCommand = new FunctionCallCommand("set", scopeManager.setAccessorOnObject, "Introspection", "Sets a variable within the current introspection scope");
 			getCommand = new FunctionCallCommand("get", scopeManager.getAccessorOnObject, "Introspection", "Prints a variable within the current introspection scope");
@@ -939,13 +902,8 @@
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			ContextMenuUtil.setUp(this, parent);
-			try{
-				parentTabChildren = parent.tabChildren;
-				parentTabEnabled = parent.tabEnabled;
-			}catch (e:Error) {
-				
-			}
 			var score:int = 0;
 			if (stage.align != StageAlign.TOP_LEFT) {
 				print("Warning: stage.align is not set to TOP_LEFT; This might cause scaling issues",MessageTypes.ERROR);
@@ -1043,71 +1001,7 @@
 				}
 			}
 		}
-		private function doTab():void
-		{
-			var flag:Boolean = false; //TODO: Temporary flag until this whole tab business has been sorted out
-			
-			if (inputTextField.text.length < 1) return;
-			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
-			
-			var isFirstWord:Boolean = inputTextField.text.lastIndexOf(word) < 1;
-			var firstWord:String;
-			if (isFirstWord) {
-				firstWord = word;
-			}else {
-				firstWord = TextUtils.getWordAtIndex(inputTextField, 0);
-			}
-			if (autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord)||!isNaN(Number(word))) {
-				//this word is okay, so accept the tab
-				var wordIndex:int = TextUtils.getFirstIndexOfWordAtCaretIndex(inputTextField);
-					
-				//is there currently a selection?
-				if (inputTextField.selectedText.length > 0) {
-					moveCaretToIndex(inputTextField.selectionBeginIndex);
-					wordIndex = inputTextField.selectionBeginIndex;
-				}else if(inputTextField.text.charAt(inputTextField.caretIndex)==" "&&inputTextField.caretIndex!=inputTextField.text.length-1){
-					moveCaretToIndex(inputTextField.caretIndex - 1);
-				}
 				
-				word = TextUtils.getWordAtCaretIndex(inputTextField);
-				wordIndex = inputTextField.caretIndex;
-				
-				//case correction
-				var temp:String = inputTextField.text;
-				try {
-					temp = temp.replace(word, autoCompleteManager.correctCase(word));
-					inputTextField.text = temp;
-				}catch (e:Error) {
-				}
-				
-				//is there a word after the current word?
-				if (wordIndex + word.length < inputTextField.text.length - 1) {
-					moveCaretToIndex(wordIndex + word.length);
-					TextUtils.selectWordAtCaretIndex(inputTextField);
-					
-				}else {
-					//if it's the last word
-					if (inputTextField.text.charAt(inputTextField.text.length-1)!=" ") {
-						inputTextField.appendText(" ");
-					}
-					moveCaretToIndex();
-				}
-			}else{
-				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
-				var call:Boolean = (firstWord == callCommand.trigger);
-				var select:Boolean = (firstWord == selectCommand.trigger);
-				tabSearch(word, !isFirstWord||select, isFirstWord, call);
-				
-				if (flag) {
-					TextUtils.selectWordAtCaretIndex(inputTextField);
-				}else{
-					word = TextUtils.getWordAtCaretIndex(inputTextField);
-					wordIndex = TextUtils.getFirstIndexOfWordAtCaretIndex(inputTextField);
-					moveCaretToIndex(wordIndex + word.length);
-				}
-			}
-		}
-		
 		private function moveCaretToIndex(index:int = -1):void
 		{
 			if (index == -1) {
@@ -1204,71 +1098,7 @@
 		
 		}
 		
-		private function singleTab():void
-		{
-			if (autoCompleteManager.suggestionActive) {
-				inputTextField.appendText(" ");
-				inputTextField.setSelection(inputTextField.length, inputTextField.length);
-			}
-		}
-		//TODO: Invoke properly
-		private function onKeyDown(e:KeyboardEvent):void 
-		{
-			if (!visible) return;
-			if (e.keyCode == Keyboard.TAB) {
-				if (visible && stage.focus != inputTextField) {
-					stage.focus = inputTextField;
-					e.stopImmediatePropagation();
-					e.stopPropagation();
-				}
-				doTab();
-				return;
-			}
-			if (e.ctrlKey) {
-				switch(e.keyCode) {
-					case Keyboard.UP:
-					scroll(1);
-					return
-					case Keyboard.DOWN:
-					scroll(-1);
-					return;
-					case Keyboard.LEFT:
-					//scroll(0,-textOutput.width*.5);
-					return
-					case Keyboard.RIGHT:
-					//scroll(0,textOutput.width*.5);
-					return;
-				}
-			}
-			if (e.keyCode == Keyboard.BACKSPACE && e.ctrlKey) {
-				inputTextField.text = "";
-				onInputFieldChange();
-				return;
-			}
-			if (e.keyCode == Keyboard.ENTER) {
-				if (inputTextField.text.length < 1) {
-					stage.focus = inputTextField;
-					return;
-				}
-				var success:Boolean = false;
-				if (echo) print("'" + inputTextField.text + "'", MessageTypes.USER);
-				try {
-					var attempt:* = commandManager.tryCommand(inputTextField.text);
-					success = true;
-				}catch (error:ConsoleAuthError) {
-					//TODO: This needs a more graceful solution. Dual auth error prints = lame
-				}catch (error:Error) {
-					print(error.message,MessageTypes.ERROR);
-				}
-					
-				inputTextField.text = "";
-				onInputFieldChange();
-			}else if (e.keyCode == Keyboard.PAGE_DOWN) {
-				scroll(-persistence.numLines);
-			}else if (e.keyCode == Keyboard.PAGE_UP) {
-				scroll(persistence.numLines);
-			}
-		}
+		
 		
 		
 		private function scroll(deltaY:int = 0,deltaX:int = 0):void {
@@ -1283,28 +1113,6 @@
 				textOutput.scrollH = Math.max(0, textOutput.scrollH + deltaX);
 			}
 		}
-		private function resetTab(e:TimerEvent):void 
-		{
-			try{
-				parent.tabChildren = parentTabChildren;
-				parent.tabEnabled = parentTabEnabled;
-			}catch (e:Error) {
-				
-			}
-		}
-		private function disableTab():void
-		{
-			try{
-				parent.tabChildren = parent.tabEnabled = false;
-			}catch (e:Error) {
-				
-			}
-		}
-		private function reenableTab():void {
-			tabTimer.reset();
-			tabTimer.start();
-		}
-		
 		
 		public function getApproxMessagesSize():int {
 			var totalText:String = "";
@@ -1478,11 +1286,6 @@
 			return new Rectangle(x, y, w, h);
 		}
 		
-		
-		override public function setPassword(pwd:String):void {
-			commandManager.setupAuthentication(pwd);
-		}
-		
 		public function setTabSearch(newvalue:Boolean = true):void {
 			tabSearchEnabled = newvalue;
 			print("Tab searching: " + tabSearchEnabled, MessageTypes.SYSTEM);
@@ -1598,6 +1401,154 @@
 				return new c(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17], args[18], args[19]);
 				default:
 				return new c();
+			}
+		}
+		
+		//keyboard event handler
+		private function onKeyDown(e:KeyboardEvent):void 
+		{
+			if (!visible) return; //Ignore if invisible
+			if (e.keyCode == Keyboard.TAB) {
+				if (visible && stage.focus != inputTextField) {
+					stage.focus = inputTextField;
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+				}
+				doTab();
+				return;
+			}
+			if (e.ctrlKey) {
+				switch(e.keyCode) {
+					case Keyboard.UP:
+					scroll(1);
+					return
+					case Keyboard.DOWN:
+					scroll(-1);
+					return;
+					case Keyboard.LEFT:
+					//TODO: Need to handle horizontal scroll somehow, but this is not the way
+					//scroll(0,-textOutput.width*.5);
+					return
+					case Keyboard.RIGHT:
+					//scroll(0,textOutput.width*.5);
+					return;
+				}
+			}
+			if (e.keyCode == Keyboard.BACKSPACE && e.ctrlKey) {
+				inputTextField.text = "";
+				onInputFieldChange();
+				return;
+			}
+			if (e.keyCode == Keyboard.ENTER) {
+				if (inputTextField.text.length < 1) {
+					stage.focus = inputTextField;
+					return;
+				}
+				var success:Boolean = false;
+				if (echo) print("'" + inputTextField.text + "'", MessageTypes.USER);
+				try {
+					var attempt:* = commandManager.tryCommand(inputTextField.text);
+					success = true;
+				}catch (error:ConsoleAuthError) {
+					//TODO: This needs a more graceful solution. Dual auth error prints = lame
+				}catch (error:Error) {
+					print(error.message,MessageTypes.ERROR);
+				}
+					
+				inputTextField.text = "";
+				onInputFieldChange();
+			}else if (e.keyCode == Keyboard.PAGE_DOWN) {
+				scroll(-persistence.numLines);
+			}else if (e.keyCode == Keyboard.PAGE_UP) {
+				scroll(persistence.numLines);
+			}
+		}
+		
+		//tab control
+		private function resetTab(e:TimerEvent):void 
+		{
+			try{
+				//parent.tabChildren = parentTabChildren;
+				//parent.tabEnabled = parentTabEnabled;
+			}catch (e:Error) {
+				
+			}
+		}
+		private function disableTab():void
+		{
+			try{
+				//parent.tabChildren = parent.tabEnabled = false;
+			}catch (e:Error) {
+				
+			}
+		}
+		private function reenableTab():void {
+			//tabTimer.reset();
+			//tabTimer.start();
+		}
+		
+		private function doTab():void
+		{
+			var flag:Boolean = false; //TODO: Temporary flag until this whole tab business has been sorted out
+			
+			if (inputTextField.text.length < 1) return;
+			var word:String = TextUtils.getWordAtCaretIndex(inputTextField);
+			
+			var isFirstWord:Boolean = inputTextField.text.lastIndexOf(word) < 1;
+			var firstWord:String;
+			if (isFirstWord) {
+				firstWord = word;
+			}else {
+				firstWord = TextUtils.getWordAtIndex(inputTextField, 0);
+			}
+			if (autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord)||!isNaN(Number(word))) {
+				//this word is okay, so accept the tab
+				var wordIndex:int = TextUtils.getFirstIndexOfWordAtCaretIndex(inputTextField);
+					
+				//is there currently a selection?
+				if (inputTextField.selectedText.length > 0) {
+					moveCaretToIndex(inputTextField.selectionBeginIndex);
+					wordIndex = inputTextField.selectionBeginIndex;
+				}else if(inputTextField.text.charAt(inputTextField.caretIndex)==" "&&inputTextField.caretIndex!=inputTextField.text.length-1){
+					moveCaretToIndex(inputTextField.caretIndex - 1);
+				}
+				
+				word = TextUtils.getWordAtCaretIndex(inputTextField);
+				wordIndex = inputTextField.caretIndex;
+				
+				//case correction
+				var temp:String = inputTextField.text;
+				try {
+					temp = temp.replace(word, autoCompleteManager.correctCase(word));
+					inputTextField.text = temp;
+				}catch (e:Error) {
+				}
+				
+				//is there a word after the current word?
+				if (wordIndex + word.length < inputTextField.text.length - 1) {
+					moveCaretToIndex(wordIndex + word.length);
+					TextUtils.selectWordAtCaretIndex(inputTextField);
+					
+				}else {
+					//if it's the last word
+					if (inputTextField.text.charAt(inputTextField.text.length-1)!=" ") {
+						inputTextField.appendText(" ");
+					}
+					moveCaretToIndex();
+				}
+			}else{
+				var getSet:Boolean = (firstWord == getCommand.trigger || firstWord == setCommand.trigger);
+				var call:Boolean = (firstWord == callCommand.trigger);
+				var select:Boolean = (firstWord == selectCommand.trigger);
+				tabSearch(word, !isFirstWord||select, isFirstWord, call);
+				
+				if (flag) {
+					TextUtils.selectWordAtCaretIndex(inputTextField);
+				}else{
+					word = TextUtils.getWordAtCaretIndex(inputTextField);
+					wordIndex = TextUtils.getFirstIndexOfWordAtCaretIndex(inputTextField);
+					moveCaretToIndex(wordIndex + word.length);
+				}
 			}
 		}
 		

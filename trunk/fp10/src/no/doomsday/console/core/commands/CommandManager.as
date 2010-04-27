@@ -1,7 +1,6 @@
 ﻿package no.doomsday.console.core.commands 
 {
 	import no.doomsday.console.core.DConsole;
-	import no.doomsday.console.core.errors.ConsoleAuthError;
 	import no.doomsday.console.core.introspection.InspectionUtils;
 	import no.doomsday.console.core.messages.MessageTypes;
 	import no.doomsday.console.core.persistence.PersistenceManager;
@@ -17,11 +16,6 @@
 		private var console:DConsole;
 		private var persistence:PersistenceManager;
 		private var	commands:Vector.<ConsoleCommand>;
-		private var password:String = "";
-		private var authenticated:Boolean = true;
-		private var authCommand:FunctionCallCommand = new FunctionCallCommand("authorize", authenticate, "System", "Input password to gain console access");
-		private var deAuthCommand:FunctionCallCommand = new FunctionCallCommand("deauthorize", lock, "System", "Lock the console from unauthorized user access");
-		private var authenticationSetup:Boolean;
 		private var referenceManager:ReferenceManager;
 		public function CommandManager(console:DConsole,persistence:PersistenceManager,referenceManager:ReferenceManager) 
 		{
@@ -50,11 +44,7 @@
 				throw e;
 			}
 			var str:String = args.shift().toLowerCase();
-			if (!authenticated && str != authCommand.trigger) {
-				if(!sub) console.print("Not authenticated", MessageTypes.ERROR);
-				throw new ConsoleAuthError();
-			}
-			if (str != authCommand.trigger&&!sub) {
+			if (!sub) {
 				persistence.addtoHistory(input);
 			}
 			
@@ -147,29 +137,6 @@
 			return arg;
 		}
 		
-		//authentication
-		public function setupAuthentication(password:String):void {
-			this.password = password;
-			authenticated = false;
-			if (authenticationSetup) return;
-			authenticationSetup = true;
-			console.addCommand(authCommand);
-			console.addCommand(deAuthCommand);
-		}
-		
-		private function lock():void
-		{
-			authenticated = false;
-			console.print("Deauthorized", MessageTypes.SYSTEM);
-		}
-		public function authenticate(password:String):void {
-			if (password == this.password) {
-				authenticated = true;
-				console.print("Authorized", MessageTypes.SYSTEM);
-			}else {
-				console.print("Not authorized", MessageTypes.ERROR);
-			}
-		}
 		public function doSearch(search:String):Vector.<String>
 		{
 			var result:Vector.<String> = new Vector.<String>;

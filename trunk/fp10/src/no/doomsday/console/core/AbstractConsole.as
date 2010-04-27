@@ -17,7 +17,6 @@
 	import no.doomsday.console.core.security.ConsoleLock;
 
 	/**
-	 * ...	s	1s'
 	 * @author Andreas Rønning
 	 */
 	public class AbstractConsole extends DSprite
@@ -99,11 +98,6 @@
 		}
 		
 		public function saveLog(e:Event = null):void
-		{
-			throw new NotImplementedError();
-		}
-		
-		public function setPassword(pwd:String):void
 		{
 			throw new NotImplementedError();
 		}
