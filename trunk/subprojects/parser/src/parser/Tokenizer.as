@@ -7,68 +7,100 @@
 	 */
 	public class Tokenizer
 	{
-		private static const NUM_TABLE:String = "0123456789";
+		private static const NUM_TABLE:String = "0123456789.";
 		private static const LOWERCASE_TABLE:String = "abcdefghijklmnopqrstuvwxyz";
-		private static const OPERATORS_TABLE:String = "+-*/=.";
+		private static const OPERATORS_TABLE:String = "+-*/=";
 		private static const STRUCTURE_TABLE:String = "()[]{}";
 		private static const SEPARATORS_TABLE:String = " ,";
 		private static const QUOTES_TABLE:String = "'" + '"';
 		
 		//private static var typeTableBuffer:String = "";
-		private static var currentType:TokenType = TokenTypes.IDENTIFIER;
+		private static var currentType:TokenType = TokenTypes.UNKNOWN;
+		static private var lastType:TokenType = currentType;
 		private static var stringBuffer:Vector.<String>;
-		private static var out:XML;
 		private static var openStack:Vector.<String> = new Vector.<String>();
+		private static var out:XML;
 		public static function tokenize(input:String):XML {
 			clearBuffer();
 			out = <stream/>;
 			if (input.length < 1) return out;
 			var split:Array = input.split("");
 			split.reverse();
+			var lastItem:String = "";
+			lastType;
+			var lookingAt:String = "";
 			while (split.length > 0) {
 				//left to right, no look forward
-				var lookingAt:String = split.pop();
-				//var t:String = getTypeTable(lookingAt);
+				lastItem = lookingAt;
+				lookingAt = split.pop();
 				if (isQuote(lookingAt)) {
 					if (openStack.length == 0) {
-						currentType = TokenTypes.STRING;
+						setCurrentType(TokenTypes.STRING);
 						openStack.push(lookingAt);
 					}else if (openStack[openStack.length - 1] == lookingAt) {
 						openStack.pop();
 						reduce();
 					}else {
-						currentType = TokenTypes.STRING;
+						setCurrentType(TokenTypes.STRING);
 						openStack.push(lookingAt);
 					}
 					continue;
 				}
-				if (currentType != TokenTypes.STRING && (isSeparator(lookingAt) || isOperator(lookingAt))) { 
-					trace("critical change");
-					reduce();
-					//We have a critical change in type
-					if (!isSeparator(lookingAt)) {
+				if (currentType == TokenTypes.STRING) {
+					//If we're currently a string, simply push to buffer
+					stringBuffer.push(lookingAt);
+				}else if (isSeparator(lookingAt) || isOperator(lookingAt) || isStructure(lookingAt)) { 
+					//if we're currently not a string, and the current symbol is an operator or a separator...
+					trace("critical change, operator/separator");
+					reduce(); //reduce the current buffer
+					if (!isSeparator(lookingAt)) { //simply ignore all separators
 						switch(lookingAt) {
 							case "+":
-							currentType = TokenTypes.PLUS_OP;
+							setCurrentType(TokenTypes.PLUS_OP);
 							break;
 							case "-":
-							currentType = TokenTypes.MINUS_OP;
+							setCurrentType(TokenTypes.MINUS_OP);
 							break;
 							case "/":
-							currentType = TokenTypes.DIVIDE_OP;
+							setCurrentType(TokenTypes.DIVIDE_OP);
 							break;
 							case "*":
-							currentType = TokenTypes.MULTIPLY_OP;
+							setCurrentType(TokenTypes.MULTIPLY_OP);
+							break;
+							case "=":
+							setCurrentType(TokenTypes.EQUAL_OP);
+							break;
+							case "(":
+							setCurrentType(TokenTypes.OPEN_PARENTHESIS);
+							break;
+							case ")":
+							setCurrentType(TokenTypes.CLOSE_PARENTHESIS);
+							break;
+							case "[":
+							setCurrentType(TokenTypes.OPEN_BRACKET);
+							break;
+							case "]":
+							setCurrentType(TokenTypes.CLOSE_BRACKET);
+							break;
+							case "{":
+							setCurrentType(TokenTypes.OPEN_CURLYBRACE);
+							break;
+							case "}":
+							setCurrentType(TokenTypes.CLOSE_CURLYBRACE);
 							break;
 							default:
-							currentType = TokenTypes.IDENTIFIER;
+							setCurrentType(TokenTypes.UNKNOWN);
 						}
 						stringBuffer.push(lookingAt);
 					}
-					reduce();
+					reduce(); //the current buffer should only contain an operator or be empty, so reduce
 				}else {
-					if (currentType != TokenTypes.STRING && isNumber(lookingAt)) { 
-						currentType = TokenTypes.NUMBER;
+					//we are probably an identifier or a number..
+					//assuming this is the first pass after a buffer clear, check the type
+					if (isNumber(lookingAt)&&currentType!=TokenTypes.IDENTIFIER){
+						setCurrentType(TokenTypes.NUMBER);
+					}else if (getTypeTable(lookingAt) == LOWERCASE_TABLE) {
+						setCurrentType(TokenTypes.IDENTIFIER);
 					}
 					stringBuffer.push(lookingAt);
 				}
@@ -78,6 +110,10 @@
 			}
 			
 			return out;
+		}
+		static private function setCurrentType(t:TokenType):void {
+			lastType = currentType;
+			currentType = t;
 		}
 		
 		static private function isNumber(input:String):Boolean {
@@ -92,6 +128,9 @@
 		}
 		static private function isQuote(input:String):Boolean {
 			return QUOTES_TABLE.indexOf(input) > -1;
+		}
+		static private function isStructure(input:String):Boolean {
+			return STRUCTURE_TABLE.indexOf(input) > -1;
 		}
 		
 		static private function getTypeTable(input:String):String
@@ -109,7 +148,7 @@
 		private static function clearBuffer():void
 		{
 			stringBuffer = new Vector.<String>();
-			currentType = TokenTypes.IDENTIFIER;
+			setCurrentType(TokenTypes.UNKNOWN);
 		}
 		/**
 		 * Take a data/type pair and create a compatible XML node
@@ -117,9 +156,15 @@
 		 * @param	type
 		 * @return
 		 */
-		private static function makeToken(data:String, type:TokenType):XML {
+		private static function makeTokenNode(data:String, type:TokenType):XML {
 			trace("Make token", data, type.description);
+			var malFormed:Boolean = false;
+			if (type == TokenTypes.IDENTIFIER) {
+				if (isNumber(data.charAt(0)))
+				malFormed = true;
+			}
 			var n:XML = <token/>;
+			if (malFormed) n.@malformed = malFormed;
 			n.@desc = type.description;
 			n.@typeID = type.id;
 			n.@value = data;
@@ -132,8 +177,12 @@
 		 */
 		private static function reduce():void {
 			if (stringBuffer.length < 1) return;
-			var t:XML = makeToken(stringBuffer.join(""), currentType);
-			out.appendChild(t);
+			try{
+				var t:XML = makeTokenNode(stringBuffer.join(""), currentType);
+				out.appendChild(t);
+			}catch (e:Error) {
+				
+			}
 			clearBuffer();
 		}
 		

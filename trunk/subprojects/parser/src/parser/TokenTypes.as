@@ -7,6 +7,7 @@
 	 */
 	public class TokenTypes
 	{
+		public static const UNKNOWN:TokenType 				= new TokenType("unknown");
 		public static const NUMBER:TokenType 				= new TokenType("number");
 		public static const IDENTIFIER:TokenType 			= new TokenType("identifier");
 		public static const STRING:TokenType 				= new TokenType("string");
@@ -23,6 +24,7 @@
 		public static const CLOSE_CURLYBRACE:TokenType 		= new TokenType("close curlybrace");
 		public static const COMMA:TokenType 				= new TokenType("comma");
 		public static const PERIOD:TokenType 				= new TokenType("period");
+		public static const EXPRESSION:TokenType 			= new TokenType("expression");
 		
 	}
 

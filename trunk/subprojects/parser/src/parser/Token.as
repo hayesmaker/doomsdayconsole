@@ -8,6 +8,7 @@
 	{
 		public var type:uint;
 		public var value:*;
+		public var malFormed:Boolean = false;
 		public function Token() 
 		{
 			
