@@ -1,4 +1,4 @@
-﻿package parser 
+﻿package parser.tokenizer
 {
 	import utils.UIDGen;
 	/**

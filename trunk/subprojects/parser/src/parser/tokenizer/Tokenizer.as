@@ -1,6 +1,5 @@
-﻿package parser 
+﻿package parser.tokenizer
 {
-	import mx.accessibility.DateChooserAccImpl;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -19,10 +18,10 @@
 		static private var lastType:TokenType = currentType;
 		private static var stringBuffer:Vector.<String>;
 		private static var openStack:Vector.<String> = new Vector.<String>();
-		private static var out:XML;
-		public static function tokenize(input:String):XML {
+		private static var out:Vector.<Token>;
+		public static function tokenize(input:String):Vector.<Token> {
 			clearBuffer();
-			out = <stream/>;
+			out = new Vector.<Token>;
 			if (input.length < 1) return out;
 			var split:Array = input.split("");
 			split.reverse();
@@ -51,7 +50,6 @@
 					stringBuffer.push(lookingAt);
 				}else if (isSeparator(lookingAt) || isOperator(lookingAt) || isStructure(lookingAt)) { 
 					//if we're currently not a string, and the current symbol is an operator or a separator...
-					trace("critical change, operator/separator");
 					reduce(); //reduce the current buffer
 					if (!isSeparator(lookingAt)) { //simply ignore all separators
 						switch(lookingAt) {
@@ -108,7 +106,6 @@
 			if (stringBuffer.length > 0) {
 				reduce();
 			}
-			
 			return out;
 		}
 		static private function setCurrentType(t:TokenType):void {
@@ -150,25 +147,17 @@
 			stringBuffer = new Vector.<String>();
 			setCurrentType(TokenTypes.UNKNOWN);
 		}
-		/**
-		 * Take a data/type pair and create a compatible XML node
-		 * @param	data
-		 * @param	type
-		 * @return
-		 */
-		private static function makeTokenNode(data:String, type:TokenType):XML {
-			trace("Make token", data, type.description);
+		private static function makeTokenObject(data:String, type:TokenType):Token {
 			var malFormed:Boolean = false;
 			if (type == TokenTypes.IDENTIFIER) {
 				if (isNumber(data.charAt(0)))
 				malFormed = true;
 			}
-			var n:XML = <token/>;
-			if (malFormed) n.@malformed = malFormed;
-			n.@desc = type.description;
-			n.@typeID = type.id;
-			n.@value = data;
-			return n;
+			var t:Token = new Token();
+			if (malFormed) t.malFormed = malFormed;
+			t.type = type;
+			t.value = data;
+			return t;
 		}
 		/**
 		 * Reduce the current buffer to a token
@@ -178,8 +167,10 @@
 		private static function reduce():void {
 			if (stringBuffer.length < 1) return;
 			try{
-				var t:XML = makeTokenNode(stringBuffer.join(""), currentType);
-				out.appendChild(t);
+				//var t:XML = makeTokenNode(stringBuffer.join(""), currentType);
+				//out.appendChild(t);
+				var t:Token = makeTokenObject(stringBuffer.join(""), currentType);
+				out.push(t);
 			}catch (e:Error) {
 				
 			}
