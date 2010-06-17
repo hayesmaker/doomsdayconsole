@@ -11,6 +11,7 @@
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	
 	import no.doomsday.console.core.text.TextFormats;
 	/**
 	 * ...
@@ -78,10 +79,12 @@
 			sampleBMD.draw(stage, matrix, null, null, clipRect);
 			sampleBMD.unlock();
 			_color = sampleBMD.getPixel(1, 1);
-			colorPickerTF.text = color;
+			colorPickerTF.text = "0x" + color;
 		}
 		public function get color():String {
-			return _color.toString(16);
+			var str:String = _color.toString(16).toUpperCase();
+			str = new Array(7 - str.length).join("0") + str;
+			return str;
 		}
 		public function deactivate():void {
 			visible = false;
