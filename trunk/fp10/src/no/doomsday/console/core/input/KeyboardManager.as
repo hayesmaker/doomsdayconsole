@@ -13,7 +13,6 @@
 	import flash.utils.Dictionary;
 	
 	import mx.utils.StringUtil;
-	import mx.utils.object_proxy;
 	
 	import no.doomsday.console.ConsoleUtil;
 	import no.doomsday.console.core.text.TextUtils;
