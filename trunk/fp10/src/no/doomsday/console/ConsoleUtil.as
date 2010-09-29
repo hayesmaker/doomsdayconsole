@@ -48,6 +48,9 @@
 			}
 			return _instance;
 		}
+		public static function select(target:*):void {
+			instance.select(target);
+		}
 		/**
 		 * Add a message
 		 * @param	msg

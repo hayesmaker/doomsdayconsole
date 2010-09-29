@@ -213,6 +213,10 @@
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
+		override public function select(target:*):void 
+		{
+			doSelect(target);
+		}
 		
 		private function startColorPicker():void {
 			colorPicker.activate();

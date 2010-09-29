@@ -46,7 +46,9 @@
 		}
 		
 		/* INTERFACE no.doomsday.console.core.interfaces.IConsole */
-
+		public function select(target:*):void {
+			throw new NotImplementedError();
+		}
 		
 		public function show():void
 		{
