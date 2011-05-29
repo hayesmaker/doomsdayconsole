@@ -1,4 +1,5 @@
 #summary Using batch txt files to automate commands
+#labels Deprecated
 
 The console currently has two public methods for running batch files; {{{runBatch}}} and {{{runBatchFromUrl}}}. The former takes a string, splits it into commands based on \r\n and attempts to call them all in top-down sequence. The latter takes a url to an UTF-8 encoded txt file, loads that file and then runs runBatch on its contents.
 
