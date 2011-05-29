@@ -1,4 +1,5 @@
 #summary Customizing the console appearance
+#labels Deprecated
 
 = Introduction =
 If you wind up using the console a lot, you might find issue with the color schemes chosen. Fear not, there are a couple of methods for changing just about every single color.
