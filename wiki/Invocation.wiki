@@ -1,4 +1,5 @@
 #summary Customizing your invocation keystroke
+#labels Deprecated
 
 The default keystroke for toggling the console is shift+enter, but you are free to change this to any combination of held down keys.
 
