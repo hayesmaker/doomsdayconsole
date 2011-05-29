@@ -1,0 +1,16 @@
+package no.doomsday.dconsole2.core.plugins 
+{
+	import no.doomsday.dconsole2.core.commands.CommandArgument;
+	public interface IParsingDConsolePlugin extends IDConsolePlugin
+	{
+		/**
+		 * Takes a string input and returns an object
+		 * @param	data 
+		 * The string to parse
+		 * @return
+		 * The resulting object. If no parsing takes place or it fails, return null
+		 */
+		function parse(data:String):*;
+	}
+	
+}
