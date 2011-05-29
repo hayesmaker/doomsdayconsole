@@ -1,4 +1,5 @@
 #summary A quick look at introspection
+#labels Deprecated
 
 = Introduction =
 While not the primary consern, the console has some rudimentary commands for navigating the structure of your application at runtime. This includes objects, DisplayObjects, variables and methods. 
