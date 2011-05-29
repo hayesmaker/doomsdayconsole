@@ -1,5 +1,5 @@
 #summary A fast introduction to getting the console running
-#labels Phase-Deploy,Phase-Implementation
+#labels Phase-Deploy,Phase-Implementation,Featured
 
 ==Via !ActionScript 3==
 
@@ -8,7 +8,7 @@ package
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import no.doomsday.console.ConsoleUtil;
+	import com.furusystems.dconsole2.DConsole;
 	
 	public class Main extends Sprite 
 	{
@@ -23,13 +23,13 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			//add the console instance to the stage or the root layer of your application
-			addChild(ConsoleUtil.instance);
+			addChild(DConsole.view);
 			
-			//by default, the console toggles on shift-tab, but can also be shown with ConsoleUtil.show and ConsoleUtil.hide
-			ConsoleUtil.show();
+			//by default, the console toggles on ctrl+shift+enter, but can also be shown with DConsole.show() and hidden with DConsole.hide()
+			DConsole.show();
 			
 			//to link a command to a method, do as follows
-			ConsoleUtil.createCommand("drawRect", drawRect);
+			DConsole.createCommand("drawRect", drawRect);
 			
 			//now try opening the console. Start typing in "dra" and it should autocomplete to drawRect. 
 			//hit tab to jump to the end of the line and enter a few numbers, for instance  'drawRect 30 30 100 200 0xff0000'
@@ -53,23 +53,23 @@ package
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" applicationComplete="appCompleteHandler()">
 	<mx:Script>
 		<![CDATA[
-			import no.doomsday.console.ConsoleUtil;
+			import com.furusystems.dconsole2.DConsole;
 			private function appCompleteHandler():void {				
 				
 				// Add the console instance to the application's parent (e.g.
 				// the SystemManager instance).  We wrap it within a sprite
 				// so that addChild() plays nice.
 				var c:Sprite = new Sprite();
-				c.addChild(ConsoleUtil.instance);
+				c.addChild(DConsole.view);
 				parent.addChild(c);
 				
 				// By default, the console toggles on shift-enter, but it 
 				// can also be programatically shown or hidden via the
-				// ConsoleUtil.show() and ConsoleUtil.hide() methods.
-				ConsoleUtil.show();
+				// DConsole.show() and DConsole.hide() methods.
+				DConsole.show();
 				
 				// To a link a command to a method, do as follows
-				ConsoleUtil.createCommand("drawRect", drawRect);
+				DConsole.createCommand("drawRect", drawRect);
 				
 				// Now try opening the console.  Start typing in "draw" and
 				// it should autocomplete to drawRect.  Hit tab to jump to
@@ -95,6 +95,6 @@ package
 
 Try the commands "help" and "commands" to get a look at the built-in functionality, which includes methods for listing available embedded fonts, measuring sizes and distances and the like.
 
-ConsoleUtil is a way to get at the most common console features quickly. Explore DebugConsole.as (as messy as it is) to get a sense of the different available commands.
+Explore DConsole's static methods to get a feel for how things work.
 
 The api is very verbose with lots of imports. An IDE with good autocomplete is highly recommended.
