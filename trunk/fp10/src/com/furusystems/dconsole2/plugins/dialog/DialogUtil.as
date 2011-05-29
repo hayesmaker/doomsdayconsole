@@ -19,7 +19,7 @@ package com.furusystems.dconsole2.plugins.dialog
 	 */
 	public class DialogUtil implements IDConsolePlugin, IMessageReceiver
 	{
-		static private const L:ILogger = Logging.getLogger(DialogPlug);
+		static private const L:ILogger = Logging.getLogger(DialogUtil);
 		private var _currentDialog:DialogSequence;
 		public function DialogUtil() 
 		{
