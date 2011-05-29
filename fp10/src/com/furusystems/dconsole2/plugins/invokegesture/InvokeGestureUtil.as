@@ -1,13 +1,13 @@
-package no.doomsday.dconsole2.plugins.invokegesture 
+package com.furusystems.dconsole2.plugins.invokegesture 
 {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...
@@ -30,7 +30,7 @@ package no.doomsday.dconsole2.plugins.invokegesture
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function get descriptionText():String 
 		{

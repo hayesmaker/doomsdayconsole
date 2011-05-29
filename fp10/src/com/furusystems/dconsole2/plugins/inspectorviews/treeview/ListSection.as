@@ -1,7 +1,7 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.treeview 
+package com.furusystems.dconsole2.plugins.inspectorviews.treeview 
 {
 	import flash.display.Sprite;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
 	/**
 	 * ...
 	 * @author Andreas Rønning

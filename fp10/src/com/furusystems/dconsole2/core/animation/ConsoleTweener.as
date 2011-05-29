@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.animation 
+package com.furusystems.dconsole2.core.animation 
 {
 	import flash.utils.Dictionary;
 	/**

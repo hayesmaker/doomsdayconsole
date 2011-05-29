@@ -1,10 +1,10 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import flash.system.System;
 	import flash.utils.getTimer;
-	import no.doomsday.dconsole2.core.gui.maindisplay.assistant.Assistant;
-	import no.doomsday.dconsole2.core.plugins.IUpdatingDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
+	import com.furusystems.dconsole2.core.plugins.IUpdatingDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning, Mr.doob
@@ -25,7 +25,7 @@ package no.doomsday.dconsole2.plugins
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function get descriptionText():String
 		{
@@ -43,7 +43,7 @@ package no.doomsday.dconsole2.plugins
 			_assistant = null;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IUpdatingDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IUpdatingDConsolePlugin */
 		
 		public function update(pm:PluginManager):void
 		{

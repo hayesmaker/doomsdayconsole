@@ -1,30 +1,30 @@
-package no.doomsday.dconsole2.plugins.plugcollections
+package com.furusystems.dconsole2.plugins.plugcollections
 {
-	import no.doomsday.dconsole2.core.plugins.IPluginBundle;
-	import no.doomsday.dconsole2.plugins.BatchRunnerUtil;
-	import no.doomsday.dconsole2.plugins.BytearrayHexdumpUtil;
-	import no.doomsday.dconsole2.plugins.ChainsawConnectorUtil;
-	import no.doomsday.dconsole2.plugins.ClassFactoryUtil;
-	import no.doomsday.dconsole2.plugins.colorpicker.ColorPickerUtil;
-	import no.doomsday.dconsole2.plugins.CommandMapperUtil;
-	import no.doomsday.dconsole2.plugins.controller.ControllerUtil;
-	import no.doomsday.dconsole2.plugins.FontUtil;
-	import no.doomsday.dconsole2.plugins.FullscreenUtil;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.PropertyViewUtil;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.TreeViewUtil;
-	import no.doomsday.dconsole2.plugins.invokegesture.InvokeGestureUtil;
-	import no.doomsday.dconsole2.plugins.JSONParserUtil;
-	import no.doomsday.dconsole2.plugins.JSRouterUtil;
-	import no.doomsday.dconsole2.plugins.LogFileUtil;
-	import no.doomsday.dconsole2.plugins.measurebracket.MeasurementBracketUtil;
-	import no.doomsday.dconsole2.plugins.mediatester.MediaTesterUtil;
-	import no.doomsday.dconsole2.plugins.MouseUtil;
-	import no.doomsday.dconsole2.plugins.PerformanceTesterUtil;
-	import no.doomsday.dconsole2.plugins.ProductInfoUtil;
-	import no.doomsday.dconsole2.plugins.ScreenshotUtil;
-	import no.doomsday.dconsole2.plugins.StageUtil;
-	import no.doomsday.dconsole2.plugins.StatsOutputUtil;
-	import no.doomsday.dconsole2.plugins.SystemInfoUtil;
+	import com.furusystems.dconsole2.core.plugins.IPluginBundle;
+	import com.furusystems.dconsole2.plugins.BatchRunnerUtil;
+	import com.furusystems.dconsole2.plugins.BytearrayHexdumpUtil;
+	import com.furusystems.dconsole2.plugins.ChainsawConnectorUtil;
+	import com.furusystems.dconsole2.plugins.ClassFactoryUtil;
+	import com.furusystems.dconsole2.plugins.colorpicker.ColorPickerUtil;
+	import com.furusystems.dconsole2.plugins.CommandMapperUtil;
+	import com.furusystems.dconsole2.plugins.controller.ControllerUtil;
+	import com.furusystems.dconsole2.plugins.FontUtil;
+	import com.furusystems.dconsole2.plugins.FullscreenUtil;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.PropertyViewUtil;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.TreeViewUtil;
+	import com.furusystems.dconsole2.plugins.invokegesture.InvokeGestureUtil;
+	import com.furusystems.dconsole2.plugins.JSONParserUtil;
+	import com.furusystems.dconsole2.plugins.JSRouterUtil;
+	import com.furusystems.dconsole2.plugins.LogFileUtil;
+	import com.furusystems.dconsole2.plugins.measurebracket.MeasurementBracketUtil;
+	import com.furusystems.dconsole2.plugins.mediatester.MediaTesterUtil;
+	import com.furusystems.dconsole2.plugins.MouseUtil;
+	import com.furusystems.dconsole2.plugins.PerformanceTesterUtil;
+	import com.furusystems.dconsole2.plugins.ProductInfoUtil;
+	import com.furusystems.dconsole2.plugins.ScreenshotUtil;
+	import com.furusystems.dconsole2.plugins.StageUtil;
+	import com.furusystems.dconsole2.plugins.StatsOutputUtil;
+	import com.furusystems.dconsole2.plugins.SystemInfoUtil;
 	/**
 	 * Collection of all available plugins
 	 * @author Andreas Rønning
@@ -62,7 +62,7 @@ package no.doomsday.dconsole2.plugins.plugcollections
 			]);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IPluginBundle */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IPluginBundle */
 		
 		public function get plugins():Vector.<Class>
 		{

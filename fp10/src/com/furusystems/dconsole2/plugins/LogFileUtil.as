@@ -1,10 +1,10 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import flash.net.FileReference;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -129,7 +129,7 @@ package no.doomsday.dconsole2.plugins
 			}
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{

@@ -1,7 +1,7 @@
-﻿package no.doomsday.dconsole2.core.style 
+﻿package com.furusystems.dconsole2.core.style 
 {
 	import flash.text.TextFormat;
-	import no.doomsday.dconsole2.core.style.fonts.Fonts;
+	import com.furusystems.dconsole2.core.style.fonts.Fonts;
 	/**
 	 * ...
 	 * @author Andreas Rønning

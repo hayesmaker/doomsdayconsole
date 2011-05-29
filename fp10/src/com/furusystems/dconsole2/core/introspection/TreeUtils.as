@@ -1,8 +1,8 @@
-﻿package no.doomsday.dconsole2.core.introspection 
+﻿package com.furusystems.dconsole2.core.introspection 
 {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
-	import no.doomsday.dconsole2.core.introspection.descriptions.ChildScopeDesc;
+	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
 	/**
 	 * ...
 	 * @author Andreas Rønning

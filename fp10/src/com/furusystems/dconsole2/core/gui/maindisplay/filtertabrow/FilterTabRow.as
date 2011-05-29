@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow 
+package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -7,13 +7,13 @@ package no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
-	import no.doomsday.dconsole2.core.DSprite;
-	import no.doomsday.dconsole2.core.gui.layout.IContainable;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.logmanager.DLogManager;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.DSprite;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.logmanager.DLogManager;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -124,7 +124,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow
 			scrollRect = new Rectangle(0, 0, width, GUIUnits.SQUARE_UNIT);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
 		{
@@ -134,7 +134,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow
 			redraw(_rect.width);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemeable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

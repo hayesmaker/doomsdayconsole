@@ -1,10 +1,10 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import flash.utils.Dictionary;
-	import no.doomsday.dconsole2.core.introspection.IntrospectionScope;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -18,7 +18,7 @@ package no.doomsday.dconsole2.plugins
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function get descriptionText():String
 		{

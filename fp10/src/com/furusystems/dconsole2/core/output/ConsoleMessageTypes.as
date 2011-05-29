@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.output
+﻿package com.furusystems.dconsole2.core.output
 {
 	public class ConsoleMessageTypes
 	{

@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.buttons 
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.buttons 
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import no.doomsday.dconsole2.core.gui.AbstractButton;
+	import com.furusystems.dconsole2.core.gui.AbstractButton;
 	/**
 	 * ...
 	 * @author Andreas Rønning

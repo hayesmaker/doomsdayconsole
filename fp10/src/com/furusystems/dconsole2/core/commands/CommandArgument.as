@@ -1,7 +1,7 @@
-﻿package no.doomsday.dconsole2.core.commands 
+﻿package com.furusystems.dconsole2.core.commands 
 {
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.references.ReferenceManager;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.references.ReferenceManager;
 	
 	public class CommandArgument
 	{

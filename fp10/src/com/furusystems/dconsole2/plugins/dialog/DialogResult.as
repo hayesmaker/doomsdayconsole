@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.dialog 
+package com.furusystems.dconsole2.plugins.dialog 
 {
 	/**
 	 * VO containing a vector of string responses 

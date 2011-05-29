@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.input
+package com.furusystems.dconsole2.core.input
 {
 	/**
 	 * KeyboardSequence

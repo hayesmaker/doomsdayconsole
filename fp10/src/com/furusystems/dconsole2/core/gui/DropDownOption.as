@@ -1,9 +1,9 @@
-﻿package no.doomsday.dconsole2.core.gui 
+﻿package com.furusystems.dconsole2.core.gui 
 {
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

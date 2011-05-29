@@ -1,17 +1,17 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.sections 
+package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.geom.Rectangle;
 	
-	import no.doomsday.dconsole2.core.gui.maindisplay.assistant.Assistant;
-	import no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
-	import no.doomsday.dconsole2.core.gui.maindisplay.input.InputField;
-	import no.doomsday.dconsole2.core.gui.maindisplay.output.OutputField;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
+	import com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
+	import com.furusystems.dconsole2.core.gui.maindisplay.input.InputField;
+	import com.furusystems.dconsole2.core.gui.maindisplay.output.OutputField;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.plugins.controller 
+﻿package com.furusystems.dconsole2.plugins.controller 
 {
 	import flash.display.Sprite;
 	import flash.events.Event;

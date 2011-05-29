@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import com.furusystems.logging.slf4as.constants.Levels;
 	import com.furusystems.messaging.pimp.Message;
@@ -7,14 +7,14 @@ package no.doomsday.dconsole2.plugins
 	import flash.events.Event;
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -31,7 +31,7 @@ package no.doomsday.dconsole2.plugins
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function get descriptionText():String 
 		{

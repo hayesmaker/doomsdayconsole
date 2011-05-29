@@ -1,6 +1,6 @@
-package no.doomsday.dconsole2.core.style.themes 
+package com.furusystems.dconsole2.core.style.themes 
 {
-	import no.doomsday.dconsole2.core.style.StyleManager;
+	import com.furusystems.dconsole2.core.style.StyleManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning

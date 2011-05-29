@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.plugins.controller 
+﻿package com.furusystems.dconsole2.plugins.controller 
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -9,7 +9,7 @@
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
 	import flash.ui.Keyboard;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

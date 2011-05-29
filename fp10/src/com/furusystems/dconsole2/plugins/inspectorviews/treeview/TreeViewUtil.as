@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.treeview 
+package com.furusystems.dconsole2.plugins.inspectorviews.treeview 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -10,17 +10,17 @@ package no.doomsday.dconsole2.plugins.inspectorviews.treeview
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
-	import no.doomsday.dconsole2.core.inspector.AbstractInspectorView;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.style.Alphas;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.DConsole;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.buttons.EyeDropperButton;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.dfs.DFS;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
+	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.style.Alphas;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.buttons.EyeDropperButton;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.dfs.DFS;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -145,7 +145,7 @@ package no.doomsday.dconsole2.plugins.inspectorviews.treeview
 			_mouseSelectButton.x = availableWidth - _mouseSelectButton.width - 2;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemeable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

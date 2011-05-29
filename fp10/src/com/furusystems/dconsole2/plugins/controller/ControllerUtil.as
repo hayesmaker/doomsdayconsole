@@ -1,9 +1,9 @@
-package no.doomsday.dconsole2.plugins.controller 
+package com.furusystems.dconsole2.plugins.controller 
 {
 	import flash.display.Sprite;
-	import no.doomsday.dconsole2.core.introspection.ScopeManager;
-	import no.doomsday.dconsole2.core.plugins.IUpdatingDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
+	import com.furusystems.dconsole2.core.plugins.IUpdatingDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -38,7 +38,7 @@ package no.doomsday.dconsole2.plugins.controller
 			addController(_scopeManager.currentScope.obj, properties, 0, 0);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{

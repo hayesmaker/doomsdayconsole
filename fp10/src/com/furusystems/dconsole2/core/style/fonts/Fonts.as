@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.style.fonts 
+package com.furusystems.dconsole2.core.style.fonts 
 {
 	import flash.text.Font;
 	/**

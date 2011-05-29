@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.plugins.monitoring 
+﻿package com.furusystems.dconsole2.plugins.monitoring 
 {
 	/**
 	 * ...

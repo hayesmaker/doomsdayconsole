@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.inspector.assets 
+package com.furusystems.dconsole2.core.inspector.assets 
 {
 	/**
 	 * ...

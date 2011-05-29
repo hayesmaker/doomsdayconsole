@@ -1,7 +1,7 @@
-package no.doomsday.dconsole2.core.persistence 
+package com.furusystems.dconsole2.core.persistence 
 {
 	import flash.net.SharedObject;
-	import no.doomsday.dconsole2.core.utils.Property;
+	import com.furusystems.dconsole2.core.utils.Property;
 	/**
 	 * ...
 	 * @author Andreas Ronning

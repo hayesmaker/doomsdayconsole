@@ -1,9 +1,9 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import flash.text.Font;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -27,7 +27,7 @@ package no.doomsday.dconsole2.plugins
 			printFonts(_console);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{

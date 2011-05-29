@@ -1,6 +1,6 @@
-package no.doomsday.dconsole2.core.logmanager 
+package com.furusystems.dconsole2.core.logmanager 
 {
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	/**
 	 * ...
 	 * @author Andreas Ronning 

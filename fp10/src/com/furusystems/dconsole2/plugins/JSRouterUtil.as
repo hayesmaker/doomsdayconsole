@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -7,12 +7,12 @@ package no.doomsday.dconsole2.plugins
 	import flash.system.Security;
 	import flash.system.System;
 	
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -70,7 +70,7 @@ package no.doomsday.dconsole2.plugins
 			var m:ConsoleMessage = md.data as ConsoleMessage ;
 			if (_routingToJS) ExternalInterface.call(_logFunction, m.type + ":" + m.text);
 		}
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{
@@ -98,7 +98,7 @@ package no.doomsday.dconsole2.plugins
 			_console = null;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function get descriptionText():String
 		{

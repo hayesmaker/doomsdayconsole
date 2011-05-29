@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui
+package com.furusystems.dconsole2.core.gui
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -6,8 +6,8 @@ package no.doomsday.dconsole2.core.gui
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Rønning

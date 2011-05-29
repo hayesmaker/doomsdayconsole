@@ -1,6 +1,6 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 {
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.TabContent;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.TabContent;
 	/**
 	 * ...
 	 * @author Andreas Rønning

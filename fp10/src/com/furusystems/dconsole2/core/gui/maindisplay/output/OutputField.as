@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.output 
+package com.furusystems.dconsole2.core.gui.maindisplay.output 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -12,21 +12,21 @@ package no.doomsday.dconsole2.core.gui.maindisplay.output
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
 	import flash.utils.Timer;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	
-	import no.doomsday.dconsole2.core.gui.layout.IContainable;
-	import no.doomsday.dconsole2.core.gui.SimpleScrollbarNorm;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.logmanager.DConsoleLog;
-	import no.doomsday.dconsole2.core.logmanager.DLogManager;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.style.Alphas;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.StyleManager;
-	import no.doomsday.dconsole2.core.style.TextFormats;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.gui.SimpleScrollbarNorm;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.logmanager.DConsoleLog;
+	import com.furusystems.dconsole2.core.logmanager.DLogManager;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.style.Alphas;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.StyleManager;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * Handles rendering of a vector of messages
 	 * @author Andreas Rønning
@@ -105,7 +105,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.output
 			return _textOutput.text;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
 		{
@@ -385,7 +385,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.output
 			return false;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

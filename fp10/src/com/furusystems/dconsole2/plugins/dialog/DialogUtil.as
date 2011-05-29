@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.dialog 
+package com.furusystems.dconsole2.plugins.dialog 
 {
 	import com.furusystems.logging.slf4as.ILogger;
 	import com.furusystems.logging.slf4as.Logging;
@@ -7,12 +7,12 @@ package no.doomsday.dconsole2.plugins.dialog
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.events.KeyboardEvent;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
-	import no.doomsday.dconsole2.plugins.dialog.DialogDesc;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.plugins.dialog.DialogDesc;
 	/**
 	 * ...
 	 * @author Andreas Ronning
@@ -44,7 +44,7 @@ package no.doomsday.dconsole2.plugins.dialog
 		
 		
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function get descriptionText():String 
 		{

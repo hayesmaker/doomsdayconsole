@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.input 
+package com.furusystems.dconsole2.core.gui.maindisplay.input 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -9,14 +9,14 @@ package no.doomsday.dconsole2.core.gui.maindisplay.input
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	
-	import no.doomsday.dconsole2.core.gui.layout.IContainable;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.core.style.TextFormats;
-	import no.doomsday.dconsole2.core.text.TextUtils;
-	import no.doomsday.dconsole2.core.utils.ColorUtils;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.text.TextUtils;
+	import com.furusystems.dconsole2.core.utils.ColorUtils;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -64,7 +64,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.input
 			_inputTextField.text = s;
 			focus();
 		}
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
 		{
@@ -129,7 +129,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.input
 			caretToEnd();
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

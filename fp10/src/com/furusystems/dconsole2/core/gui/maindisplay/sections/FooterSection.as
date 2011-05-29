@@ -1,7 +1,7 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.sections 
+package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
 	import flash.geom.Rectangle;
-	import no.doomsday.dconsole2.core.gui.ScaleHandle;
+	import com.furusystems.dconsole2.core.gui.ScaleHandle;
 	/**
 	 * ...
 	 * @author Andreas Rønning

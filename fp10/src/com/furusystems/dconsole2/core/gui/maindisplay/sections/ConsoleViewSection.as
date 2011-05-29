@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.sections 
+package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
 	import flash.geom.Rectangle;
-	import no.doomsday.dconsole2.core.DSprite;
-	import no.doomsday.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.DSprite;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -15,14 +15,14 @@ package no.doomsday.dconsole2.core.gui.maindisplay.sections
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
 		{
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function get minHeight():Number
 		{

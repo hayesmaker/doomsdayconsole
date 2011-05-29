@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui 
+package com.furusystems.dconsole2.core.gui 
 {
 	import flash.display.Loader;
 	import flash.display.Sprite;

@@ -1,15 +1,15 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 {
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	
-	import no.doomsday.dconsole2.core.gui.TextFieldFactory;
-	import no.doomsday.dconsole2.core.introspection.descriptions.MethodDesc;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.TabContent;
+	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
+	import com.furusystems.dconsole2.core.introspection.descriptions.MethodDesc;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.TabContent;
 	/**
 	 * ...
 	 * @author Andreas Rønning

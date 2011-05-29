@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.toolbar 
+package com.furusystems.dconsole2.core.gui.maindisplay.toolbar 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -8,9 +8,9 @@ package no.doomsday.dconsole2.core.gui.maindisplay.toolbar
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
-	import no.doomsday.dconsole2.core.gui.TextFieldFactory;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
 	/**
 	 * ...
 	 * @author Andreas Rønning

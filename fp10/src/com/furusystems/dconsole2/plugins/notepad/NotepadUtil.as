@@ -1,10 +1,10 @@
-package no.doomsday.dconsole2.plugins.notepad 
+package com.furusystems.dconsole2.plugins.notepad 
 {
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.inspector.Inspector;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.inspector.Inspector;
 	import flash.display.BitmapData;
-	import no.doomsday.dconsole2.core.inspector.AbstractInspectorView;
-	import no.doomsday.dconsole2.core.plugins.IDConsoleInspectorPlugin;
+	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
+	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -17,7 +17,7 @@ package no.doomsday.dconsole2.plugins.notepad
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsoleInspectorPlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin */
 		
 		override public function get descriptionText():String { 
 			return "Adds a simple persistent text input window to the inspector";

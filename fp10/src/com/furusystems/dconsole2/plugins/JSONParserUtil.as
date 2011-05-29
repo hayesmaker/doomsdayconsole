@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.plugins 
+package com.furusystems.dconsole2.plugins 
 {
 	import com.adobe.serialization.json.JSON;
-	import no.doomsday.dconsole2.core.plugins.IParsingDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.plugins.IParsingDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	
 	/**
 	 * ...
@@ -15,7 +15,7 @@ package no.doomsday.dconsole2.plugins
 		{
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IParsingDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IParsingDConsolePlugin */
 		
 		public function parse(data:String):*
 		{

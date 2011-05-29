@@ -1,12 +1,12 @@
-﻿package no.doomsday.dconsole2.plugins.monitoring 
+﻿package com.furusystems.dconsole2.plugins.monitoring 
 {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import no.doomsday.dconsole2.core.gui.DropDown;
-	import no.doomsday.dconsole2.core.gui.DropDownOption;
-	import no.doomsday.dconsole2.core.gui.events.DropDownEvent;
-	import no.doomsday.dconsole2.core.gui.Window;
+	import com.furusystems.dconsole2.core.gui.DropDown;
+	import com.furusystems.dconsole2.core.gui.DropDownOption;
+	import com.furusystems.dconsole2.core.gui.events.DropDownEvent;
+	import com.furusystems.dconsole2.core.gui.Window;
 	/**
 	 * ...
 	 * @author Andreas Rønning
