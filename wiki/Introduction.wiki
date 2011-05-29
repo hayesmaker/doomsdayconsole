@@ -1,4 +1,5 @@
 #summary A general purpose description
+#labels Featured
 
 ==Whosawhat now?==
 This is a fast, relatively spartan utility for interacting with your application at runtime, taking the form of an output textfield and an input textfield. The output field doubles as a trace window, and is your source of feedback. The input field is how you primarily interact with the console. You type in commands, native or custom, and watch the effects. 
