@@ -1,6 +1,9 @@
 #summary Viewing the ProductInfo Tag
 
-This is implemented via the *productInfo* command.
+To access this functionality, enable the ProductInfoUtil plugin:
+<code>DConsole.registerPlugins(ProductInfoUtil);</code>
+
+From this point on, tag viewing is implemented via the *productInfo* command.
 
 SWFs compiled with Flex Builder or the  Flex SDK include an undocumented !ProductInfo tag that specifies, among other details, the SDK version used in the application, and the compilation date of the SWF.  These details can be particularly useful if you are working with multiple versions of a Flex application and need to quickly determine when a particular SWF was compiled and the SDK version used.
 
