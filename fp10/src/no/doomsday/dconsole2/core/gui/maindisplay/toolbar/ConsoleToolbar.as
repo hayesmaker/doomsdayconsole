@@ -30,7 +30,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay.toolbar
 			_titleField.defaultTextFormat = TextFormats.consoleTitleFormat;
 			_titleField.embedFonts = true;
 			_titleField.textColor = Colors.HEADER_FG;
-			_titleField.text = "Doomsday Console 64";
+			_titleField.text = "Doomsday Console II";
 			_titleField.x = _titleField.y = 1;
 			_clock = new ToolbarClock();
 			_clock.y = 1;
