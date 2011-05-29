@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2
+﻿package com.furusystems.dconsole2
 {
 	//{ imports
 	import com.furusystems.logging.slf4as.Logging;
@@ -20,44 +20,44 @@
 	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.ui.Keyboard;
-	import no.doomsday.dconsole2.core.commands.CommandManager;
-	import no.doomsday.dconsole2.core.commands.ConsoleCommand;
-	import no.doomsday.dconsole2.core.commands.FunctionCallCommand;
+	import com.furusystems.dconsole2.core.commands.CommandManager;
+	import com.furusystems.dconsole2.core.commands.ConsoleCommand;
+	import com.furusystems.dconsole2.core.commands.FunctionCallCommand;
 	
-	import no.doomsday.dconsole2.core.DSprite;
-	import no.doomsday.dconsole2.core.errors.CommandError;
-	import no.doomsday.dconsole2.core.errors.ConsoleAuthError;
-	import no.doomsday.dconsole2.core.gui.DockingGuides;
-	import no.doomsday.dconsole2.core.gui.maindisplay.assistant.Assistant;
-	import no.doomsday.dconsole2.core.gui.maindisplay.ConsoleView;
-	import no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
-	import no.doomsday.dconsole2.core.gui.maindisplay.input.InputField;
-	import no.doomsday.dconsole2.core.gui.maindisplay.output.OutputField;
-	import no.doomsday.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
-	import no.doomsday.dconsole2.core.gui.ScaleHandle;
-	import no.doomsday.dconsole2.core.gui.ToolTip;
-	import no.doomsday.dconsole2.core.input.KeyBindings;
-	import no.doomsday.dconsole2.core.input.KeyboardManager;
-	import no.doomsday.dconsole2.core.introspection.InspectionUtils;
-	import no.doomsday.dconsole2.core.introspection.IntrospectionScope;
-	import no.doomsday.dconsole2.core.introspection.ScopeManager;
-	import no.doomsday.dconsole2.core.logmanager.DConsoleLog;
-	import no.doomsday.dconsole2.core.logmanager.DLogFilter;
-	import no.doomsday.dconsole2.core.logmanager.DLogManager;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageRepeatMode;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.persistence.PersistenceManager;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.references.ReferenceManager;
-	import no.doomsday.dconsole2.core.security.ConsoleLock;
-	import no.doomsday.dconsole2.core.style.StyleManager;
-	import no.doomsday.dconsole2.core.text.autocomplete.AutocompleteDictionary;
-	import no.doomsday.dconsole2.core.text.autocomplete.AutocompleteManager;
-	import no.doomsday.dconsole2.core.text.TextUtils;
-	import no.doomsday.dconsole2.core.Version;
-	import no.doomsday.dconsole2.logging.ConsoleLogBinding;
+	import com.furusystems.dconsole2.core.DSprite;
+	import com.furusystems.dconsole2.core.errors.CommandError;
+	import com.furusystems.dconsole2.core.errors.ConsoleAuthError;
+	import com.furusystems.dconsole2.core.gui.DockingGuides;
+	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
+	import com.furusystems.dconsole2.core.gui.maindisplay.ConsoleView;
+	import com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
+	import com.furusystems.dconsole2.core.gui.maindisplay.input.InputField;
+	import com.furusystems.dconsole2.core.gui.maindisplay.output.OutputField;
+	import com.furusystems.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
+	import com.furusystems.dconsole2.core.gui.ScaleHandle;
+	import com.furusystems.dconsole2.core.gui.ToolTip;
+	import com.furusystems.dconsole2.core.input.KeyBindings;
+	import com.furusystems.dconsole2.core.input.KeyboardManager;
+	import com.furusystems.dconsole2.core.introspection.InspectionUtils;
+	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
+	import com.furusystems.dconsole2.core.logmanager.DConsoleLog;
+	import com.furusystems.dconsole2.core.logmanager.DLogFilter;
+	import com.furusystems.dconsole2.core.logmanager.DLogManager;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageRepeatMode;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.persistence.PersistenceManager;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.references.ReferenceManager;
+	import com.furusystems.dconsole2.core.security.ConsoleLock;
+	import com.furusystems.dconsole2.core.style.StyleManager;
+	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteDictionary;
+	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteManager;
+	import com.furusystems.dconsole2.core.text.TextUtils;
+	import com.furusystems.dconsole2.core.Version;
+	import com.furusystems.dconsole2.logging.ConsoleLogBinding;
 	//}
 	/**
 	 * ...
@@ -504,7 +504,7 @@
 			for (var i:int = 0; i < split.length; i++) 
 			{
 				var txt:String = split[i];
-				if (txt.indexOf("no.doomsday.dconsole2") > -1 || txt.indexOf("adobe.com/AS3") > -1 || (ignoreBlankLines && txt.length<1)) continue;
+				if (txt.indexOf("com.furusystems.dconsole2") > -1 || txt.indexOf("adobe.com/AS3") > -1 || (ignoreBlankLines && txt.length<1)) continue;
 				msg = new ConsoleMessage(txt, date, type, tag);
 				out.push(msg);
 			}
@@ -1017,7 +1017,7 @@
 			_styleManager.load(themeURI, colorsURI);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.IConsole */
+		/* INTERFACE com.furusystems.dconsole2.IConsole */
 		
 		public function get scopeManager():ScopeManager
 		{
@@ -1206,7 +1206,7 @@
 			console.changeKeyboardShortcut(keystroke, modifier);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.IConsole */
+		/* INTERFACE com.furusystems.dconsole2.IConsole */
 		
 		public function setHeaderText(title:String):void
 		{
@@ -1221,7 +1221,7 @@
 			
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.IConsole */
+		/* INTERFACE com.furusystems.dconsole2.IConsole */
 		
 		public function set overrideCallback(callback:Function):void 
 		{

@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.commands{
+﻿package com.furusystems.dconsole2.core.commands{
 	import flash.utils.Dictionary;
 	/**
 	 * ...

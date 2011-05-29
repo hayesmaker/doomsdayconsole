@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.text.autocomplete 
+﻿package com.furusystems.dconsole2.core.text.autocomplete 
 {
 	import flash.utils.Dictionary;
 	/**

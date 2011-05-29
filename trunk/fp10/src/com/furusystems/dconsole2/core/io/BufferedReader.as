@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.io
+package com.furusystems.dconsole2.core.io
 {
 	/**
 	 * BufferedReader.as

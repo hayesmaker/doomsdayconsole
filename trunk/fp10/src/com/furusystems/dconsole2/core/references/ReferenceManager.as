@@ -1,9 +1,9 @@
-﻿package no.doomsday.dconsole2.core.references 
+﻿package com.furusystems.dconsole2.core.references 
 {
 	import flash.utils.Dictionary;
-	import no.doomsday.dconsole2.core.introspection.ScopeManager;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

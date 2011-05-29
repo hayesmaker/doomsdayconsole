@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.bitmap
+﻿package com.furusystems.dconsole2.core.bitmap
 {
 	import flash.display.BitmapData;
 	import flash.geom.Point;

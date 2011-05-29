@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.dialog 
+package com.furusystems.dconsole2.plugins.dialog 
 {
 	/**
 	 * Describes a full set of questions/responses for a dialog

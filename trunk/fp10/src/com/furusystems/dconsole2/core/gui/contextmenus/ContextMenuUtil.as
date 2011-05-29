@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.gui.contextmenus
+﻿package com.furusystems.dconsole2.core.gui.contextmenus
 {
 	/**
 	 * ...

@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview 
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -9,18 +9,18 @@ package no.doomsday.dconsole2.plugins.inspectorviews.propertyview
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
-	import no.doomsday.dconsole2.core.inspector.AbstractInspectorView;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.introspection.descriptions.AccessorDesc;
-	import no.doomsday.dconsole2.core.introspection.descriptions.ChildScopeDesc;
-	import no.doomsday.dconsole2.core.introspection.descriptions.MethodDesc;
-	import no.doomsday.dconsole2.core.introspection.descriptions.VariableDesc;
-	import no.doomsday.dconsole2.core.introspection.IntrospectionScope;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.*;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.tabs.*;
+	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.introspection.descriptions.AccessorDesc;
+	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
+	import com.furusystems.dconsole2.core.introspection.descriptions.MethodDesc;
+	import com.furusystems.dconsole2.core.introspection.descriptions.VariableDesc;
+	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.*;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs.*;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -134,7 +134,7 @@ package no.doomsday.dconsole2.plugins.inspectorviews.propertyview
 			scrollRect = r;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemeable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

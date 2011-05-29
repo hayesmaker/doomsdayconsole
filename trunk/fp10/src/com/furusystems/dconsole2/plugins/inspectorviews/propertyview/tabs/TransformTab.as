@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.tabs 
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs 
 {
 	import flash.display.DisplayObject;
-	import no.doomsday.dconsole2.core.introspection.IntrospectionScope;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.PropertyField;
+	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.PropertyField;
 	/**
 	 * ...
 	 * @author Andreas Rønning

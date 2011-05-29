@@ -1,9 +1,9 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview 
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview 
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.tabs.PropertyTab;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs.PropertyTab;
 	/**
 	 * ...
 	 * @author Andreas Ronning 

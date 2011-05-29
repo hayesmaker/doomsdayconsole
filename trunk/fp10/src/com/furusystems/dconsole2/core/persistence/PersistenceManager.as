@@ -1,9 +1,9 @@
-﻿package no.doomsday.dconsole2.core.persistence 
+﻿package com.furusystems.dconsole2.core.persistence 
 {
 	import flash.geom.Rectangle;
 	import flash.net.SharedObject;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

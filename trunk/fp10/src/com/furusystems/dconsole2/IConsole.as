@@ -1,10 +1,10 @@
-package no.doomsday.dconsole2 
+package com.furusystems.dconsole2 
 {
 	import flash.events.Event;
-	import no.doomsday.dconsole2.core.gui.maindisplay.ConsoleView;
-	import no.doomsday.dconsole2.core.introspection.ScopeManager;
-	import no.doomsday.dconsole2.core.persistence.PersistenceManager;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.gui.maindisplay.ConsoleView;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
+	import com.furusystems.dconsole2.core.persistence.PersistenceManager;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	
 	/**
 	 * ...

@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.gui 
+﻿package com.furusystems.dconsole2.core.gui 
 {
 	import flash.display.BlendMode;
 	import flash.display.Shape;
@@ -7,10 +7,10 @@
 	import flash.filters.DropShadowFilter;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import no.doomsday.dconsole2.core.gui.events.DropDownEvent;
-	import no.doomsday.dconsole2.core.style.BaseColors;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.gui.events.DropDownEvent;
+	import com.furusystems.dconsole2.core.style.BaseColors;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

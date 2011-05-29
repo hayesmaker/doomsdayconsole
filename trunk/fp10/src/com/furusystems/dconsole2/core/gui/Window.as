@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.gui 
+﻿package com.furusystems.dconsole2.core.gui 
 {
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
@@ -12,8 +12,8 @@
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
-	import no.doomsday.dconsole2.core.style.BaseColors;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.style.BaseColors;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

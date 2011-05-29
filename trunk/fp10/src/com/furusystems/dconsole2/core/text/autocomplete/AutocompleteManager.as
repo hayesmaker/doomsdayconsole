@@ -1,10 +1,10 @@
-﻿package no.doomsday.dconsole2.core.text.autocomplete
+﻿package com.furusystems.dconsole2.core.text.autocomplete
 {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
-	import no.doomsday.dconsole2.core.text.TextUtils;
+	import com.furusystems.dconsole2.core.text.TextUtils;
 	
 	/**
 	 * ...

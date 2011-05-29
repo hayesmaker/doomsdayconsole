@@ -1,14 +1,14 @@
-package no.doomsday.dconsole2.core.gui.maindisplay.assistant 
+package com.furusystems.dconsole2.core.gui.maindisplay.assistant 
 {
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.strings.Strings;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.strings.Strings;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Rønning

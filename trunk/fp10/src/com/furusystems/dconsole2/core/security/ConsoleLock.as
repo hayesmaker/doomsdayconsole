@@ -1,7 +1,7 @@
-package no.doomsday.dconsole2.core.security
+package com.furusystems.dconsole2.core.security
 {
 	
-	import no.doomsday.dconsole2.core.input.KeyboardManager;
+	import com.furusystems.dconsole2.core.input.KeyboardManager;
 
 	/**
 	 * Console lock Class

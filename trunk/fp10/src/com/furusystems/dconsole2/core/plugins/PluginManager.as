@@ -1,15 +1,15 @@
-package no.doomsday.dconsole2.core.plugins 
+package com.furusystems.dconsole2.core.plugins 
 {
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.utils.describeType;
 	import flash.utils.Dictionary;
-	import no.doomsday.dconsole2.core.introspection.ScopeManager;
-	import no.doomsday.dconsole2.core.logmanager.DLogManager;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.references.ReferenceManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
+	import com.furusystems.dconsole2.core.logmanager.DLogManager;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.references.ReferenceManager;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

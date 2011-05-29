@@ -1,6 +1,6 @@
-﻿package no.doomsday.dconsole2.core.commands.utils
+﻿package com.furusystems.dconsole2.core.commands.utils
 {
-	import no.doomsday.dconsole2.core.errors.ErrorStrings;
+	import com.furusystems.dconsole2.core.errors.ErrorStrings;
 	/**
 	 * ...
 	 * @author Andreas Rønning

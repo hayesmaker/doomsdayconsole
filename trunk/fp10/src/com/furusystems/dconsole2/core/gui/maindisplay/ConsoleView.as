@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.gui.maindisplay
+package com.furusystems.dconsole2.core.gui.maindisplay
 {
 	//{
 	import com.furusystems.messaging.pimp.Message;
@@ -13,29 +13,29 @@ package no.doomsday.dconsole2.core.gui.maindisplay
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
-	import no.doomsday.dconsole2.core.animation.ConsoleTweener;
-	import no.doomsday.dconsole2.core.animation.EasingTween;
+	import com.furusystems.dconsole2.core.animation.ConsoleTweener;
+	import com.furusystems.dconsole2.core.animation.EasingTween;
 	
-	import no.doomsday.dconsole2.core.effects.Filters;
-	import no.doomsday.dconsole2.core.gui.DockingGuides;
-	import no.doomsday.dconsole2.core.gui.layout.HorizontalSplit;
-	import no.doomsday.dconsole2.core.gui.layout.IContainable;
-	import no.doomsday.dconsole2.core.gui.layout.ILayoutContainer;
-	import no.doomsday.dconsole2.core.gui.maindisplay.assistant.Assistant;
-	import no.doomsday.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
-	import no.doomsday.dconsole2.core.gui.maindisplay.input.InputField;
-	import no.doomsday.dconsole2.core.gui.maindisplay.output.OutputField;
-	//import no.doomsday.dconsole2.core.gui.maindisplay.sections.FooterSection;
-	import no.doomsday.dconsole2.core.gui.maindisplay.sections.HeaderSection;
-	import no.doomsday.dconsole2.core.gui.maindisplay.sections.InspectorSection;
-	import no.doomsday.dconsole2.core.gui.maindisplay.sections.MainSection;
-	import no.doomsday.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
-	import no.doomsday.dconsole2.core.gui.ScaleHandle;
-	import no.doomsday.dconsole2.core.inspector.Inspector;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.effects.Filters;
+	import com.furusystems.dconsole2.core.gui.DockingGuides;
+	import com.furusystems.dconsole2.core.gui.layout.HorizontalSplit;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.gui.layout.ILayoutContainer;
+	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
+	import com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
+	import com.furusystems.dconsole2.core.gui.maindisplay.input.InputField;
+	import com.furusystems.dconsole2.core.gui.maindisplay.output.OutputField;
+	//import com.furusystems.dconsole2.core.gui.maindisplay.sections.FooterSection;
+	import com.furusystems.dconsole2.core.gui.maindisplay.sections.HeaderSection;
+	import com.furusystems.dconsole2.core.gui.maindisplay.sections.InspectorSection;
+	import com.furusystems.dconsole2.core.gui.maindisplay.sections.MainSection;
+	import com.furusystems.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
+	import com.furusystems.dconsole2.core.gui.ScaleHandle;
+	import com.furusystems.dconsole2.core.inspector.Inspector;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
 	//}
 	/**
 	 * Root level of the console main view
@@ -437,7 +437,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay
 		}
 		
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
 		{
@@ -543,7 +543,7 @@ package no.doomsday.dconsole2.core.gui.maindisplay
 		}
 		
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.ILayoutContainer */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.ILayoutContainer */
 		
 		public function set rect(r:Rectangle):void
 		{

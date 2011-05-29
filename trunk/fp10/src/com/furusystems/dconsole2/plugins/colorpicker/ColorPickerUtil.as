@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.plugins.colorpicker 
+﻿package com.furusystems.dconsole2.plugins.colorpicker 
 {
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
@@ -12,12 +12,12 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.ui.Mouse;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.core.style.TextFormats;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...
@@ -129,7 +129,7 @@
 			visible?deactivate():activate();
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{

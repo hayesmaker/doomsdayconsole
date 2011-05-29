@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.gui 
+﻿package com.furusystems.dconsole2.core.gui 
 {
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -8,12 +8,12 @@
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	
-	import no.doomsday.dconsole2.core.gui.layout.IContainable;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.strings.Strings;
-	import no.doomsday.dconsole2.core.style.Alphas;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.strings.Strings;
+	import com.furusystems.dconsole2.core.style.Alphas;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -57,7 +57,7 @@
 			Mouse.cursor = MouseCursor.HAND;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.gui.layout.IContainable */
+		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
 		{

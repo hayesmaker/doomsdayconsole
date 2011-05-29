@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.plugins.plugcollections 
+package com.furusystems.dconsole2.plugins.plugcollections 
 {
-	import no.doomsday.dconsole2.core.plugins.IPluginBundle;
-	import no.doomsday.dconsole2.plugins.*;
-	import no.doomsday.dconsole2.plugins.measurebracket.MeasurementBracketUtil;
+	import com.furusystems.dconsole2.core.plugins.IPluginBundle;
+	import com.furusystems.dconsole2.plugins.*;
+	import com.furusystems.dconsole2.plugins.measurebracket.MeasurementBracketUtil;
 	/**
 	 * Collection of all basic plugins
 	 * @author Andreas Rønning
@@ -31,7 +31,7 @@ package no.doomsday.dconsole2.plugins.plugcollections
 			]);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IPluginBundle */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IPluginBundle */
 		
 		public function get plugins():Vector.<Class>
 		{

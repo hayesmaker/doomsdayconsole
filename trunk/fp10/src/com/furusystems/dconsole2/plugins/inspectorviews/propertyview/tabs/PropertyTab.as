@@ -1,14 +1,14 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.tabs
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.core.style.TextFormats;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.PropertyField;
-	import no.doomsday.dconsole2.plugins.inspectorviews.propertyview.TabContent;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.PropertyField;
+	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.TabContent;
 	/**
 	 * ...
 	 * @author Andreas Rønning

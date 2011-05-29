@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.treeview.noderenderers
+package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 {
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
@@ -12,12 +12,12 @@ package no.doomsday.dconsole2.plugins.inspectorviews.treeview.noderenderers
 	import flash.text.TextFormat;
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
-	import no.doomsday.dconsole2.core.gui.AbstractButton;
-	import no.doomsday.dconsole2.core.style.BaseColors;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.DConsole;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.buttons.*;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.TreeViewUtil;
+	import com.furusystems.dconsole2.core.gui.AbstractButton;
+	import com.furusystems.dconsole2.core.style.BaseColors;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.buttons.*;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.TreeViewUtil;
 	
 	public final class ListNode extends Sprite implements INodeRenderer
 	{

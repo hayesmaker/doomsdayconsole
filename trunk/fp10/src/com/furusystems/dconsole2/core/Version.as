@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core
+package com.furusystems.dconsole2.core
 {
   public final class Version
   {

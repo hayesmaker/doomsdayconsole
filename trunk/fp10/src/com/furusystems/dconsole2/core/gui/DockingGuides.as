@@ -1,12 +1,12 @@
-package no.doomsday.dconsole2.core.gui 
+package com.furusystems.dconsole2.core.gui 
 {
 	import com.furusystems.messaging.pimp.IMessageReceiver;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Shape;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.BaseColors;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.BaseColors;
 	
 	/**
 	 * ...
@@ -41,7 +41,7 @@ package no.doomsday.dconsole2.core.gui
 			visible = false;
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.notification.IMessageReceiver */
+		/* INTERFACE com.furusystems.dconsole2.core.notification.IMessageReceiver */
 		
 		public function onMessage(d:MessageData):void
 		{

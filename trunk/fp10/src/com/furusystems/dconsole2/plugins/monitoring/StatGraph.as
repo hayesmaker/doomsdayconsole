@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.plugins.monitoring 
+﻿package com.furusystems.dconsole2.plugins.monitoring 
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -14,7 +14,7 @@
 	import flash.text.TextFormat;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
-	import no.doomsday.dconsole2.core.bitmap.Bresenham;
+	import com.furusystems.dconsole2.core.bitmap.Bresenham;
 	/**
 	 * ...
 	 * @author Andreas Rønning

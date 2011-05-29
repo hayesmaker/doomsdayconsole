@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.inspector 
+package com.furusystems.dconsole2.core.inspector 
 {
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -6,10 +6,10 @@ package no.doomsday.dconsole2.core.inspector
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
-	import no.doomsday.dconsole2.core.errors.NotImplementedError;
-	import no.doomsday.dconsole2.core.inspector.IInspectorView;
-	import no.doomsday.dconsole2.core.plugins.IDConsoleInspectorPlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.errors.NotImplementedError;
+	import com.furusystems.dconsole2.core.inspector.IInspectorView;
+	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -136,7 +136,7 @@ package no.doomsday.dconsole2.core.inspector
 		{
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsoleInspectorPlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin */
 		
 		public function get view():AbstractInspectorView
 		{

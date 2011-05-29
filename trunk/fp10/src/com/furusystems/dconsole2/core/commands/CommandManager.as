@@ -1,13 +1,13 @@
-﻿package no.doomsday.dconsole2.core.commands 
+﻿package com.furusystems.dconsole2.core.commands 
 {
-	import no.doomsday.dconsole2.core.commands.utils.ArgumentSplitterUtil;
-	import no.doomsday.dconsole2.core.errors.CommandError;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.persistence.PersistenceManager;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.references.ReferenceManager;
-	import no.doomsday.dconsole2.core.text.TextUtils;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.commands.utils.ArgumentSplitterUtil;
+	import com.furusystems.dconsole2.core.errors.CommandError;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.persistence.PersistenceManager;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.references.ReferenceManager;
+	import com.furusystems.dconsole2.core.text.TextUtils;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

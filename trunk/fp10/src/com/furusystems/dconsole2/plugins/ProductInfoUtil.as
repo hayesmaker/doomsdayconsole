@@ -1,13 +1,13 @@
-package no.doomsday.dconsole2.plugins
+package com.furusystems.dconsole2.plugins
 {
 	import flash.display.DisplayObject;
 	import flash.display.LoaderInfo;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * Parse the ProductInfo tag from the root object's SWF.
@@ -145,7 +145,7 @@ package no.doomsday.dconsole2.plugins
 			}
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{

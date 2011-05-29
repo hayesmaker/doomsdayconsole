@@ -1,13 +1,13 @@
-package no.doomsday.dconsole2.core.gui 
+package com.furusystems.dconsole2.core.gui 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.StyleManager;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.StyleManager;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -99,7 +99,7 @@ package no.doomsday.dconsole2.core.gui
 			}
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemeable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

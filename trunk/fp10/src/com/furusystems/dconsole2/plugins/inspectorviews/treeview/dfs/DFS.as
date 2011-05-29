@@ -1,7 +1,7 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.treeview.dfs 
+package com.furusystems.dconsole2.plugins.inspectorviews.treeview.dfs 
 {
 	import flash.display.DisplayObject;
-	import no.doomsday.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
+	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
 	public class DFS
 	{
 		public static function search(destination:DisplayObject, origin:ListNode):ListNode {

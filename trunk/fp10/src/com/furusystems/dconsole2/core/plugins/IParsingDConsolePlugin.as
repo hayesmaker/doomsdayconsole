@@ -1,6 +1,6 @@
-package no.doomsday.dconsole2.core.plugins 
+package com.furusystems.dconsole2.core.plugins 
 {
-	import no.doomsday.dconsole2.core.commands.CommandArgument;
+	import com.furusystems.dconsole2.core.commands.CommandArgument;
 	public interface IParsingDConsolePlugin extends IDConsolePlugin
 	{
 		/**

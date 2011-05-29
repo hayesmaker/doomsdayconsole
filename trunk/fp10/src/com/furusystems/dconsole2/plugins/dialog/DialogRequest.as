@@ -1,10 +1,10 @@
-package no.doomsday.dconsole2.plugins.dialog 
+package com.furusystems.dconsole2.plugins.dialog 
 {
 	import com.furusystems.messaging.pimp.PimpCentral;
 	
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * Describes an individual dialog request
 	 * @author Andreas Ronning

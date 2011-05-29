@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.plugins.controller 
+﻿package com.furusystems.dconsole2.plugins.controller 
 {
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
@@ -9,8 +9,8 @@
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import no.doomsday.dconsole2.core.gui.Window;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.gui.Window;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

@@ -1,11 +1,11 @@
-package no.doomsday.dconsole2.core.logmanager 
+package com.furusystems.dconsole2.core.logmanager 
 {
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.utils.Dictionary;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessage;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...

@@ -1,7 +1,7 @@
-package no.doomsday.dconsole2.core.inspector 
+package com.furusystems.dconsole2.core.inspector 
 {
 	import flash.events.Event;
-	import no.doomsday.dconsole2.core.interfaces.IScrollable;
+	import com.furusystems.dconsole2.core.interfaces.IScrollable;
 	
 	/**
 	 * ...

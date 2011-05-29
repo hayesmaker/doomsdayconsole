@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview 
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview 
 {
 	import flash.display.Sprite;
 	/**

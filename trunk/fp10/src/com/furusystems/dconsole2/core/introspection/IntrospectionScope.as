@@ -1,7 +1,7 @@
-﻿package no.doomsday.dconsole2.core.introspection 
+﻿package com.furusystems.dconsole2.core.introspection 
 {
-	import no.doomsday.dconsole2.core.introspection.descriptions.*;
-	import no.doomsday.dconsole2.core.text.autocomplete.AutocompleteDictionary;
+	import com.furusystems.dconsole2.core.introspection.descriptions.*;
+	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteDictionary;
 	/**
 	 * ...
 	 * @author Andreas Rønning

@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.measurebracket 
+package com.furusystems.dconsole2.plugins.measurebracket 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.PimpCentral;
@@ -13,13 +13,13 @@ package no.doomsday.dconsole2.plugins.measurebracket
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	
-	import no.doomsday.dconsole2.core.introspection.ScopeManager;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.core.plugins.IDConsolePlugin;
-	import no.doomsday.dconsole2.core.plugins.PluginManager;
-	import no.doomsday.dconsole2.core.style.BaseColors;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.style.BaseColors;
+	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...
@@ -336,7 +336,7 @@ package no.doomsday.dconsole2.plugins.measurebracket
 			}
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.plugins.IDConsolePlugin */
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
 		
 		public function initialize(pm:PluginManager):void
 		{

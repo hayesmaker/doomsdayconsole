@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.core.gui.layout
+package com.furusystems.dconsole2.core.gui.layout
 {
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
-	import no.doomsday.dconsole2.core.DSprite;
+	import com.furusystems.dconsole2.core.DSprite;
 	/**
 	 * ...
 	 * @author Andreas Rønning

@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.search
+﻿package com.furusystems.dconsole2.core.search
 {
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;

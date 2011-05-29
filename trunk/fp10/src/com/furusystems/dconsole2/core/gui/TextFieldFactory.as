@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.core.gui 
+package com.furusystems.dconsole2.core.gui 
 {
 	import flash.text.TextField;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

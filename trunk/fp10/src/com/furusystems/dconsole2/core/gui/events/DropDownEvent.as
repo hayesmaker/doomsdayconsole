@@ -1,7 +1,7 @@
-﻿package no.doomsday.dconsole2.core.gui.events 
+﻿package com.furusystems.dconsole2.core.gui.events 
 {
 	import flash.events.Event;
-	import no.doomsday.dconsole2.core.gui.DropDownOption;
+	import com.furusystems.dconsole2.core.gui.DropDownOption;
 	
 	/**
 	 * ...

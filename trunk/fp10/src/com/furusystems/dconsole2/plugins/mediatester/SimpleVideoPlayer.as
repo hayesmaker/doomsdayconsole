@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.mediatester 
+package com.furusystems.dconsole2.plugins.mediatester 
 {
 	import flash.display.Sprite;
 	import flash.events.AsyncErrorEvent;
@@ -9,7 +9,7 @@ package no.doomsday.dconsole2.plugins.mediatester
 	import flash.media.Video;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
-	import no.doomsday.dconsole2.core.gui.Window;
+	import com.furusystems.dconsole2.core.gui.Window;
 	/**
 	 * ...
 	 * @author Andreas Rønning

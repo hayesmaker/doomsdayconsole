@@ -1,4 +1,4 @@
-﻿package no.doomsday.dconsole2.core.text 
+﻿package com.furusystems.dconsole2.core.text 
 {
 	import flash.text.TextField;
 	

@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.effects 
+package com.furusystems.dconsole2.core.effects 
 {
 	import flash.filters.DropShadowFilter;
 	/**

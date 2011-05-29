@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes 
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes 
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -9,10 +9,10 @@ package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.ui.Keyboard;
-	import no.doomsday.dconsole2.core.style.Colors;
-	import no.doomsday.dconsole2.core.style.GUIUnits;
-	import no.doomsday.dconsole2.core.style.TextFormats;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

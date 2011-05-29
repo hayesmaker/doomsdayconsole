@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.inspector.buttons 
+package com.furusystems.dconsole2.core.inspector.buttons 
 {
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -7,12 +7,12 @@ package no.doomsday.dconsole2.core.inspector.buttons
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	
-	import no.doomsday.dconsole2.core.DSprite;
-	import no.doomsday.dconsole2.core.gui.AbstractButton;
-	import no.doomsday.dconsole2.core.inspector.AbstractInspectorView;
-	import no.doomsday.dconsole2.core.interfaces.IThemeable;
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.plugins.IDConsoleInspectorPlugin;
+	import com.furusystems.dconsole2.core.DSprite;
+	import com.furusystems.dconsole2.core.gui.AbstractButton;
+	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
 	/**
 	 * ...
 	 * @author Andreas Rønning
@@ -32,7 +32,7 @@ package no.doomsday.dconsole2.core.inspector.buttons
 			setCurrentMode(modeMap[btn]);
 		}
 		
-		/* INTERFACE no.doomsday.dconsole2.core.interfaces.IThemeable */
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
 		
 		public function onThemeChange(md:MessageData):void
 		{

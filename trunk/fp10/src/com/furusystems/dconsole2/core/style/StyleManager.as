@@ -1,13 +1,13 @@
-package no.doomsday.dconsole2.core.style 
+package com.furusystems.dconsole2.core.style 
 {
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
-	import no.doomsday.dconsole2.core.Notifications;
-	import no.doomsday.dconsole2.core.style.themes.ConsoleTheme;
-	import no.doomsday.dconsole2.DConsole;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.themes.ConsoleTheme;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Rønning

@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.plugins.dialog 
+package com.furusystems.dconsole2.plugins.dialog 
 {
 	import com.furusystems.messaging.pimp.Message;
 	public class DialogNotifications 

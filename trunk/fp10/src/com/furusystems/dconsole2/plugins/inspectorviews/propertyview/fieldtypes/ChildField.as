@@ -1,6 +1,6 @@
-package no.doomsday.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
+package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 {
-	import no.doomsday.dconsole2.core.introspection.descriptions.ChildScopeDesc;
+	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
 	/**
 	 * ...
 	 * @author Andreas Rønning

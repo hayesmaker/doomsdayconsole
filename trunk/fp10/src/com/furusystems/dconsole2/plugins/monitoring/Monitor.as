@@ -1,12 +1,12 @@
-﻿package no.doomsday.dconsole2.plugins.monitoring 
+﻿package com.furusystems.dconsole2.plugins.monitoring 
 {
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.Dictionary;
-	import no.doomsday.dconsole2.core.gui.Window;
-	import no.doomsday.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.gui.Window;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Rønning

@@ -1,4 +1,4 @@
-package no.doomsday.dconsole2.core.style 
+package com.furusystems.dconsole2.core.style 
 {
 	/**
 	 * Collection of units for use/multiplication by the layout

@@ -1,8 +1,8 @@
-package no.doomsday.dconsole2.core.plugins 
+package com.furusystems.dconsole2.core.plugins 
 {
 	import flash.display.BitmapData;
-	import no.doomsday.dconsole2.core.inspector.AbstractInspectorView;
-	import no.doomsday.dconsole2.core.inspector.Inspector;
+	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
+	import com.furusystems.dconsole2.core.inspector.Inspector;
 	
 	/**
 	 * ...
