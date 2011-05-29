@@ -175,7 +175,7 @@
 			_getCommand = new FunctionCallCommand("get", _scopeManager.getPropertyOnObject, "Introspection", "Prints a variable within the current introspection scope");
 			_selectCommand = new FunctionCallCommand("select", select, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
 			
-			print("Welcome to Doomsday Console 64 - www.doomsday.no",ConsoleMessageTypes.SYSTEM);
+			print("Welcome to Doomsday Console II - www.doomsday.no",ConsoleMessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),ConsoleMessageTypes.SYSTEM);
 			print("Console version " + Version.Major+"."+Version.Minor+" rev"+Version.Revision, ConsoleMessageTypes.SYSTEM);
 			print("Player version " + Capabilities.version, ConsoleMessageTypes.SYSTEM);
@@ -320,7 +320,7 @@
 		
 		private function about():void
 		{
-			addSystemMessage("Doomsday Console 64");
+			addSystemMessage("Doomsday Console II");
 			addSystemMessage("\t\tversion " + Version.Major + "." + Version.Minor + " revision " + Version.Revision);
 			addSystemMessage("\t\tconcept and development by www.doomsday.no & www.furusystems.com");
 			addSystemMessage("\t\t\t\tAndreas Ronning, Cristobal Dabed, Richard Oiestad");
