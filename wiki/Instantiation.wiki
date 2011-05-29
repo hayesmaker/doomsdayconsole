@@ -1,4 +1,5 @@
 #summary Creating new objects
+#labels Deprecated
 
 The `new` command allows you to instantiate objects at run-time, returning a reference to the created instance. Advanced users can use this as a subcommand
 
