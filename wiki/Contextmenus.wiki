@@ -1,4 +1,5 @@
 #summary Adding context menus to your app
+#labels Deprecated
 
 Previously mandatory, application-wide context menus are now opt-in.
 To include context menus in your console implementation, use the new ContextMenuUtil class as such.
