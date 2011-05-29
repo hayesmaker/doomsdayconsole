@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:creuna="*">
+	<mx:Form>
+		<mx:FormHeading label="Parser test"></mx:FormHeading>
+		<mx:FormItem label="Expression">
+			<mx:HBox>
+				<mx:TextInput id="expressionInputField" enter="onDoButtonClick()"></mx:TextInput>
+				<mx:Button label="do" click="onDoButtonClick()"></mx:Button>
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:FormItem label="Output">
+			<mx:TextArea id="outputField" width="400" height="400" /> 
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Script>
+		<![CDATA[
+		import flash.utils.getTimer;
+		import parser.Parser;
+		private function onDoButtonClick():void {
+			var startTime:int = getTimer();
+			outputField.text = Parser.parse(expressionInputField.text);
+			var endTime:int = getTimer() - startTime;
+			outputField.text += "\n Time taken(ms) : " + endTime;
+			expressionInputField.text = "";
+			expressionInputField.setFocus();
+		}
+		]]>
+	</mx:Script>
+</mx:Application>
