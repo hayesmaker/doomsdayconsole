@@ -92,7 +92,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			_mainSection = new MainSection(console);
 			_inspectorSection = new InspectorSection();
 			_headerSection = new HeaderSection();
-			_bg.cacheAsBitmap = true;
+			//_bg.cacheAsBitmap = true;
 			
 			addChild(_bg);
 			addChild(_headerSection);
@@ -115,7 +115,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			_mainSplitDragBar.doubleClickEnabled = true;
 			_mainSplitDragBar.buttonMode = true;
 			
-			filters = [Filters.CONSOLE_DROPSHADOW];
+			//filters = [Filters.CONSOLE_DROPSHADOW];
 			
 			scaleHandle.addEventListener(MouseEvent.MOUSE_DOWN, beginScaleDrag);
 			scaleHandle.addEventListener(MouseEvent.DOUBLE_CLICK, onScaleDoubleclick);

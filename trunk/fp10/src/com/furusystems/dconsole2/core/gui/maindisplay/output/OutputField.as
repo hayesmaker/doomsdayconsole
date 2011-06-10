@@ -8,6 +8,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
+	import flash.text.AntiAliasType;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
@@ -115,6 +116,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			return _textOutput.text;
 		}
 		
+		public function setText(s:String):void {
+			_textOutput.text = s;
+		}
+		
 		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
@@ -177,7 +182,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		}
 		public function unlockOutput():void {
 			_locked = false;
-			//drawMessages();
 		}
 		/**
 		 * Toggle display of message timestamp
@@ -240,20 +244,18 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			return _currentLog;
 		}
 		public function getMessageAtLine(line:int):ConsoleMessage {
-			const currentLogVector:Vector.<ConsoleMessage> = currentLog.messages;
+			var currentLogVector:Vector.<ConsoleMessage> = currentLog.messages;
 			line += _scrollIndex;
 			return currentLog.messages[line];
 		}
-		public function drawMessages(e:TimerEvent = null):void {
-			if (!visible || _locked || !currentLog || nothingChanged() ) return;
+		public function drawMessages():void {
+			if (!visible || _locked || !currentLog ) return;
 			if (_atBottom) {
 				_scrollIndex = maxScroll;
 			}
-			//const iterator:DLogIterator = new DLogIterator(currentLog);
-			const currentLogVector:Vector.<ConsoleMessage> = currentLog.messages;
-			//const currentLogVector:Vector.<Message> = iterator.getFilteredVector();
-			const date:Date = new Date();
-			text = ""; //clear the output text field
+			var currentLogVector:Vector.<ConsoleMessage> = currentLog.messages;
+			var date:Date = new Date();
+			clear();
 			_scrollRange = Math.min(currentLogVector.length, scrollIndex + numLines);
 			if (numLines > _scrollRange-scrollIndex) {
 				_scrollIndex = maxScroll;
@@ -297,7 +299,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 					lineLength += dateStr.length;
 					textOutput.appendText(dateStr);
 				}
-				if (showTag&&msg.tag!=""&&msg.tag!=DConsole.TAG&&visible) {
+				if (showTag && msg.tag != "" && msg.tag != DConsole.TAG && visible) { 
 					textOutput.defaultTextFormat = visible?TextFormats.outputTformatTag:TextFormats.outputTformatHidden;
 					textOutput.appendText(" " + msg.tag);
 					lineLength += (1 + msg.tag.length);
@@ -332,7 +334,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 							fmt = TextFormats.hoorayFormat; 
 						break;
 						case ConsoleMessageTypes.TRACE:
-						//TODO: Dedicated trace text format?
 						case ConsoleMessageTypes.DEBUG:
 						case ConsoleMessageTypes.INFO:
 						default:
@@ -368,7 +369,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 				}
 				
 				if (i != _scrollRange-1) {
-					textOutput.appendText(str+"\n");
+					textOutput.appendText(str + "\n");
 				}else {
 					textOutput.appendText(str);
 				}
@@ -392,10 +393,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			_scrollbar.draw(_textOutput.height, _scrollIndex, maxScroll);
 		}
 		
-		private function nothingChanged():Boolean
+		private function clear():void 
 		{
-			
-			return false;
+			_textOutput.text = "";
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemable */
