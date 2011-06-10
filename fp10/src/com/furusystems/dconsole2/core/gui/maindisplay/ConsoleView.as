@@ -25,7 +25,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 	import com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
 	import com.furusystems.dconsole2.core.gui.maindisplay.input.InputField;
 	import com.furusystems.dconsole2.core.gui.maindisplay.output.OutputField;
-	//import com.furusystems.dconsole2.core.gui.maindisplay.sections.FooterSection;
 	import com.furusystems.dconsole2.core.gui.maindisplay.sections.HeaderSection;
 	import com.furusystems.dconsole2.core.gui.maindisplay.sections.InspectorSection;
 	import com.furusystems.dconsole2.core.gui.maindisplay.sections.MainSection;

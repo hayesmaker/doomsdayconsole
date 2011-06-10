@@ -203,9 +203,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			}
 		}
 		public function set scrollIndex(i:int):void {
+			var _prevIndex:int = _scrollIndex;
 			_scrollIndex = Math.max(0, Math.min(i, maxScroll));
 			_atBottom = _scrollIndex == maxScroll;
-			drawMessages();
+			if (_prevIndex != _scrollIndex) drawMessages();
 		}
 		public function get scrollIndex():int {
 			return _scrollIndex;
@@ -215,8 +216,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			return Math.max(0, currentLog.messages.length - numLines);
 		}
 		public function update():void {
-			_messageDrawTimer.reset();
-			_messageDrawTimer.start();
+			drawMessages();
+			//_messageDrawTimer.reset();
+			//_messageDrawTimer.start();
 		}
 		public function set currentLog(l:DConsoleLog):void {
 			_currentLog = l;
