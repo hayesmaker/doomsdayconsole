@@ -123,9 +123,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 			}
 		}
 		private function render(w:Number, updateAppearance:Boolean = false):void {
-			//if (w == _prevWidth && !updateAppearance) return;
 			headerField.textColor = Colors.INSPECTOR_TAB_HEADER_FG;
-			if(w!=_prevWidth){
+			if(w!=_prevWidth||updateAppearance){
 				headerBar.graphics.clear();
 				headerBar.graphics.beginFill(Colors.INSPECTOR_TAB_HEADER_BG);
 				headerBar.graphics.drawRect(0, 0, w, GUIUnits.SQUARE_UNIT);

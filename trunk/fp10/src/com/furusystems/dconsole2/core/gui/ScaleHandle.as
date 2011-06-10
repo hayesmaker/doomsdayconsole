@@ -21,7 +21,7 @@
 	public class ScaleHandle extends Sprite implements IContainable
 	{
 		
-		public var dragging:Boolean = false;
+		private var _dragging:Boolean = false;
 		public function ScaleHandle() 
 		{
 			//buttonMode = true;
@@ -32,6 +32,7 @@
 			addEventListener(MouseEvent.ROLL_OUT, onRollOut);
 			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			alpha = 0;
 		}
 		
 		private function onMouseOut(e:MouseEvent):void 
@@ -47,13 +48,13 @@
 		private function onRollOut(e:MouseEvent):void 
 		{
 			if (dragging) return;
-			//alpha = 0;
+			alpha = 0;
 			Mouse.cursor = MouseCursor.AUTO;
 		}
 		
 		private function onRollOver(e:MouseEvent):void 
 		{
-			//alpha = 1;
+			alpha = 1;
 			Mouse.cursor = MouseCursor.HAND;
 		}
 		
@@ -86,6 +87,18 @@
 		public function get minWidth():Number
 		{
 			return 0;
+		}
+		
+		public function get dragging():Boolean 
+		{
+			return _dragging;
+		}
+		
+		public function set dragging(value:Boolean):void 
+		{
+			_dragging = value;
+			if (value) alpha = 1;
+			else alpha = 0;
 		}
 		
 	}
