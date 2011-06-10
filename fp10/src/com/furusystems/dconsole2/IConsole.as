@@ -26,9 +26,11 @@ package com.furusystems.dconsole2
 		function onEvent(e:Event):void;
 		function clear():void;
 		function createCommand(keyword:String, func:Function, commandGroup:String = "Application", helpText:String = ""):void;		
+		function removeCommand(triggerPhrase:String):void;
 		function setHeaderText(title:String):void;
 		function set overrideCallback(callback:Function):void;
 		function clearOverrideCallback():void;
+		
 	}
 	
 }

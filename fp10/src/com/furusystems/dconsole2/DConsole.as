@@ -1132,6 +1132,13 @@
 			console.createCommand(triggerPhrase, func, commandGroup, helpText);
 		}
 		/**
+		 * Removes a command keyed by its trigger phrase
+		 * @param	triggerPhrase
+		 */
+		public static function removeCommand(triggerPhrase:String):void {
+			console.removeCommand(triggerPhrase);
+		}
+		/**
 		 * Use this to print event messages on dispatch (addEventListener(Event.CHANGE, ConsoleUtil.onEvent))
 		 */
 		public static function get onEvent():Function {

@@ -37,7 +37,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		private var _scrollbar:SimpleScrollbarNorm;
 		private var _locked:Boolean = false;
 		private var _scrollRange:int = 0;
-		private var _messageDrawTimer:Timer = new Timer(1, 1);
 		private var _scrollIndex:int = 0;
 		private var _currentLog:DConsoleLog;
 		private var _atBottom:Boolean = true;
@@ -48,6 +47,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		public var showTraceValues:Boolean = true;
 		public var showTimeStamp:Boolean = false;
 		public var showTag:Boolean = true; //TODO: Make this private?
+		private var _dirty:Boolean = false;
 		private const TRUNCATE:Boolean = false;
 		public function OutputField() 
 		{
@@ -65,12 +65,22 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			addChild(_scrollbar);
 			_textOutput.mouseWheelEnabled = false;
 			_textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			_messageDrawTimer.addEventListener(TimerEvent.TIMER_COMPLETE, drawMessages, false, 0, true);
 			
 			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			PimpCentral.addCallback(Notifications.CURRENT_LOG_CHANGED, onCurrentLogChange);
+			PimpCentral.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
 			
 			if(TRUNCATE) _textOutput.addEventListener(MouseEvent.CLICK, onTextClick);
+		}
+		
+		private function onFrameUpdate():void 
+		{
+			if (_locked) return;
+			if (_currentLog.dirty||_dirty) {
+				drawMessages();
+				_currentLog.setClean();
+				_dirty = false;
+			}
 		}
 		
 		private function onCurrentLogChange(md:MessageData):void
@@ -121,7 +131,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			_scrollbar.draw(r.height, _scrollIndex, maxScroll);
 			
 			if (prevHeight != _textOutput.height) {
-				update(); //introduces latency but avoids clogging when called in a loop
+				_dirty = true;
+				//update(); //introduces latency but avoids clogging when called in a loop
 				//drawMessages();
 			}
 		}
@@ -166,7 +177,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		}
 		public function unlockOutput():void {
 			_locked = false;
-			drawMessages();
+			//drawMessages();
 		}
 		/**
 		 * Toggle display of message timestamp
@@ -193,7 +204,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		public function toggleLineNumbers():void
 		{
 			(showLineNum = !showLineNum) ? DConsole.print("Line numbers: on", ConsoleMessageTypes.SYSTEM) : DConsole.print("Line numbers: off", ConsoleMessageTypes.SYSTEM);
-			drawMessages();
+			_dirty = true;
 		}
 		public function scroll(deltaY:int = 0, deltaX:int = 0):void {
 			_textOutput.scrollH += deltaX;
@@ -206,7 +217,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			var _prevIndex:int = _scrollIndex;
 			_scrollIndex = Math.max(0, Math.min(i, maxScroll));
 			_atBottom = _scrollIndex == maxScroll;
-			if (_prevIndex != _scrollIndex) drawMessages();
+			if (_prevIndex != _scrollIndex) {
+				_dirty = true;
+			}
 		}
 		public function get scrollIndex():int {
 			return _scrollIndex;
@@ -216,9 +229,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			return Math.max(0, currentLog.messages.length - numLines);
 		}
 		public function update():void {
-			drawMessages();
-			//_messageDrawTimer.reset();
-			//_messageDrawTimer.start();
+			onFrameUpdate();
 		}
 		public function set currentLog(l:DConsoleLog):void {
 			_currentLog = l;
