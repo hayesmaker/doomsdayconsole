@@ -23,7 +23,6 @@ package com.furusystems.dconsole2.plugins.plugcollections
 				JSRouterUtil,
 				MeasurementBracketUtil,
 				MouseUtil,
-				FullscreenUtil,
 				SystemInfoUtil,
 				StatsOutputUtil,
 				JSONParserUtil,
