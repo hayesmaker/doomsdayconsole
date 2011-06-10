@@ -69,21 +69,21 @@
 		//{ members
 		private var _initialized:Boolean = false;
 		
-		private var _output:OutputField;
-		private var _input:InputField;
-		private var _assistant:Assistant;
+		//private var output:OutputField;
+		//private var input:InputField;
+		//private var assistant:Assistant;
 		private var _autoCompleteManager:AutocompleteManager;
 		private var _globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
 		
 		private var _styleManager:StyleManager = new StyleManager();
 		
-		private var _scaleHandle:ScaleHandle;
+		//private var scaleHandle:ScaleHandle;
 		
 		private var _referenceManager:ReferenceManager;
 		private var _scopeManager:ScopeManager;
 		private var _commandManager:CommandManager;
 		
-		private var _toolBar:ConsoleToolbar;
+		//private var _toolBar:ConsoleToolbar;
 		private var _toolTip:ToolTip;
 		private var _visible:Boolean = false;
 		private var _isVisible:Boolean = true; //TODO: Fix naming ambiguity; _isVisible refers to the native visibility toggle
@@ -109,7 +109,7 @@
 		private var _modifier:uint = KeyBindings.CTRL_SHIFT;
 		private var _lock:ConsoleLock = new ConsoleLock();
 		private var _plugManager:PluginManager;
-		private var _filterTabs:FilterTabRow;
+		//private var _filterTabs:FilterTabRow;
 		private var _logManager:DLogManager;
 		
 		private var _autoCreateTagLogs:Boolean = true; //If true, automatically create new logs when a new tag is encountered
@@ -138,16 +138,10 @@
 			_mainConsoleView = new ConsoleView(this);
 			
 			//TODO: Use getters with direct references, not these vars
-			_toolBar = _mainConsoleView.toolbar;
-			_filterTabs = _mainConsoleView.filtertabs;
-			_output = _mainConsoleView.output;
-			_scaleHandle = _mainConsoleView.scaleHandle;			
-			_assistant = _mainConsoleView.assistant;			
-			_input = _mainConsoleView.input;
 			
-			_output.currentLog = _logManager.currentLog;
+			output.currentLog = _logManager.currentLog;
 			
-			_autoCompleteManager = new AutocompleteManager(_input.inputTextField);
+			_autoCompleteManager = new AutocompleteManager(input.inputTextField);
 			_scopeManager = new ScopeManager(this, _autoCompleteManager);
 			_autoCompleteManager.setDictionary(_globalDictionary);
 			_referenceManager = new ReferenceManager(this, _scopeManager);
@@ -162,8 +156,8 @@
 			
 			_toolTip = new ToolTip();
 			
-			_input.addEventListener(Event.CHANGE, updateAssistantText);
-			_scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
+			input.addEventListener(Event.CHANGE, updateAssistantText);
+			scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
 			
 			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_REQUEST, onScopeChangeRequest);
 			PimpCentral.addCallback(Notifications.EXECUTE_STATEMENT, onExecuteStatementNotification);
@@ -242,7 +236,7 @@
 			//addCommand(new FunctionCallCommand("consoleHeight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			createCommand("about", about, "System", "Credits etc");
 			createCommand("clear", clear, "View", "Clear the console");
-			createCommand("timestampDisplay", _output.toggleTimestamp, "View", "Toggle display of message timestamp");
+			createCommand("timestampDisplay", output.toggleTimestamp, "View", "Toggle display of message timestamp");
 			createCommand("help", getHelp, "System", "Output basic instructions");
 			createCommand("clearhistory", _persistence.clearHistory, "System", "Clears the stored command history");
 			//addCommand(new FunctionCallCommand("dock", dock, "System", "Docks the console to either 'top'(default) or 'bottom'"));
@@ -250,7 +244,7 @@
 			createCommand("minimizeConsole", minimize, "System", "Sets console height to 1");
 			createCommand("toggleTabSearch", toggleTabSearch, "System", "Toggles tabbing to search commands and methods for the current word");
 			createCommand("setRepeatFilter", setRepeatFilter, "System", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough");
-			createCommand("toggleLineNumbers", _output.toggleLineNumbers, "System", "Toggles the display of line numbers");
+			createCommand("toggleLineNumbers", output.toggleLineNumbers, "System", "Toggles the display of line numbers");
 			createCommand("repeat", repeatCommand, "System", "Repeats command string X Y times");
 			addCommand(new FunctionCallCommand("reset", resetConsole, "System", "Resets and clears the console"), false);
 
@@ -267,7 +261,7 @@
 			createCommand("commands", _commandManager.listCommands, "Utility", "Output a list of available commands. Add a second argument to search.");
 			createCommand("search", searchCurrentLog, "Utility", "Searches the current log for a string and scrolls to the first matching line");
 			createCommand("addSearch", addSearch, "Utility", "Adds a search tab for the given term");
-			//createCommand("goto", _output.goto, "Utility", "Scrolls to the specified line, if possible"); //TODO: Current enter key behavior overrides this one. Bummer.
+			//createCommand("goto", output.goto, "Utility", "Scrolls to the specified line, if possible"); //TODO: Current enter key behavior overrides this one. Bummer.
 			//createCommand("getLoader", getLoader, "Utility", "Returns a 'dumb' Loader getting data from the url X");
 			createCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)");
 			createCommand("toggleTags", toggleTags, "System", "Toggles the display of tags");
@@ -296,6 +290,25 @@
 			createCommand("loadTheme", _styleManager.load, "Theme", "Loads theme xml from urls; [x] theme [y] color table");
 			
 		}
+		
+		private function get toolBar():ConsoleToolbar {
+			return _mainConsoleView.toolbar;
+		}
+		private function get filterTabs():FilterTabRow {
+			return _mainConsoleView.filtertabs;
+		}
+		private function get output():OutputField {
+			return _mainConsoleView.output;
+		}
+		private function get scaleHandle():ScaleHandle {
+			return _mainConsoleView.scaleHandle;
+		}
+		private function get assistant():Assistant {
+			return _mainConsoleView.assistant;
+		}
+		private function get input():InputField {
+			return _mainConsoleView.input;
+		}		
 		
 		private function selectTag(tag:String):void 
 		{
@@ -337,7 +350,7 @@
 		{
 			var idx:int = _logManager.searchCurrentLog(term);
 			if(idx>-1){
-				_output.scrollToLine(idx);
+				output.scrollToLine(idx);
 				//print("'" + term + "' found in log "+_logManager.currentLog+" at line " + idx);
 			}else {
 				addErrorMessage("Not found");
@@ -436,12 +449,12 @@
 			var cmd:ConsoleCommand;
 			var helpText:String;
 			try {
-				cmd = _commandManager.parseForCommand(_input.text);
+				cmd = _commandManager.parseForCommand(input.text);
 				helpText = cmd.helpText;
 			}catch (e:Error) {
 				helpText = "";
 			}
-			var secondElement:String = TextUtils.parseForSecondElement(_input.text);
+			var secondElement:String = TextUtils.parseForSecondElement(input.text);
 			if(secondElement){
 				if (cmd == _callCommand) {
 					try{
@@ -458,9 +471,9 @@
 				}
 			}
 			if (helpText != "") {
-				_assistant.text = "?	" + cmd.trigger + ": " + helpText;
+				assistant.text = "?	" + cmd.trigger + ": " + helpText;
 			}else {
-				_assistant.clear();
+				assistant.clear();
 			}
 		}
 		
@@ -538,9 +551,10 @@
 			var msg:ConsoleMessage;
 			for (var i:int = 0; i < messages.length; i++) 
 			{
+				//break;
 				msg = messages[i];
 				if (_rootLog.prevMessage) {
-					if(_rootLog.prevMessage.text==msg.text&&_rootLog.prevMessage.tag==msg.tag){
+					if (_rootLog.prevMessage.text == msg.text && _rootLog.prevMessage.tag == msg.tag) { 
 						switch(_repeatMessageMode) {
 							case ConsoleMessageRepeatMode.STACK:
 								_rootLog.prevMessage.repeatcount++;
@@ -554,7 +568,6 @@
 							case ConsoleMessageRepeatMode.IGNORE:
 								continue;
 							break;
-							default:
 						}
 					}
 				}
@@ -570,14 +583,14 @@
 				_rootLog.addMessage(msg);
 				if (_tagLog) _tagLog.addMessage(msg);
 			}
-			_output.update();
+			output.update();
 		}
 		/**
 		 * Clear the console
 		 */
 		public function clear():void {
 			_logManager.currentLog.clear();
-			_output.drawMessages();
+			output.drawMessages();
 		}
 		
 		private function setupStageAlignAndScale():void {
@@ -634,14 +647,14 @@
 					}
 				}
 				if (_testCmd) {
-					_input.text = cmd;
-					_input.focus();
-					var spaceIndex:int = _input.text.indexOf(" ");
+					input.text = cmd;
+					input.focus();
+					var spaceIndex:int = input.text.indexOf(" ");
 					
 					if (spaceIndex>-1) {
-						_input.inputTextField.setSelection(_input.text.indexOf(" ") + 1, _input.text.length);
+						input.inputTextField.setSelection(input.text.indexOf(" ") + 1, input.text.length);
 					}else{
-						_input.inputTextField.setSelection(0, _input.text.length);
+						input.inputTextField.setSelection(0, input.text.length);
 					}
 				}
 			}
@@ -782,8 +795,8 @@
 				if (parent) {
 					parent.addChild(this);
 				}
-				_input.focus();
-				_input.text = "";
+				input.focus();
+				input.text = "";
 				updateAssistantText();
 				beginFrameUpdates();
 				PimpCentral.send(Notifications.CONSOLE_SHOW, null, this);
@@ -834,8 +847,8 @@
 		{
 			if (!visible) return; //Ignore if invisible
 			if (e.keyCode == Keyboard.SPACE&&e.shiftKey) {
-				if (visible && stage.focus != _input) {
-					_input.focus();
+				if (visible && stage.focus != input) {
+					input.focus();
 					e.stopImmediatePropagation();
 					e.stopPropagation();
 				}
@@ -849,10 +862,10 @@
 			if (e.ctrlKey) {
 				switch(e.keyCode) {
 					case Keyboard.UP:
-					_output.scroll(1);
+					output.scroll(1);
 					return
 					case Keyboard.DOWN:
-					_output.scroll(-1);
+					output.scroll(-1);
 					return;
 					case Keyboard.LEFT:
 					//TODO: previous tab
@@ -863,29 +876,29 @@
 				}
 			}
 			/*if (e.keyCode == Keyboard.BACKSPACE && e.ctrlKey) {
-				_input.clear();
+				input.clear();
 				updateAssistantText();
 				return;
 			}*/
 			if (e.keyCode == Keyboard.ENTER) {
-				if (_input.text.length < 1) {
-					_input.focus();
+				if (input.text.length < 1) {
+					input.focus();
 					return;
 				}
 				var success:Boolean = false;
-				print("'" + _input.text + "'", ConsoleMessageTypes.USER);
+				print("'" + input.text + "'", ConsoleMessageTypes.USER);
 				if (_overrideCallback != null) {
-					_overrideCallback(_input.text);
+					_overrideCallback(input.text);
 					success = true;
 				}else{
 					try {
-						var attempt:* = executeStatement(_input.text);
+						var attempt:* = executeStatement(input.text);
 						success = true;
 					}catch (error:ConsoleAuthError) {
 						//TODO: This needs a more graceful solution. Dual auth error prints = lame
 					}catch (error:CommandError) {
 						if (_defaultInputCallback != null) {
-							var ret:* = _defaultInputCallback(_input.text);
+							var ret:* = _defaultInputCallback(input.text);
 							if (ret) {
 								print(ret, ConsoleMessageTypes.INFO);
 							}
@@ -896,17 +909,17 @@
 						print(error.message, ConsoleMessageTypes.ERROR);
 					}
 				}
-				_output.scrollToBottom();
-				_input.clear();
+				output.scrollToBottom();
+				input.clear();
 				updateAssistantText();
 			}else if (e.keyCode == Keyboard.PAGE_DOWN) {
-				_output.scroll(-_output.numLines);
+				output.scroll(-output.numLines);
 			}else if (e.keyCode == Keyboard.PAGE_UP) {
-				_output.scroll(_output.numLines);
+				output.scroll(output.numLines);
 			}else if (e.keyCode == Keyboard.HOME) {
-				_output.scrollIndex = 0;
+				output.scrollIndex = 0;
 			}else if (e.keyCode == Keyboard.END) {
-				_output.scrollIndex = _output.maxScroll;
+				output.scrollIndex = output.maxScroll;
 			}
 		}
 		
@@ -936,49 +949,49 @@
 		{
 			var flag:Boolean = false; 
 			
-			if (_input.text.length < 1) return;
-			var word:String = _input.wordAtCaret;
+			if (input.text.length < 1) return;
+			var word:String = input.wordAtCaret;
 			
-			var isFirstWord:Boolean = _input.text.lastIndexOf(word) < 1;
+			var isFirstWord:Boolean = input.text.lastIndexOf(word) < 1;
 			var firstWord:String;
 			if (isFirstWord) {
 				firstWord = word;
 			}else {
-				firstWord = _input.firstWord;
+				firstWord = input.firstWord;
 			}
 			if (_autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord)||!isNaN(Number(word))) {
 				//this word is okay, so accept the tab
-				var wordIndex:int = _input.firstIndexOfWordAtCaret;
+				var wordIndex:int = input.firstIndexOfWordAtCaret;
 				//is there currently a selection?
-				if (_input.inputTextField.selectedText.length > 0) {
-					_input.moveCaretToIndex(_input.selectionBeginIndex);
-					wordIndex = _input.selectionBeginIndex;
-				}else if (_input.text.charAt(_input.caretIndex) == " " && _input.caretIndex != _input.text.length - 1) { 
-					_input.moveCaretToIndex(_input.caretIndex - 1);
+				if (input.inputTextField.selectedText.length > 0) {
+					input.moveCaretToIndex(input.selectionBeginIndex);
+					wordIndex = input.selectionBeginIndex;
+				}else if (input.text.charAt(input.caretIndex) == " " && input.caretIndex != input.text.length - 1) { 
+					input.moveCaretToIndex(input.caretIndex - 1);
 				}
 				
-				word = _input.wordAtCaret;
-				wordIndex = _input.caretIndex;
+				word = input.wordAtCaret;
+				wordIndex = input.caretIndex;
 				
 				//case correction
-				var temp:String = _input.text;
+				var temp:String = input.text;
 				try {
 					temp = temp.replace(word, _autoCompleteManager.correctCase(word));
-					_input.text = temp;
+					input.text = temp;
 				}catch (e:Error) {
 				}
 				
 				//is there a word after the current word?
-				if (wordIndex + word.length < _input.text.length - 1) {
-					_input.moveCaretToIndex(wordIndex + word.length);
-					_input.selectWordAtCaret();
+				if (wordIndex + word.length < input.text.length - 1) {
+					input.moveCaretToIndex(wordIndex + word.length);
+					input.selectWordAtCaret();
 					
 				}else {
 					//if it's the last word
-					if (_input.text.charAt(_input.text.length-1)!=" ") {
-						_input.inputTextField.appendText(" ");
+					if (input.text.charAt(input.text.length-1)!=" ") {
+						input.inputTextField.appendText(" ");
 					}
-					_input.caretToEnd();
+					input.caretToEnd();
 				}
 			}else{
 				var getSet:Boolean = (firstWord == _getCommand.trigger || firstWord == _setCommand.trigger);
@@ -987,9 +1000,9 @@
 				tabSearch(word, !isFirstWord || select, isFirstWord, call);
 				
 				if (flag) {
-					_input.selectWordAtCaret();
+					input.selectWordAtCaret();
 				}else{
-					_input.moveCaretToIndex(_input.firstIndexOfWordAtCaret + _input.wordAtCaret.length);
+					input.moveCaretToIndex(input.firstIndexOfWordAtCaret + input.wordAtCaret.length);
 				}
 			}
 		}
@@ -1008,12 +1021,12 @@
 		
 		public function lockOutput():void
 		{
-			_output.lockOutput();
+			output.lockOutput();
 		}
 		
 		public function unlockOutput():void
 		{
-			_output.unlockOutput();
+			output.unlockOutput();
 		}
 		
 		public function loadStyle(themeURI:String = null, colorsURI:String = null):void 

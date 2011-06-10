@@ -28,7 +28,7 @@
 		private var contents:Sprite = new Sprite();
 		public function Controller(o:*, params:Array,manager:ControllerUtil) 
 		{
-			cacheAsBitmap = true;
+			//cacheAsBitmap = true;
 			
 			var dragBarHeight:int = 10;
 			this.manager = manager;
