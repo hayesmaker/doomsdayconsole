@@ -22,7 +22,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 		
 		private var _titleField:TextField = new TextField();
 		private var _rect:Rectangle;
-		private var _clock:ToolbarClock;
 		public function ConsoleToolbar() 
 		{
 			_titleField.height = GUIUnits.SQUARE_UNIT;
@@ -32,9 +31,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 			_titleField.textColor = Colors.HEADER_FG;
 			_titleField.text = "Doomsday Console II";
 			_titleField.x = _titleField.y = 1;
-			_clock = new ToolbarClock();
-			_clock.y = 1;
-			addChild(_clock);
 			addChild(_titleField);
 			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			
@@ -54,8 +50,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 			graphics.drawRect(0, 0, _rect.width, GUIUnits.SQUARE_UNIT);
 			graphics.endFill();
 			_titleField.width = allotedRect.width;
-			_clock.x = allotedRect.width;
-			_clock.visible = allotedRect.width > 500;
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
@@ -63,7 +57,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 		public function onThemeChange(md:MessageData):void
 		{
 			_titleField.textColor = Colors.HEADER_FG;
-			_clock.setColor(Colors.HEADER_FG);
 			graphics.clear();
 			graphics.beginFill(Colors.HEADER_BG);
 			graphics.drawRect(0, 0, _rect.width, GUIUnits.SQUARE_UNIT);

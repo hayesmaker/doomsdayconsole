@@ -545,6 +545,10 @@
 							case ConsoleMessageRepeatMode.STACK:
 								_rootLog.prevMessage.repeatcount++;
 								_rootLog.prevMessage.timestamp = msg.timestamp;
+								_rootLog.setDirty();
+								if (_tagLog) {
+									_tagLog.setDirty();
+								}
 								continue;
 							break;
 							case ConsoleMessageRepeatMode.IGNORE:
@@ -829,7 +833,7 @@
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return; //Ignore if invisible
-			if (e.keyCode == Keyboard.TAB) {
+			if (e.keyCode == Keyboard.SPACE&&e.shiftKey) {
 				if (visible && stage.focus != _input) {
 					_input.focus();
 					e.stopImmediatePropagation();
