@@ -61,8 +61,10 @@
 	import com.furusystems.dconsole2.logging.ConsoleLogBinding;
 	//}
 	/**
-	 * ...
-	 * @author doomsday crew
+	 * ActionScript 3 logger, commandline interface and utility platform
+	 * @author Andreas Roenning
+	 * @author Cristobal Dabed
+	 * @author Furu systems
 	 */
 	public class DConsole extends DSprite implements IConsole
 	{
@@ -102,6 +104,7 @@
 		private var _mainConsoleView:ConsoleView;
 		
 		//} end members
+		//{ Instance
 		/**
 		 * Creates a new DConsole instance. 
 		 * This class is intended to always be on top of the stage of the application it is associated with.
@@ -429,7 +432,11 @@
 		}
 		public function executeStatement(statement:String, echo:Boolean = false):*{
 			if (echo) print(statement, ConsoleMessageTypes.USER);
-			return _commandManager.tryCommand(statement);
+			try{
+				return _commandManager.tryCommand(statement);
+			}catch (e:Error) {
+				addErrorMessage(e.message+" '"+statement+"'");
+			}
 		}
 		
 		private function updateAssistantText(e:Event = null):void 
@@ -543,7 +550,7 @@
 				//break;
 				msg = messages[i];
 				if (_rootLog.prevMessage) {
-					if (_rootLog.prevMessage.text == msg.text && _rootLog.prevMessage.tag == msg.tag) { 
+					if (_rootLog.prevMessage.text == msg.text && _rootLog.prevMessage.tag == msg.tag && _rootLog.prevMessage.type == msg.type) { 
 						switch(_repeatMessageMode) {
 							case ConsoleMessageRepeatMode.STACK:
 								_rootLog.prevMessage.repeatcount++;
@@ -1046,10 +1053,9 @@
 		{
 			_overrideCallback = null;
 		}
+		//}
 		
-		/*
-		 * Statics
-		 */
+		//{ Statics
 		
 		/**
 		 * If true, the console instance cannot be selected by the console. The default is true, which is recommended.
@@ -1251,11 +1257,13 @@
 		 * Execute a console command statement
 		 * @param	statement
 		 * The statement, eg. "setFrameRate 60" etc
+		 * @param	echo
+		 * Wether to echo this statement in the console (default false)
 		 * @return
 		 * The return value of the executed statement, if any.
 		 */
-		public static function executeStatement(statement:String):* {
-			return console.executeStatement(statement);
+		public static function executeStatement(statement:String, echo:Boolean = false):* {
+			return console.executeStatement(statement, echo);
 		}
 		
 		/**
@@ -1336,6 +1344,8 @@
 		/*public static function lockWithKeyCodes(keyCodes:Array):void {
 			console.lock.lock(keyCodes, console.toggleDisplay);
 		}*/
+		
+		//}
 	}
 	
 }
