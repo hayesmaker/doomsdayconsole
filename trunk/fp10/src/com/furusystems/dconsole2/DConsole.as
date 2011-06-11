@@ -15,6 +15,7 @@
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.TextEvent;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
@@ -68,22 +69,14 @@
 		
 		//{ members
 		private var _initialized:Boolean = false;
-		
-		//private var output:OutputField;
-		//private var input:InputField;
-		//private var assistant:Assistant;
 		private var _autoCompleteManager:AutocompleteManager;
 		private var _globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
 		
 		private var _styleManager:StyleManager = new StyleManager();
 		
-		//private var scaleHandle:ScaleHandle;
-		
 		private var _referenceManager:ReferenceManager;
 		private var _scopeManager:ScopeManager;
 		private var _commandManager:CommandManager;
-		
-		//private var _toolBar:ConsoleToolbar;
 		private var _toolTip:ToolTip;
 		private var _visible:Boolean = false;
 		private var _isVisible:Boolean = true; //TODO: Fix naming ambiguity; _isVisible refers to the native visibility toggle
@@ -109,7 +102,6 @@
 		private var _modifier:uint = KeyBindings.CTRL_SHIFT;
 		private var _lock:ConsoleLock = new ConsoleLock();
 		private var _plugManager:PluginManager;
-		//private var _filterTabs:FilterTabRow;
 		private var _logManager:DLogManager;
 		
 		private var _autoCreateTagLogs:Boolean = true; //If true, automatically create new logs when a new tag is encountered
@@ -137,9 +129,12 @@
 			_logManager = new DLogManager();
 			_mainConsoleView = new ConsoleView(this);
 			
-			//TODO: Use getters with direct references, not these vars
-			
 			output.currentLog = _logManager.currentLog;
+			
+			input.inputTextField.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
+			
+			tabChildren = tabEnabled = false;
+			
 			
 			_autoCompleteManager = new AutocompleteManager(input.inputTextField);
 			_scopeManager = new ScopeManager(this, _autoCompleteManager);
@@ -180,11 +175,18 @@
 			
 			addChild(_toolTip);
 						
-			//view.y = -view.height;
 			visible = false;
 			
 			print("Ready. Type help to get started.", ConsoleMessageTypes.SYSTEM);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function onTextInput(e:TextEvent):void 
+		{
+			if (_cancelNextSpace) {
+				e.preventDefault();
+				_cancelNextSpace = false;
+			}
 		}
 		public function get currentScope():IntrospectionScope {
 			return _scopeManager.currentScope;
@@ -422,16 +424,15 @@
 		{
 			addSystemMessage("Help");
 			addSystemMessage("\tKeyboard commands");
-			addSystemMessage("\t\tShift-Enter (default) -> Toggle console");
-			addSystemMessage("\t\tTab -> (When out of focus) Set the keyboard focus to the input field");
-			addSystemMessage("\t\tTab -> (When in focus) Skip to end of line and append a space");
-			addSystemMessage("\t\tTab -> (While caret is on an unknown term) Context sensitive search");
+			addSystemMessage("\t\tControl+Shift+Enter (default) -> Show/hide console");
+			addSystemMessage("\t\tControl+Space -> (When out of focus) Set the keyboard focus to the input field");
+			addSystemMessage("\t\tControl+Space -> (When in focus) Skip to end of line and append a space");
+			addSystemMessage("\t\tControl+Space -> (While caret is on an unknown term) Context sensitive search");
 			addSystemMessage("\t\tEnter -> Execute line");
 			addSystemMessage("\t\tPage up/Page down -> Vertical scroll by page");
 			addSystemMessage("\t\tArrow up -> Recall the previous executed line");
 			addSystemMessage("\t\tArrow down -> Recall the more recent executed line");
 			addSystemMessage("\t\tCtrl + Arrow keys -> Scroll");
-			addSystemMessage("\t\tCtrl + backspace -> Clear the input field");
 			addSystemMessage("\t\tMouse functions");
 			addSystemMessage("\t\tMousewheel -> Vertical scroll line by line");
 			addSystemMessage("\t\tClick drag below the input line -> Change console height");
@@ -602,7 +603,7 @@
 		private function onAddedToStage(e:Event):void 
 		{
 			KeyboardManager.instance.setup(stage);
-			parent.tabEnabled = parent.tabChildren = false;
+			//parent.tabEnabled = parent.tabChildren = false;
 			if (stage.align != StageAlign.TOP_LEFT) {
 				print("Warning: stage.align is not set to TOP_LEFT; This might cause scaling issues",ConsoleMessageTypes.ERROR);
 			}
@@ -625,40 +626,6 @@
 			_dockingGuides.resize();
 		}
 		
-		private function onKeyUp(e:KeyboardEvent):void 
-		{
-			if (visible) {
-				var cmd:String = "";
-				var _testCmd:Boolean = false;
-				if (e.keyCode == Keyboard.UP) {
-					if (!e.ctrlKey) {
-						cmd = _persistence.historyUp();
-						_testCmd = true;
-					}else {
-						return;
-					}
-					
-				}else if (e.keyCode == Keyboard.DOWN) {
-					if (!e.ctrlKey) {
-						cmd = _persistence.historyDown();
-						_testCmd = true;
-					}else {
-						return;
-					}
-				}
-				if (_testCmd) {
-					input.text = cmd;
-					input.focus();
-					var spaceIndex:int = input.text.indexOf(" ");
-					
-					if (spaceIndex>-1) {
-						input.inputTextField.setSelection(input.text.indexOf(" ") + 1, input.text.length);
-					}else{
-						input.inputTextField.setSelection(0, input.text.length);
-					}
-				}
-			}
-		}
 		private function tabSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
 		{
 			if (searchString.length < 1) return;
@@ -842,17 +809,56 @@
 			_mainConsoleView.minimize();
 		}
 		
-		//keyboard event handler
+		//keyboard event handlers
+		
+		private function onKeyUp(e:KeyboardEvent):void 
+		{
+			if (visible) {
+				var cmd:String = "";
+				var _testCmd:Boolean = false;
+				if (e.keyCode == Keyboard.UP) {
+					if (!e.ctrlKey) {
+						cmd = _persistence.historyUp();
+						_testCmd = true;
+					}else {
+						return;
+					}
+					
+				}else if (e.keyCode == Keyboard.DOWN) {
+					if (!e.ctrlKey) {
+						cmd = _persistence.historyDown();
+						_testCmd = true;
+					}else {
+						return;
+					}
+				}
+				if (_testCmd) {
+					input.text = cmd;
+					input.focus();
+					var spaceIndex:int = input.text.indexOf(" ");
+					
+					if (spaceIndex>-1) {
+						input.inputTextField.setSelection(input.text.indexOf(" ") + 1, input.text.length);
+					}else{
+						input.inputTextField.setSelection(0, input.text.length);
+					}
+				}
+			}
+		}
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return; //Ignore if invisible
-			if (e.keyCode == Keyboard.SPACE&&e.shiftKey) {
+			if (e.keyCode == Keyboard.SPACE && e.ctrlKey) {
+				_cancelNextSpace = true;
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				e.stopPropagation();
 				if (visible && stage.focus != input) {
 					input.focus();
-					e.stopImmediatePropagation();
-					e.stopPropagation();
+				}else if (stage.focus == input) {
 				}
-				doTab();
+					
+				doTab();				
 				return;
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
@@ -875,11 +881,6 @@
 					break;
 				}
 			}
-			/*if (e.keyCode == Keyboard.BACKSPACE && e.ctrlKey) {
-				input.clear();
-				updateAssistantText();
-				return;
-			}*/
 			if (e.keyCode == Keyboard.ENTER) {
 				if (input.text.length < 1) {
 					input.focus();
@@ -1062,6 +1063,7 @@
 		public static const TAG:String = "DConsole";
 		private var _dockingGuides:DockingGuides;
 		private var _overrideCallback:Function = null;
+		private var _cancelNextSpace:Boolean = false;
 		
 		public static function getCurrentTarget():Object {
 			return (console as DConsole).scopeManager.currentScope.obj;
