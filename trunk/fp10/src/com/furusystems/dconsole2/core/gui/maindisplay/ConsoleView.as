@@ -241,6 +241,14 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			initFromPersistence();
+			switch(dockingMode) {
+				case DOCK_BOT:
+					y = stage.stageHeight + 10;
+				break;
+				case DOCK_TOP:
+					y = -height;
+				break;
+			}
 			onParentUpdate(_rect);
 		}
 		
