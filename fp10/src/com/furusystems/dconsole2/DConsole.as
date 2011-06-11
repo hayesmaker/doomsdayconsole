@@ -113,7 +113,6 @@
 		public function DConsole() 
 		{		
 			//Prepare logging
-			Logging.logBinding = new ConsoleLogBinding();
 			
 			_persistence = new PersistenceManager(this);
 			
@@ -597,6 +596,7 @@
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			Logging.logBinding = new ConsoleLogBinding();
 			KeyboardManager.instance.setup(stage);
 			if (stage.align != StageAlign.TOP_LEFT) {
 				print("Warning: stage.align is not set to TOP_LEFT; This might cause scaling issues",ConsoleMessageTypes.ERROR);
