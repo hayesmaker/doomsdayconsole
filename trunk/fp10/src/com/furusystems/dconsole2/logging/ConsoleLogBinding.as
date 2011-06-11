@@ -20,7 +20,7 @@ package com.furusystems.dconsole2.logging
 		
 		public function print(owner:Object, level:String, str:String):void 
 		{
-			if (String(owner) == "[Logging]") owner = DConsole.TAG;
+			if (String(owner) == "Logging") owner = DConsole.TAG;
 			var l:String = ConsoleMessageTypes.DEBUG;
 			switch(Levels.getID(level)) {
 				case Levels.ERROR:
