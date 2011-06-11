@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.style.themes
 	import com.furusystems.dconsole2.core.style.StyleManager;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ConsoleTheme
 	{

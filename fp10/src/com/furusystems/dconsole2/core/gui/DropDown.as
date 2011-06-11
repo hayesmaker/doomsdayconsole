@@ -13,7 +13,7 @@
 	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DropDown extends Sprite
 	{

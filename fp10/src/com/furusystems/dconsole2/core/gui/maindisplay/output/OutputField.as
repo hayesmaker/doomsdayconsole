@@ -30,7 +30,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * Handles rendering of a vector of messages
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class OutputField extends Sprite implements IContainable,IThemeable
 	{

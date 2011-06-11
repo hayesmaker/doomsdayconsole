@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.core.inspector
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface IInspectorView extends IScrollable
 	{ 

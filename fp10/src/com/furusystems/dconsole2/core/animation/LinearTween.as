@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.core.animation
 	import flash.utils.getTimer;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class LinearTween implements IConsoleTweenProcess
 	{

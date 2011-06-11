@@ -9,7 +9,7 @@
 	/**
 	 * Maintains a list of keyboard shortcuts and dispatches the callback function when a shortcut has been triggered.
 	 * 
-	 * @author Andreas Rønning, Cristobal Dabed
+	 * @author Andreas Roenning, Cristobal Dabed
 	 * @version 0.3
 	 */
 	public final class KeyboardManager extends EventDispatcher

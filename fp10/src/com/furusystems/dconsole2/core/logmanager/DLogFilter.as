@@ -2,7 +2,7 @@ package com.furusystems.dconsole2.core.logmanager
 {
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DLogFilter
 	{

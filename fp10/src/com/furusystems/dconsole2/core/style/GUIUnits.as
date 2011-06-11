@@ -2,7 +2,7 @@ package com.furusystems.dconsole2.core.style
 {
 	/**
 	 * Collection of units for use/multiplication by the layout
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class GUIUnits
 	{

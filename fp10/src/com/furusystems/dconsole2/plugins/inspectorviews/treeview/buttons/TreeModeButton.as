@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.buttons
 	import com.furusystems.dconsole2.core.gui.AbstractButton;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class TreeModeButton extends AbstractButton
 	{

@@ -5,7 +5,7 @@
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DropDownEvent extends Event 
 	{

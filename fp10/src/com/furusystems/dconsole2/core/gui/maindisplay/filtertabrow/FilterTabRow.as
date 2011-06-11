@@ -16,7 +16,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class FilterTabRow extends Sprite implements IContainable,IThemeable
 	{

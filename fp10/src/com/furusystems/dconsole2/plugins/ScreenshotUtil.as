@@ -10,7 +10,7 @@ package com.furusystems.dconsole2.plugins
 	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ScreenshotUtil implements IDConsolePlugin
 	{

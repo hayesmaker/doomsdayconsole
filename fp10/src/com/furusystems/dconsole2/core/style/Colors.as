@@ -2,7 +2,7 @@ package com.furusystems.dconsole2.core.style
 {
 	/**
 	 * Collection of color references used across the GUI
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class Colors
 	{

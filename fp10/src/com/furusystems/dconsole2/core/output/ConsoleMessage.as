@@ -4,7 +4,7 @@
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public final class ConsoleMessage 
 	{

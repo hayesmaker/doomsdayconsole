@@ -6,7 +6,7 @@ package com.furusystems.dconsole2.core.interfaces
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface IConsoleDisplay 
 	{

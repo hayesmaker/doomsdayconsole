@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.style.fonts
 	import flash.text.Font;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class Fonts
 	{

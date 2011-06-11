@@ -11,7 +11,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class CornerScaleHandle extends Sprite
 	{

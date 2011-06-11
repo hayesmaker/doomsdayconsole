@@ -10,7 +10,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 	import com.furusystems.dconsole2.core.strings.Strings;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class HeaderSection extends ConsoleViewSection
 	{

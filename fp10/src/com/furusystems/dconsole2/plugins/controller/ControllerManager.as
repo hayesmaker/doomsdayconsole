@@ -4,7 +4,7 @@
 	import flash.events.Event;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ControllerManager extends Sprite
 	{

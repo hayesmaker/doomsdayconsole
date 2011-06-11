@@ -9,7 +9,7 @@ package com.furusystems.dconsole2.core.utils
 	import com.furusystems.dconsole2.core.Notifications;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class TooltipHelper
 	{

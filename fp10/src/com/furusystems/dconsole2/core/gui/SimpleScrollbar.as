@@ -7,7 +7,7 @@
 	import com.furusystems.dconsole2.core.style.Colors;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class SimpleScrollbar extends Sprite
 	{

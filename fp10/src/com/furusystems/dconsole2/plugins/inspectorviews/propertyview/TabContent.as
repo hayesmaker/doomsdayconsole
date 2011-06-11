@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	import flash.display.Sprite;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class TabContent extends Sprite
 	{

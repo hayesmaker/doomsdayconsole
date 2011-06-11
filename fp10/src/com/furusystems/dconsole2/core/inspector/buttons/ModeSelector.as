@@ -15,7 +15,7 @@ package com.furusystems.dconsole2.core.inspector.buttons
 	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ModeSelector extends DSprite implements IThemeable
 	{

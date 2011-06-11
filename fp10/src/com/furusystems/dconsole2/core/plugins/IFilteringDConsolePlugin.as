@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.plugins
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface IFilteringDConsolePlugin extends IDConsolePlugin
 	{

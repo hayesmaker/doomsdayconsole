@@ -17,7 +17,7 @@
 	import com.furusystems.dconsole2.core.bitmap.Bresenham;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class StatGraph extends Sprite
 	{

@@ -23,7 +23,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs.*;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class PropertyViewUtil extends AbstractInspectorView implements IThemeable
 	{

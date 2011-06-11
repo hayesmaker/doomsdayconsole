@@ -15,7 +15,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ConsoleToolbar extends Sprite implements IContainable,IThemeable
 	{

@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.gui.layout
 	
 	/**
 	 * Describes a layout container that has an array of child IContainables
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface ILayoutContainer extends IContainable
 	{

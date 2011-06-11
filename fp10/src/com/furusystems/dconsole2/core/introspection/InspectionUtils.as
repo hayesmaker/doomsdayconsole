@@ -7,7 +7,7 @@
 	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteDictionary;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class InspectionUtils
 	{

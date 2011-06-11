@@ -10,7 +10,7 @@ package com.furusystems.dconsole2.core.gui
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DockingGuides extends Shape implements IMessageReceiver
 	{

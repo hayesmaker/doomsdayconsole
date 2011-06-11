@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.effects
 	import flash.filters.DropShadowFilter;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class Filters
 	{
