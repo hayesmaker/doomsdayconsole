@@ -1,4 +1,5 @@
 #summary Published demonstration screencasts
+#labels Featured
 
 Screencast demoing 1.01a update
 http://www.doomsday.no/screencasts/consolescreencast/10/
