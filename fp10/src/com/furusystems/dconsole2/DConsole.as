@@ -88,7 +88,7 @@
 		private var _setCommand:FunctionCallCommand;
 		private var _selectCommand:FunctionCallCommand;
 			
-		private var _tabSearchEnabled:Boolean = true;
+		private var _quickSearchEnabled:Boolean = true;
 		
 		private var _repeatMessageMode:int = ConsoleMessageRepeatMode.STACK;
 		
@@ -244,7 +244,7 @@
 			//addCommand(new FunctionCallCommand("dock", dock, "System", "Docks the console to either 'top'(default) or 'bottom'"));
 			createCommand("maximizeConsole", maximize,"System","Sets console height to fill the screen");
 			createCommand("minimizeConsole", minimize, "System", "Sets console height to 1");
-			createCommand("toggleTabSearch", toggleTabSearch, "System", "Toggles tabbing to search commands and methods for the current word");
+			createCommand("toggleQuickSearch", toggleQuickSearch, "System", "Toggles ctrl+space to search commands and methods for the current word");
 			createCommand("setRepeatFilter", setRepeatFilter, "System", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough");
 			createCommand("toggleLineNumbers", output.toggleLineNumbers, "System", "Toggles the display of line numbers");
 			createCommand("repeat", repeatCommand, "System", "Repeats command string X Y times");
@@ -405,12 +405,12 @@
 			}
 		}
 		
-		private function toggleTabSearch():void
+		private function toggleQuickSearch():void
 		{
-			setTabSearch(!_tabSearchEnabled);
+			setQuickSearch(!_quickSearchEnabled);
 		}
-		
 		private function onScaleHandleDrag(e:Event):void 
+		
 		{
 			var my:Number;
 			var eh:Number = 14;
@@ -603,7 +603,6 @@
 		private function onAddedToStage(e:Event):void 
 		{
 			KeyboardManager.instance.setup(stage);
-			//parent.tabEnabled = parent.tabChildren = false;
 			if (stage.align != StageAlign.TOP_LEFT) {
 				print("Warning: stage.align is not set to TOP_LEFT; This might cause scaling issues",ConsoleMessageTypes.ERROR);
 			}
@@ -626,7 +625,7 @@
 			_dockingGuides.resize();
 		}
 		
-		private function tabSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
+		private function doSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
 		{
 			if (searchString.length < 1) return;
 			var found:Boolean = false;
@@ -794,9 +793,9 @@
 			_mainConsoleView.width = value;
 		}
 		
-		public function setTabSearch(newvalue:Boolean = true):void {
-			_tabSearchEnabled = newvalue;
-			print("Tab searching: " + _tabSearchEnabled, ConsoleMessageTypes.SYSTEM);
+		public function setQuickSearch(newvalue:Boolean = true):void {
+			_quickSearchEnabled = newvalue;
+			print("Quick-searching: " + _quickSearchEnabled, ConsoleMessageTypes.SYSTEM);
 		}
 		
 		//minmaxing size
@@ -858,7 +857,7 @@
 				}else if (stage.focus == input) {
 				}
 					
-				doTab();				
+				doComplete();				
 				return;
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
@@ -946,7 +945,7 @@
 			_repeatMessageMode = filter;
 		}
 		
-		private function doTab():void
+		private function doComplete():void
 		{
 			var flag:Boolean = false; 
 			
@@ -961,7 +960,7 @@
 				firstWord = input.firstWord;
 			}
 			if (_autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord)||!isNaN(Number(word))) {
-				//this word is okay, so accept the tab
+				//this word is okay, so accept the completion
 				var wordIndex:int = input.firstIndexOfWordAtCaret;
 				//is there currently a selection?
 				if (input.inputTextField.selectedText.length > 0) {
@@ -998,7 +997,7 @@
 				var getSet:Boolean = (firstWord == _getCommand.trigger || firstWord == _setCommand.trigger);
 				var call:Boolean = (firstWord == _callCommand.trigger);
 				var select:Boolean = (firstWord == _selectCommand.trigger);
-				tabSearch(word, !isFirstWord || select, isFirstWord, call);
+				doSearch(word, !isFirstWord || select, isFirstWord, call);
 				
 				if (flag) {
 					input.selectWordAtCaret();

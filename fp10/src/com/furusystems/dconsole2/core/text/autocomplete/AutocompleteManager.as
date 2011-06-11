@@ -47,6 +47,8 @@
         }
 
         public function complete():void {
+			
+			//TODO: Start process offset by the nearest occurence of an opening parenthesis
 			suggestionActive = false;
 			//if the caret is somewhere in an existing word, ignore
 			var nextChar:String = _targetTextField.text.charAt(_targetTextField.caretIndex);
