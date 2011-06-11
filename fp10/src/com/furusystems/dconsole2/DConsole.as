@@ -841,6 +841,7 @@
 					}else{
 						input.inputTextField.setSelection(0, input.text.length);
 					}
+					updateAssistantText();
 				}
 			}
 		}
