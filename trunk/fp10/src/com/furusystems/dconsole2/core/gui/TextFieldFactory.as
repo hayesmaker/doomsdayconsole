@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.core.gui
 	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class TextFieldFactory
 	{

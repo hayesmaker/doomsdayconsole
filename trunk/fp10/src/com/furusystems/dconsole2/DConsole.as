@@ -71,49 +71,37 @@
 		private var _initialized:Boolean = false;
 		private var _autoCompleteManager:AutocompleteManager;
 		private var _globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
-		
 		private var _styleManager:StyleManager = new StyleManager();
-		
 		private var _referenceManager:ReferenceManager;
 		private var _scopeManager:ScopeManager;
 		private var _commandManager:CommandManager;
 		private var _toolTip:ToolTip;
 		private var _visible:Boolean = false;
 		private var _isVisible:Boolean = true; //TODO: Fix naming ambiguity; _isVisible refers to the native visibility toggle
-		
 		private var _persistence:PersistenceManager;
-		
 		private var _callCommand:FunctionCallCommand;
 		private var _getCommand:FunctionCallCommand;
 		private var _setCommand:FunctionCallCommand;
 		private var _selectCommand:FunctionCallCommand;
-			
 		private var _quickSearchEnabled:Boolean = true;
-		
 		private var _repeatMessageMode:int = ConsoleMessageRepeatMode.STACK;
-		
 		private var _bgLayer:Sprite = new Sprite();
 		private var _topLayer:Sprite = new Sprite();
 		private var _consoleBackground:Sprite = new Sprite();
-		
 		public var ignoreBlankLines:Boolean = true;
-		
 		private var _keystroke:uint = KeyBindings.ENTER;
 		private var _modifier:uint = KeyBindings.CTRL_SHIFT;
 		private var _lock:ConsoleLock = new ConsoleLock();
 		private var _plugManager:PluginManager;
 		private var _logManager:DLogManager;
-		
 		private var _autoCreateTagLogs:Boolean = true; //If true, automatically create new logs when a new tag is encountered
-		
-		
+		private var _dockingGuides:DockingGuides;
+		private var _overrideCallback:Function = null;
+		private var _cancelNextSpace:Boolean = false;
 		private var _defaultInputCallback:Function;
-		
 		private var _mainConsoleView:ConsoleView;
 		
 		//} end members
-		
-		public static var CONSOLE_SAFE_MODE:Boolean = true; //Allows the console to select itself if true
 		/**
 		 * Creates a new DConsole instance. 
 		 * This class is intended to always be on top of the stage of the application it is associated with.
@@ -1035,8 +1023,6 @@
 			_styleManager.load(themeURI, colorsURI);
 		}
 		
-		/* INTERFACE com.furusystems.dconsole2.IConsole */
-		
 		public function get scopeManager():ScopeManager
 		{
 			return _scopeManager;
@@ -1046,30 +1032,65 @@
 		
 		public function get pluginManager():PluginManager { return _plugManager; }
 		
-		/**
+		public function setHeaderText(title:String):void
+		{
+			_mainConsoleView.toolbar.setTitle(title);
+		}
+		
+		public function setOverrideCallback(callback:Function):void 
+		{
+			_overrideCallback = callback;
+		}
+		
+		public function clearOverrideCallback():void 
+		{
+			_overrideCallback = null;
+		}
+		
+		/*
 		 * Statics
 		 */
 		
-		public static function get defaultInputCallback():Function {
-			return console.defaultInputCallback;
+		/**
+		 * If true, the console instance cannot be selected by the console. The default is true, which is recommended.
+		 */
+		public static var CONSOLE_SAFE_MODE:Boolean = true;
+		
+		/**
+		 * Removes the default input callback
+		 * @see setDefaultInputCallback
+		 */
+		public static function clearDefaultInputCallback():void {
+			console.defaultInputCallback = null;
 		}
-		public static function set defaultInputCallback(value:Function):void {
-			console.defaultInputCallback = value;
+		/**
+		 * Declares a default input callback
+		 * This callback will receive any input the console doesn't understand
+		 * @param	callback
+		 */
+		public static function setDefaultInputCallback(callback:Function):void {
+			if (callback.length != 1) throw new Error("The default input callback must accept exactly 1 string argument");
+			console.defaultInputCallback = callback;
 		}
 		 
 		private static var _instance:DConsole;
 		private static var keyboardShortcut:Array = [];
 		
+		/**
+		 * The internal tag used as the defalt for logging
+		 */
 		public static const TAG:String = "DConsole";
-		private var _dockingGuides:DockingGuides;
-		private var _overrideCallback:Function = null;
-		private var _cancelNextSpace:Boolean = false;
 		
+		/**
+		 * Returns the object currently selected as the console scope
+		 * @return An object
+		 * @see select
+		 */
 		public static function getCurrentTarget():Object {
 			return (console as DConsole).scopeManager.currentScope.obj;
 		}
 		/**
-		 * Get the singleton console instance
+		 * Get the singleton IConsole instance
 		 */
 		public static function get console():IConsole {
 			if (!_instance) {
@@ -1088,14 +1109,19 @@
 			console.setHeaderText(title);
 		}
 		/**
-		 * Get the singleton console instance typed to DisplayObject
+		 * Get the singleton console view display object
 		 */
 		public static function get view():DisplayObject {
 			return console as DisplayObject;
 		}
 		/**
-		 * Add a message
+		 * Adds a message
 		 * @param	msg
+		 * The text to output
+		 * @param	type
+		 * The message type, one of the options available in ConsoleMessageTypes
+		 * @param	tag
+		 * The string tag for identifying the source or topic of this message
 		 */
 		public static function print(msg:String, type:String = ConsoleMessageTypes.INFO,tag:String = TAG):void {
 			console.print(msg, type, tag);
@@ -1103,6 +1129,8 @@
 		/**
 		 * Add a message with system color coding
 		 * @param	msg
+		 * @param	tag
+		 * The string tag for identifying the source or topic of this message
 		 */
 		public static function addSystemMessage(msg:String,tag:String = TAG):void {
 			console.print(msg, ConsoleMessageTypes.SYSTEM, tag);
@@ -1111,6 +1139,8 @@
 		/**
 		 * Add a message with warning color coding
 		 * @param	msg
+		 * @param	tag
+		 * The string tag for identifying the source or topic of this message
 		 */
 		public static function addWarningMessage(msg:String,tag:String = TAG):void {
 			console.print(msg, ConsoleMessageTypes.WARNING, tag);
@@ -1118,6 +1148,8 @@
 		/**
 		 * Add a message with error color coding
 		 * @param	msg
+		 * @param	tag
+		 * The string tag for identifying the source or topic of this message
 		 */
 		public static function addErrorMessage(msg:String,tag:String = TAG):void {
 			console.print(msg, ConsoleMessageTypes.ERROR, tag);
@@ -1126,13 +1158,17 @@
 		/**
 		 * Add a message with error color coding
 		 * @param	msg
+		 * @param	tag
+		 * The string tag for identifying the source or topic of this message
 		 */
 		public static function addHoorayMessage(msg:String,tag:String = TAG):void {
 			console.print(msg, ConsoleMessageTypes.HOORAY, tag);
 		}
 		/**
-		 * Add a message with fatal color coding
+		 * Add a message with fatal error color coding (incredibly vile)
 		 * @param	msg
+		 * @param	tag
+		 * The string tag for identifying the source or topic of this message
 		 */
 		public static function addFatalMessage(msg:String,tag:String = TAG):void {
 			console.print(msg, ConsoleMessageTypes.FATAL,tag)
@@ -1146,6 +1182,7 @@
 		 * @param	commandGroup
 		 * Optional: The group name you want the command sorted under
 		 * @param	helpText
+		 * Optional: Any text you want displayed in the assistant when this command is being typed
 		 */
 		public static function createCommand(triggerPhrase:String, func:Function, commandGroup:String = "Application", helpText:String = ""):void {
 			console.createCommand(triggerPhrase, func, commandGroup, helpText);
@@ -1158,14 +1195,29 @@
 			console.removeCommand(triggerPhrase);
 		}
 		/**
-		 * Use this to print event messages on dispatch (addEventListener(Event.CHANGE, ConsoleUtil.onEvent))
+		 * Use this to print event messages on dispatch 
+		 * (addEventListener(Event.CHANGE, ConsoleUtil.onEvent))
 		 */
 		public static function get onEvent():Function {
 			return console.onEvent;
 		}
+		/**
+		 * Clear the console log(s)
+		 */
 		public static function get clear():Function {
 			return console.clear;
 		}
+		/**
+		 * Registers plugins and plugin bundles by their class types
+		 * A plugin is an implementor of any interface deriving from IDConsolePlugin
+		 * A plugin bundle is an implementor of IPluginBundle
+		 * @param	...args
+		 * @example 
+		 * The following code shows the BasicPlugins bundle being registered, alongside the JSRouterUtil plugin
+		 * <listing>
+		 * DConsole.registerPlugins(AllPlugins,JSRouterUtil);
+		 * </listing>
+		 */
 		public static function registerPlugins(...args:Array):void {
 			for (var i:int = 0; i < args.length; i++) 
 			{
@@ -1173,25 +1225,34 @@
 			}
 		}
 		
+		/**
+		 * Sets the specified object as the console's current scope
+		 * @param	object
+		 * @see getCurrentTarget
+		 */
 		public static function select(object:Object):void {
 			console.select(object);
 		}
 		/**
 		 * Show the console
+		 * @see hide
 		 */
 		public static function show():void {
 			console.show();
 		}
 		/**
 		 * Hide the console
+		 * @see show
 		 */
 		public static function hide():void {
 			console.hide();
 		}
 		/**
-		 * Call a console command
+		 * Execute a console command statement
 		 * @param	statement
+		 * The statement, eg. "setFrameRate 60" etc
 		 * @return
+		 * The return value of the executed statement, if any.
 		 */
 		public static function executeStatement(statement:String):* {
 			return console.executeStatement(statement);
@@ -1225,40 +1286,33 @@
 		/**
 		 * Change keyboard shortcut.
 		 * 
-		 * @param keystroke	The keystroke
+		 * @param keystroke	The key
 		 * @param modifier	The modifier 
 		 */ 
 		private static function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
 			console.changeKeyboardShortcut(keystroke, modifier);
 		}
 		
-		/* INTERFACE com.furusystems.dconsole2.IConsole */
-		
-		public function setHeaderText(title:String):void
+		/**
+		 * Declares an overriding callback for all console input
+		 * While active, regular console input behavior will cease, and all text input will be passed to the specified callback
+		 * @param	callback
+		 */
+		static public function setOverrideCallback(callback:Function):void 
 		{
-			_mainConsoleView.toolbar.setTitle(title);
+			console.setOverrideCallback(callback);
 		}
-		
-		static public function set overrideCallback(callback:Function):void 
-		{
-			console.overrideCallback = callback;
-		}
+		/**
+		 * Removes the overriding callback set in setOverrideCallback
+		 * @see setOverrideCallback
+		 */
 		static public function clearOverrideCallback():void {
-			
+			console.clearOverrideCallback();
 		}
 		
-		/* INTERFACE com.furusystems.dconsole2.IConsole */
-		
-		public function set overrideCallback(callback:Function):void 
-		{
-			_overrideCallback = callback;
-		}
-		
-		public function clearOverrideCallback():void 
-		{
-			_overrideCallback = null;
-		}
-		
+		/**
+		 * Resets all persistent data (command history, console position, docking etc)
+		 */
 		static public function clearPersistentData():void 
 		{
 			DConsole(console).persistence.clearAll();

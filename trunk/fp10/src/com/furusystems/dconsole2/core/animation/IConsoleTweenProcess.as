@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.animation
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface IConsoleTweenProcess 
 	{

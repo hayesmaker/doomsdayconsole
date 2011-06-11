@@ -23,7 +23,7 @@ package com.furusystems.dconsole2.plugins.measurebracket
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class MeasurementBracketUtil extends Sprite implements IDConsolePlugin
 	{

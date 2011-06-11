@@ -1,11 +1,10 @@
 package com.furusystems.dconsole2.core.utils
 {
-	import de.popforge.utils.sprintf;
 	
 	/**
 	 * String Util 
 	 * 
-	 * @author Andreas Rønning, Cristobal Dabed
+	 * @author Andreas Roenning, Cristobal Dabed
 	 */ 
 	public final class StringUtil
 	{
@@ -113,26 +112,25 @@ package com.furusystems.dconsole2.core.utils
 			}
 			return value;
 		}
-		
-		/**
-		 * Returns a formatted string using the specified format string and arguments.
-		 * 
-		 * @see http://download-llnw.oracle.com/javase/6/docs/api/java/lang/String.html#format(java.lang.String,%20java.lang.Object...)
-		 * @see http://github.com/mstandio/SaladoPlayer/blob/76afec9d6764c5b45418e52c6005c7fea2f82c1a/src/performance/profiler/sprintf.as
-		 * @see http://popforge.googlecode.com/svn/trunk/flash/PopforgeLibrary/src/de/popforge/utils/sprintf.as
-		 * 
-		 * @param format 	A format string
-		 * @param args 		Arguments referenced by the format specifiers in the format string. If there are more arguments than format specifiers, the extra arguments are ignored.
-		 * 
-		 * @return
-		 * 		A formatted string
-		 */ 
-		public static function format(format:String, ...args):String 
-		{
+		//*
+		 //* Returns a formatted string using the specified format string and arguments.
+		 //* 
+		 //* @see http://download-llnw.oracle.com/javase/6/docs/api/java/lang/String.html#format(java.lang.String,%20java.lang.Object...)
+		 //* @see http://github.com/mstandio/SaladoPlayer/blob/76afec9d6764c5b45418e52c6005c7fea2f82c1a/src/performance/profiler/sprintf.as
+		 //* @see http://popforge.googlecode.com/svn/trunk/flash/PopforgeLibrary/src/de/popforge/utils/sprintf.as
+		 //* 
+		 //* @param format 	A format string
+		 //* @param args 		Arguments referenced by the format specifiers in the format string. If there are more arguments than format specifiers, the extra arguments are ignored.
+		 //* 
+		 //* @return
+		 //* 		A formatted string
+		 //*/ 
+		//public static function format(format:String, ...args):String 
+		//{
 			// TODO: Repass the sprintf function at a later point
 			// At the moment we use the underlying sprintf function from popforge
-			args.unshift(format);
-			return sprintf.apply(sprintf, args);
-		}
+			//args.unshift(format);
+			//return sprintf.apply(sprintf, args);
+		//}
 	}
 }

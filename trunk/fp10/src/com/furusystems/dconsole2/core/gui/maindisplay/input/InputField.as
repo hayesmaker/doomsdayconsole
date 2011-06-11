@@ -19,7 +19,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 	import com.furusystems.dconsole2.core.utils.ColorUtils;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class InputField extends Sprite implements IContainable,IThemeable
 	{

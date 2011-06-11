@@ -6,7 +6,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.PropertyField;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class OverviewTab extends PropertyTab
 	{

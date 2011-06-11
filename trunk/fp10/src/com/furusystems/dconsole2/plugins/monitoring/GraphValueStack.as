@@ -3,7 +3,7 @@
 	import flash.utils.getTimer;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public final class GraphValueStack
 	{

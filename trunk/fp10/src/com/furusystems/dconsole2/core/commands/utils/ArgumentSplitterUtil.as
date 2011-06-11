@@ -3,7 +3,7 @@
 	import com.furusystems.dconsole2.core.errors.ErrorStrings;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ArgumentSplitterUtil
 	{

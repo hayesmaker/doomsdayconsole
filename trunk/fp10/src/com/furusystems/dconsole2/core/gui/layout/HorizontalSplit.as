@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.gui.layout
 	import flash.utils.getTimer;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class HorizontalSplit extends Cell
 	{

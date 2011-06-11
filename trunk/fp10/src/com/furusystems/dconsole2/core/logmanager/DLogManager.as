@@ -9,7 +9,7 @@ package com.furusystems.dconsole2.core.logmanager
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DLogManager
 	{
@@ -19,9 +19,10 @@ package com.furusystems.dconsole2.core.logmanager
 		private var _rootLog:DConsoleLog;
 		private var _filtersActive:int = 0;
 		private var _logsActive:int = 0;
+		private static const TAG:String = "DConsole";
 		public function DLogManager() 
 		{
-			_rootLog = _currentLog = addLog(DConsole.TAG);
+			_rootLog = _currentLog = addLog(TAG);
 			PimpCentral.addCallback(Notifications.LOG_BUTTON_CLICKED, onLogButtonClick);
 		}
 		

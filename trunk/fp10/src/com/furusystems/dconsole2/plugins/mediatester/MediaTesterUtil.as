@@ -6,7 +6,7 @@ package com.furusystems.dconsole2.plugins.mediatester
 	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class MediaTesterUtil extends Sprite implements IDConsolePlugin
 	{

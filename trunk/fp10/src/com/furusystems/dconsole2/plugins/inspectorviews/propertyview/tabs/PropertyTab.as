@@ -11,7 +11,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.TabContent;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class PropertyTab extends Sprite
 	{

@@ -8,7 +8,7 @@
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 * Heavily based on Ali Mills' work on ternary trees at http://www.asserttrue.com/articles/2006/04/09/actionscript-projects-in-flex-builder-2-0
 	 */
 	public class AutocompleteManager 

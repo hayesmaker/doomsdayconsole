@@ -1,22 +1,8 @@
 package com.furusystems.dconsole2.core.gui.maindisplay
 {
 	//{
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.ui.Mouse;
-	import flash.ui.MouseCursor;
 	import com.furusystems.dconsole2.core.animation.ConsoleTweener;
 	import com.furusystems.dconsole2.core.animation.EasingTween;
-	
-	import com.furusystems.dconsole2.core.effects.Filters;
 	import com.furusystems.dconsole2.core.gui.DockingGuides;
 	import com.furusystems.dconsole2.core.gui.layout.HorizontalSplit;
 	import com.furusystems.dconsole2.core.gui.layout.IContainable;
@@ -35,10 +21,22 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
+	
 	//}
 	/**
 	 * Root level of the console main view
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ConsoleView extends Sprite implements IContainable,ILayoutContainer
 	{

@@ -12,7 +12,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.TabContent;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class MethodField extends TabContent
 	{

@@ -21,7 +21,7 @@
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ColorPickerUtil extends Sprite implements IDConsolePlugin
 	{

@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 	import com.furusystems.dconsole2.plugins.measurebracket.MeasurementBracketUtil;
 	/**
 	 * Collection of all basic plugins
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class BasicPlugins implements IPluginBundle
 	{

@@ -6,7 +6,7 @@ package com.furusystems.dconsole2.plugins
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class JSONParserUtil implements IParsingDConsolePlugin
 	{

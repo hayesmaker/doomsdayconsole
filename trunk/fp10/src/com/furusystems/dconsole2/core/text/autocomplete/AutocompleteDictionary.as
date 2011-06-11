@@ -3,7 +3,7 @@
 	import flash.utils.Dictionary;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public dynamic class AutocompleteDictionary
 	{

@@ -6,7 +6,7 @@ package com.furusystems.dconsole2.plugins.controller
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ControllerUtil extends Sprite implements IUpdatingDConsolePlugin
 	{

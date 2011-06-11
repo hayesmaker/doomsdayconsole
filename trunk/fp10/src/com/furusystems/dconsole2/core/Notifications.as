@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core
 	import com.furusystems.messaging.pimp.Message;
 	/**
 	 * Enumeration of all constant notifications used throughout, and made available to the plugin API through PimpCentral
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public final class Notifications
 	{	

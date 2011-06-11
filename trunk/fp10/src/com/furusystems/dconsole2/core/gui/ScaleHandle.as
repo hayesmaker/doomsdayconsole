@@ -16,7 +16,7 @@
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ScaleHandle extends Sprite implements IContainable
 	{

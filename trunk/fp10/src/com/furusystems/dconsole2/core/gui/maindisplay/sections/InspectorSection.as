@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 	import com.furusystems.dconsole2.core.inspector.Inspector;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class InspectorSection extends ConsoleViewSection
 	{

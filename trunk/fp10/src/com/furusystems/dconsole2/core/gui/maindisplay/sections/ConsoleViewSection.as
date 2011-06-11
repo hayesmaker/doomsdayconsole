@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 	import com.furusystems.dconsole2.core.gui.layout.IContainable;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ConsoleViewSection extends DSprite implements IContainable
 	{

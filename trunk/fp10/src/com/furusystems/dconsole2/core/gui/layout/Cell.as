@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.core.gui.layout
 	import com.furusystems.dconsole2.core.DSprite;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class Cell extends DSprite implements ILayoutContainer
 	{

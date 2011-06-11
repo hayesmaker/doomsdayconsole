@@ -2,7 +2,7 @@
 	import flash.utils.Dictionary;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class FunctionCallCommand extends ConsoleCommand
 	{

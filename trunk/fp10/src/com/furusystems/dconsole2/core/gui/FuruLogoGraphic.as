@@ -5,7 +5,7 @@ package com.furusystems.dconsole2.core.gui
 	import flash.utils.ByteArray;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class FuruLogoGraphic extends Sprite
 	{

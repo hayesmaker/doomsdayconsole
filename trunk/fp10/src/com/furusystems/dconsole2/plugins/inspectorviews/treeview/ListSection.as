@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers.ListNode;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ListSection extends Sprite implements IRenderable
 	{

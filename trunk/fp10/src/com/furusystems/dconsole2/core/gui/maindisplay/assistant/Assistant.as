@@ -20,7 +20,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class Assistant extends Sprite implements IContainable,IThemeable
 	{

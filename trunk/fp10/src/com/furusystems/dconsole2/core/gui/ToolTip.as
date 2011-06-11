@@ -16,7 +16,7 @@ package com.furusystems.dconsole2.core.gui
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ToolTip extends Sprite implements IThemeable
 	{

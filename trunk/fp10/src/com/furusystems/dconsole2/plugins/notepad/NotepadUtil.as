@@ -7,7 +7,7 @@ package com.furusystems.dconsole2.plugins.notepad
 	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class NotepadUtil extends AbstractInspectorView
 	{

@@ -6,7 +6,7 @@
 	import flash.geom.Rectangle;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DSprite extends Sprite
 	{

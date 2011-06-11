@@ -9,7 +9,7 @@
 	import com.furusystems.dconsole2.core.gui.Window;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class GraphWindow extends Window
 	{

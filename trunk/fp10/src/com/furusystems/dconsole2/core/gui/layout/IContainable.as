@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.gui.layout
 	
 	/**
 	 * Describes an object by a rectangle that can be contained in a layout container and influenced by its layout
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface IContainable 
 	{

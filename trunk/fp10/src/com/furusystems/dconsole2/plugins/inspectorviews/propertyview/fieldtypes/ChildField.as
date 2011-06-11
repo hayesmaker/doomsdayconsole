@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ChildField extends PropertyField
 	{

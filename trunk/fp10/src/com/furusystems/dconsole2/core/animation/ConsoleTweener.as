@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.animation
 	import flash.utils.Dictionary;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ConsoleTweener
 	{

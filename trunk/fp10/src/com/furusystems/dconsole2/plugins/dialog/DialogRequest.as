@@ -22,7 +22,7 @@ package com.furusystems.dconsole2.plugins.dialog
 		public function execute():void {
 			DConsole.print(_question, ConsoleMessageTypes.SYSTEM);
 			PimpCentral.send(Notifications.ASSISTANT_MESSAGE_REQUEST, _question + " (Type your response and hit enter)");
-			DConsole.overrideCallback = handleResponse;
+			DConsole.setOverrideCallback(handleResponse);
 		}
 		
 		private function handleResponse(response:String):void 

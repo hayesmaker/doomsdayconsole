@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.plugins
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class LoadingUtil implements IDConsolePlugin
 	{

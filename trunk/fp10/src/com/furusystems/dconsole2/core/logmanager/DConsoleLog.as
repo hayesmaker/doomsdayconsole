@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.logmanager
 	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	/**
 	 * Encapsulates a vector of messages, grouped
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class DConsoleLog
 	{

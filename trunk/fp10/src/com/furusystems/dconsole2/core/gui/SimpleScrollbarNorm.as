@@ -10,7 +10,7 @@ package com.furusystems.dconsole2.core.gui
 	import com.furusystems.dconsole2.core.style.StyleManager;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class SimpleScrollbarNorm extends Sprite implements IThemeable
 	{

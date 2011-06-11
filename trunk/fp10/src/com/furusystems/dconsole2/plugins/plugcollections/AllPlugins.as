@@ -26,7 +26,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 	import com.furusystems.dconsole2.plugins.SystemInfoUtil;
 	/**
 	 * Collection of all available plugins
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class AllPlugins implements IPluginBundle
 	{

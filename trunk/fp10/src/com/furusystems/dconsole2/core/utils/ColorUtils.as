@@ -2,7 +2,7 @@ package com.furusystems.dconsole2.core.utils
 {
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class ColorUtils
 	{

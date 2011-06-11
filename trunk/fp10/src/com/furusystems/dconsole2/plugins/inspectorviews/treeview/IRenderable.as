@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 	
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public interface IRenderable 
 	{

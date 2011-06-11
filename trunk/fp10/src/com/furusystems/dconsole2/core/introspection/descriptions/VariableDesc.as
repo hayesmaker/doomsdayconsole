@@ -2,7 +2,7 @@
 {
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public class VariableDesc extends NamedDescription
 	{

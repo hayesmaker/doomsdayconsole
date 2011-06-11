@@ -4,7 +4,7 @@
 	import com.furusystems.dconsole2.core.style.fonts.Fonts;
 	/**
 	 * ...
-	 * @author Andreas Rønning
+	 * @author Andreas Roenning
 	 */
 	public final class TextFormats
 	{
