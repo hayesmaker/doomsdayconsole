@@ -173,7 +173,7 @@
 		
 		private function onTextInput(e:TextEvent):void 
 		{
-			if (_cancelNextSpace) {
+			if (_cancelNextSpace && e.text==" ") {
 				e.preventDefault();
 				_cancelNextSpace = false;
 			}
