@@ -845,7 +845,6 @@
 			if (!visible) return; //Ignore if invisible
 			if (e.keyCode == Keyboard.SPACE && e.ctrlKey) {
 				_cancelNextSpace = true;
-				e.preventDefault();
 				e.stopImmediatePropagation();
 				e.stopPropagation();
 				if (visible && stage.focus != input) {
