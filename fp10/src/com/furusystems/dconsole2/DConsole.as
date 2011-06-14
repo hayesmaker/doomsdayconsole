@@ -175,8 +175,8 @@
 		{
 			if (_cancelNextSpace && e.text==" ") {
 				e.preventDefault();
-				_cancelNextSpace = false;
 			}
+			_cancelNextSpace = false;
 		}
 		public function get currentScope():IntrospectionScope {
 			return _scopeManager.currentScope;
