@@ -88,6 +88,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		{
 			var lm:DLogManager = DLogManager(md.source);
 			currentLog = lm.currentLog;
+			_dirty = true;
 		}
 		
 		private function onTextClick(e:MouseEvent):void 
