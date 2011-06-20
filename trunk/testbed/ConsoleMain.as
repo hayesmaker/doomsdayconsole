@@ -1,7 +1,7 @@
 ﻿package 
 {
-	import com.furusystems.logging.slf4as.constants.Levels;
-	import com.furusystems.logging.slf4as.constants.PatternTypes;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.plugins.plugcollections.AllPlugins;
 	import com.furusystems.logging.slf4as.global.debug;
 	import com.furusystems.logging.slf4as.global.error;
 	import com.furusystems.logging.slf4as.global.fatal;
@@ -13,10 +13,6 @@
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import no.doomsday.dconsole2.core.output.ConsoleMessageTypes;
-	import no.doomsday.dconsole2.DConsole;
-	import no.doomsday.dconsole2.plugins.plugcollections.AllPlugins;
-	import no.doomsday.dconsole2.plugins.plugcollections.BasicPlugins;
 	
 	/**
 	 * Hello world and intro to DConsole64
@@ -25,8 +21,8 @@
 	public class ConsoleMain extends Sprite 
 	{
 	
-		[Embed(source='bin/222493312.jpg')]
-		private var BgImage:Class;
+		//[Embed(source='bin/222493312.jpg')]
+		//private var BgImage:Class;
 		
 		public function ConsoleMain():void 
 		{

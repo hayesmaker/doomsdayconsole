@@ -40,7 +40,7 @@
     <option staticLinkRSL="True" />
     <option additional="" />
     <option compilerConstants="" />
-    <option customSDK="" />
+    <option customSDK="C:\dev\flash\sdks\molehill" />
   </build>
   <!-- SWC Include Libraries -->
   <includeLibraries>
