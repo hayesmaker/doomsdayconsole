@@ -4,6 +4,7 @@ package com.furusystems.dconsole2.logging
 	import com.furusystems.logging.slf4as.constants.Levels;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.logging.slf4as.Logging;
 	/**
 	 * ...
 	 * @author Andreas Roenning
@@ -13,7 +14,12 @@ package com.furusystems.dconsole2.logging
 		
 		public function ConsoleLogBinding() 
 		{
-			
+			DConsole.createCommand("setLoggingLevel", setLoggingLevel, "Logging", "Set the current logging level (ERROR,FATAL,INFO,WARN,DEBUG)");
+		}
+		
+		private function setLoggingLevel(level:String = "ALL"):void 
+		{
+			Logging.setLevel(Levels.getID(level));
 		}
 		
 		/* INTERFACE com.furusystems.logging.slf4as.bindings.ILogBinding */
