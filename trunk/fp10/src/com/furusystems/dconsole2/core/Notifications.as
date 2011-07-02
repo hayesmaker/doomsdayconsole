@@ -7,6 +7,8 @@ package com.furusystems.dconsole2.core
 	 */
 	public final class Notifications
 	{	
+		static public const CONSOLE_VIEW_TRANSITION_COMPLETE:Message = new Message();
+		
 		static public const ESCAPE_KEY:Message = new Message();
 		
 		static public const HIDE_DOCKING_GUIDE:Message = new Message();

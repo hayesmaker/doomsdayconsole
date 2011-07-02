@@ -1,6 +1,7 @@
 ﻿package com.furusystems.dconsole2
 {
 	//{ imports
+	import com.furusystems.dconsole2.core.gui.debugdraw.DebugDraw;
 	import com.furusystems.logging.slf4as.Logging;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -102,6 +103,7 @@
 		private var _cancelNextSpace:Boolean = false;
 		private var _defaultInputCallback:Function;
 		private var _mainConsoleView:ConsoleView;
+		private var _debugDraw:DebugDraw;
 		
 		//} end members
 		//{ Instance
@@ -125,6 +127,7 @@
 			
 			tabChildren = tabEnabled = false;
 			
+			_debugDraw = new DebugDraw();
 			
 			_autoCompleteManager = new AutocompleteManager(input.inputTextField);
 			_scopeManager = new ScopeManager(this, _autoCompleteManager);
@@ -133,19 +136,25 @@
 			_plugManager = new PluginManager(_scopeManager, _referenceManager, this, _topLayer, _bgLayer, _consoleBackground, _logManager);
 			_commandManager = new CommandManager(this, _persistence, _referenceManager, _plugManager);
 			
-			addChild(_bgLayer);
-			addChild(_mainConsoleView);
-			addChild(_topLayer);
-			_dockingGuides = new DockingGuides();
-			addChild(_dockingGuides);
+			_consoleContainer = new Sprite();
+			addChild(_consoleContainer);
 			
+			_consoleContainer.addChild(_debugDraw.shape);
+			_consoleContainer.addChild(_bgLayer);
+			_consoleContainer.addChild(_mainConsoleView);
+			_consoleContainer.addChild(_topLayer);
+			_dockingGuides = new DockingGuides();
+			_consoleContainer.addChild(_dockingGuides);
 			_toolTip = new ToolTip();
+			_consoleContainer.addChild(_toolTip);
+			
 			
 			input.addEventListener(Event.CHANGE, updateAssistantText);
 			scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
 			
 			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_REQUEST, onScopeChangeRequest);
 			PimpCentral.addCallback(Notifications.EXECUTE_STATEMENT, onExecuteStatementNotification);
+			PimpCentral.addCallback(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE, onConsoleViewTransitionComplete);
 			
 			KeyboardManager.instance.addKeyboardShortcut(_keystroke, _modifier, toggleDisplay); //  [CTRL+SHIFT, ENTER]); //default keystroke
 			
@@ -163,12 +172,22 @@
 			setRepeatFilter(ConsoleMessageRepeatMode.STACK);
 			
 			
-			addChild(_toolTip);
 						
 			visible = false;
 			
 			print("Ready. Type help to get started.", ConsoleMessageTypes.SYSTEM);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function onConsoleViewTransitionComplete(md:MessageData):void 
+		{
+			//md.data will be true if the console is now visible, or false if it's now hidden
+			if (!md.data) {
+				_consoleContainer.visible = false;
+			}
+		}
+		public static function get debugDraw():DebugDraw {
+			return console.debugDraw;
 		}
 		
 		private function onTextInput(e:TextEvent):void 
@@ -728,7 +747,10 @@
 		override public function set visible(value:Boolean):void 
 		{
 			_visible = value;
-			if (_visible) view.show();
+			if (_visible) {
+				_consoleContainer.visible = true;
+				view.show();
+			}
 			else view.hide();
 		}
 		
@@ -1085,6 +1107,7 @@
 		 * The internal tag used as the defalt for logging
 		 */
 		public static const TAG:String = "DConsole";
+		private var _consoleContainer:Sprite;
 		
 		/**
 		 * Returns the object currently selected as the console scope
@@ -1211,6 +1234,11 @@
 		 */
 		public static function get clear():Function {
 			return console.clear;
+		}
+		
+		public function get debugDraw():DebugDraw 
+		{
+			return _debugDraw;
 		}
 		/**
 		 * Registers plugins and plugin bundles by their class types

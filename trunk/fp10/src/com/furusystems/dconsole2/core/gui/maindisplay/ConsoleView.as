@@ -469,6 +469,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		
 		private function onShown():void
 		{
+			PimpCentral.send(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE, true);
 		}
 		public function hide():void {
 			
@@ -539,6 +540,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		private function onHidden():void
 		{
 			visible = false;
+			PimpCentral.send(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE,false);
 		}
 		
 		
