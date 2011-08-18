@@ -1,5 +1,9 @@
 ﻿package com.furusystems.dconsole2.core.references 
 {
+	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.utils.Dictionary;
 	import com.furusystems.dconsole2.core.introspection.ScopeManager;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
@@ -22,6 +26,12 @@
 		{
 			this.scopeManager = scopeManager;
 			this.console = console;
+			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChanged);
+		}
+		
+		private function onScopeChanged(md:MessageData):void 
+		{
+			referenceDict["this"] = IntrospectionScope(md.data).obj;
 		}
 		public function clearReferenceByName(name:String):void
 		{
@@ -61,7 +71,7 @@
 		}
 		public function createReference(o:*):void
 		{
-			var id:String = "ref" + uid;
+			var id:String = "r" + uid;
 			referenceDict[id] = o;
 			printReferences();
 		}

@@ -24,6 +24,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -64,9 +65,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		
 		private var _scaleHandle:ScaleHandle = new ScaleHandle();
 		
-		static public const DOCK_TOP:int = 0;
-		static public const DOCK_BOT:int = 1;
-		static public const DOCK_NONE:int = -1;
 		private var _prevRect:Rectangle;
 		
 		public function get input():InputField { return _mainSection.input; };
@@ -213,15 +211,15 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 						scaleHandle.visible = true;
 						if (y <= 2) {
 							PimpCentral.send(Notifications.SHOW_DOCKING_GUIDE, DockingGuides.TOP, this);
-							_console.persistence.dockState.value = DOCK_TOP;
+							_console.persistence.dockState.value = DConsole.DOCK_TOP;
 							_scaleHandle.y = _rect.height;
 						}else if (y >= stage.stageHeight - _rect.height-2) {
 							PimpCentral.send(Notifications.SHOW_DOCKING_GUIDE, DockingGuides.BOT, this);
-							_console.persistence.dockState.value = DOCK_BOT;
+							_console.persistence.dockState.value = DConsole.DOCK_BOT;
 							_scaleHandle.y = -scaleHandle.height;
 						}else {
 							PimpCentral.send(Notifications.HIDE_DOCKING_GUIDE, null, this);
-							_console.persistence.dockState.value = DOCK_NONE;
+							_console.persistence.dockState.value = DConsole.DOCK_WINDOWED;
 							scaleHandle.visible = false;
 						}
 						assistant.cornerHandle.visible = !scaleHandle.visible;
@@ -240,10 +238,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			initFromPersistence();
 			switch(dockingMode) {
-				case DOCK_BOT:
+				case DConsole.DOCK_BOT:
 					y = stage.stageHeight + 10;
 				break;
-				case DOCK_TOP:
+				case DConsole.DOCK_TOP:
 					y = -height;
 				break;
 			}
@@ -303,7 +301,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			Mouse.cursor = MouseCursor.HAND;
 			var r:Rectangle = rect;
 			switch(dockingMode) {
-				case DOCK_BOT:
+				case DConsole.DOCK_BOT:
 					_tempScaleRect.height = Math.round(Math.max(GUIUnits.SQUARE_UNIT * 1, Math.min(stage.stageHeight - GUIUnits.SQUARE_UNIT, stage.stageHeight - stage.mouseY - 8)) / GUIUnits.SQUARE_UNIT) * GUIUnits.SQUARE_UNIT;
 					if(r.height!=_tempScaleRect.height){
 						r.height = height = _tempScaleRect.height;
@@ -366,7 +364,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			r.height = GUIUnits.SQUARE_UNIT;
 			
 			switch(dockingMode) {
-				case DOCK_BOT:
+				case DConsole.DOCK_BOT:
 					r.y = -scaleHandle.height;
 					scaleHandle.onParentUpdate(r);
 					break;
@@ -381,6 +379,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		{
 			if (_isDragging) return;
 			_mainSplitDragBar.alpha = 0;
+			_mainSplitDragBar.blendMode = BlendMode.NORMAL;
 			Mouse.cursor = MouseCursor.AUTO;
 		}
 		
@@ -388,6 +387,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		{
 			if (_isDragging) return;
 			_mainSplitDragBar.alpha = 1;
+			_mainSplitDragBar.blendMode = BlendMode.INVERT;
 			Mouse.cursor = MouseCursor.HAND;
 		}
 		
@@ -454,13 +454,13 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		public function show():void {
 			visible = true;
 			switch(dockingMode) {
-				case DOCK_NONE:
+				case DConsole.DOCK_WINDOWED:
 					onShown();
 				break;
-				case DOCK_BOT:
+				case DConsole.DOCK_BOT:
 					ConsoleTweener.tween(this, "y", stage.stageHeight-height, SHOW_TIME, onShown, EasingTween);
 				break;
-				case DOCK_TOP:
+				case DConsole.DOCK_TOP:
 				default:
 					ConsoleTweener.tween(this, "y", 0, SHOW_TIME, onShown, EasingTween);
 				break;
@@ -478,13 +478,13 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 				return;
 			}
 			switch(dockingMode) {
-				case DOCK_NONE:
+				case DConsole.DOCK_WINDOWED:
 					onHidden();
 				break;
-				case DOCK_BOT:
+				case DConsole.DOCK_BOT:
 					ConsoleTweener.tween(this, "y", stage.stageHeight+10, SHOW_TIME, onHidden, EasingTween);
 				break;
-				case DOCK_TOP:
+				case DConsole.DOCK_TOP:
 				default:
 					ConsoleTweener.tween(this, "y", -height, SHOW_TIME, onHidden, EasingTween);
 				break;
@@ -495,8 +495,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		{
 			var r:Rectangle;
 			switch(dockingMode) {
-				case DOCK_NONE:
-					dockingMode = DOCK_TOP;
+				case DConsole.DOCK_WINDOWED:
+					dockingMode = DConsole.DOCK_TOP;
 					maximize();
 				break;
 				default:
@@ -514,7 +514,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		{
 			var r:Rectangle = _rect;
 			switch(dockingMode) {
-				case DOCK_NONE:
+				case DConsole.DOCK_WINDOWED:
 					r.height = 5 * GUIUnits.SQUARE_UNIT;
 					rect = r;
 				break;
@@ -598,20 +598,20 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		{
 			scaleHandle.visible = true;
 			switch(dockingMode) {
-				case DOCK_TOP:
+				case DConsole.DOCK_TOP:
 					_rect.width = stage.stageWidth;
 					rect = _rect;
 					x = 0;
 					y = 0;
 				break;
-				case DOCK_BOT:
+				case DConsole.DOCK_BOT:
 					_rect.width = stage.stageWidth;
 					_scaleHandle.y = -scaleHandle.height;
 					rect = _rect;
 					y = stage.stageHeight - _rect.height;
 					x = 0;
 				break;
-				case DOCK_NONE:
+				case DConsole.DOCK_WINDOWED:
 					rect = _rect;
 					scaleHandle.visible = false;
 				break;

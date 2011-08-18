@@ -104,6 +104,10 @@
 		private var _defaultInputCallback:Function;
 		private var _mainConsoleView:ConsoleView;
 		private var _debugDraw:DebugDraw;
+				
+		static public const DOCK_TOP:int = 0;
+		static public const DOCK_BOT:int = 1;
+		static public const DOCK_WINDOWED:int = -1;
 		
 		//} end members
 		//{ Instance
@@ -170,8 +174,6 @@
 			
 			setupDefaultCommands();
 			setRepeatFilter(ConsoleMessageRepeatMode.STACK);
-			
-			
 						
 			visible = false;
 			
@@ -218,7 +220,7 @@
 		
 		private function beginFrameUpdates():void
 		{
-			addEventListener(Event.ENTER_FRAME, frameUpdate,false,0,true);
+			addEventListener(Event.ENTER_FRAME, frameUpdate, false, -1000, false);
 		}
 		
 		private function frameUpdate(e:Event):void 
@@ -250,7 +252,7 @@
 			createCommand("timestampDisplay", output.toggleTimestamp, "View", "Toggle display of message timestamp");
 			createCommand("help", getHelp, "System", "Output basic instructions");
 			createCommand("clearhistory", _persistence.clearHistory, "System", "Clears the stored command history");
-			//addCommand(new FunctionCallCommand("dock", dock, "System", "Docks the console to either 'top'(default) or 'bottom'"));
+			createCommand("dock", setDockVerbose, "System", "Docks the console to either 'top'(default) 'bottom'/'bot' or 'window'");
 			createCommand("maximizeConsole", maximize,"System","Sets console height to fill the screen");
 			createCommand("minimizeConsole", minimize, "System", "Sets console height to 1");
 			createCommand("toggleQuickSearch", toggleQuickSearch, "System", "Toggles ctrl+space to search commands and methods for the current word");
@@ -271,7 +273,7 @@
 			
 			createCommand("commands", _commandManager.listCommands, "Utility", "Output a list of available commands. Add a second argument to search.");
 			createCommand("search", searchCurrentLog, "Utility", "Searches the current log for a string and scrolls to the first matching line");
-			createCommand("addSearch", addSearch, "Utility", "Adds a search tab for the given term");
+			//createCommand("addSearch", addSearch, "Utility", "Adds a search tab for the given term");
 			//createCommand("goto", output.goto, "Utility", "Scrolls to the specified line, if possible"); //TODO: Current enter key behavior overrides this one. Bummer.
 			//createCommand("getLoader", getLoader, "Utility", "Returns a 'dumb' Loader getting data from the url X");
 			createCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)");
@@ -300,6 +302,37 @@
 			
 			createCommand("loadTheme", _styleManager.load, "Theme", "Loads theme xml from urls; [x] theme [y] color table");
 			
+			createCommand("switch", switchMasterKey);
+		}
+		
+		
+		private var _masterKeyMode:Boolean = false;
+		private function switchMasterKey():void 
+		{
+			_masterKeyMode = !_masterKeyMode;
+			if (_masterKeyMode) {
+				addSystemMessage("Current trigger is ctrl+space");
+			}else {
+				addSystemMessage("Current trigger is space, ctrl+space overrides");
+			}
+		}
+		
+		private function setDockVerbose(mode:String):void 
+		{
+			mode = mode.toLowerCase();
+			switch(mode) {
+				case "bot":
+				case "bottom":
+					dock(DOCK_BOT);
+					break;
+				case "none":
+				case "window":
+					dock(DOCK_WINDOWED);
+					break;
+				case "top":
+				default:
+					dock(DOCK_TOP);
+			}
 		}
 		
 		private function get toolBar():ConsoleToolbar {
@@ -525,13 +558,14 @@
 		private function createMessages(str:String, type:String, tag:String):Vector.<ConsoleMessage> {
 			var out:Vector.<ConsoleMessage> = new Vector.<ConsoleMessage>();
 			var split:Array = str.split("\n").join("\r").split("\r");
-			if (split.join("").length < 1) return out;
+			if (split.join("").length < 1 && ignoreBlankLines) return out;
 			var date:String = String(new Date().getTime());
 			var msg:ConsoleMessage;
 			for (var i:int = 0; i < split.length; i++) 
 			{
 				var txt:String = split[i];
-				if (txt.indexOf("com.furusystems.dconsole2") > -1 || txt.indexOf("adobe.com/AS3") > -1 || (ignoreBlankLines && txt.length<1)) continue;
+				if (txt.length < 1 && ignoreBlankLines) continue;
+				if (txt.indexOf("com.furusystems.dconsole2") > -1 || txt.indexOf("adobe.com/AS3") > -1) continue;
 				msg = new ConsoleMessage(txt, date, type, tag);
 				out.push(msg);
 			}
@@ -865,16 +899,22 @@
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return; //Ignore if invisible
-			if (e.keyCode == Keyboard.SPACE && e.ctrlKey) {
-				_cancelNextSpace = true;
-				e.stopImmediatePropagation();
-				e.stopPropagation();
+			var trigger:Boolean = false;
+				trigger = e.keyCode == Keyboard.SPACE && (_masterKeyMode==e.ctrlKey);
+			//if (_masterKeyMode) {
+			//}else {
+				//trigger = e.keyCode == Keyboard.SPACE && !e.ctrlKey;
+			//}
+			if (trigger) {
 				if (visible && stage.focus != input) {
 					input.focus();
 				}else if (stage.focus == input) {
 				}
-					
-				doComplete();				
+				if (doComplete()) {
+					_cancelNextSpace = true;
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+				}
 				return;
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
@@ -962,11 +1002,11 @@
 			_repeatMessageMode = filter;
 		}
 		
-		private function doComplete():void
+		private function doComplete():Boolean
 		{
 			var flag:Boolean = false; 
 			
-			if (input.text.length < 1) return;
+			if (input.text.length < 1) return false;
 			var word:String = input.wordAtCaret;
 			
 			var isFirstWord:Boolean = input.text.lastIndexOf(word) < 1;
@@ -983,7 +1023,7 @@
 				if (input.inputTextField.selectedText.length > 0) {
 					input.moveCaretToIndex(input.selectionBeginIndex);
 					wordIndex = input.selectionBeginIndex;
-				}else if (input.text.charAt(input.caretIndex) == " " && input.caretIndex != input.text.length - 1) { 
+				}else if (input.text.charAt(input.caretIndex) == " " && input.caretIndex != input.text.length - 1) {
 					input.moveCaretToIndex(input.caretIndex - 1);
 				}
 				
@@ -1002,7 +1042,6 @@
 				if (wordIndex + word.length < input.text.length - 1) {
 					input.moveCaretToIndex(wordIndex + word.length);
 					input.selectWordAtCaret();
-					
 				}else {
 					//if it's the last word
 					if (input.text.charAt(input.text.length-1)!=" ") {
@@ -1010,17 +1049,18 @@
 					}
 					input.caretToEnd();
 				}
-			}else{
+				return true;
+			}else {
 				var getSet:Boolean = (firstWord == _getCommand.trigger || firstWord == _setCommand.trigger);
 				var call:Boolean = (firstWord == _callCommand.trigger);
 				var select:Boolean = (firstWord == _selectCommand.trigger);
 				doSearch(word, !isFirstWord || select, isFirstWord, call);
-				
 				if (flag) {
 					input.selectWordAtCaret();
 				}else{
-					input.moveCaretToIndex(input.firstIndexOfWordAtCaret + input.wordAtCaret.length);
+					//input.moveCaretToIndex(input.firstIndexOfWordAtCaret + input.wordAtCaret.length);
 				}
+				return false;
 			}
 		}
 		
@@ -1107,6 +1147,14 @@
 		 * The internal tag used as the defalt for logging
 		 */
 		public static const TAG:String = "DConsole";
+		
+		public static function get ignoreBlankLines():Boolean {
+			return DConsole(console).ignoreBlankLines;
+		}
+		public static function set ignoreBlankLines(b:Boolean):void {
+			DConsole(console).ignoreBlankLines = b;
+		}
+		
 		private var _consoleContainer:Sprite;
 		
 		/**
@@ -1351,6 +1399,15 @@
 		static public function clearPersistentData():void 
 		{
 			DConsole(console).persistence.clearAll();
+		}
+		
+		/**
+		 * Set the console's docking state
+		 * @param	mode one of the DOCK_* static constants on DConsole
+		 */
+		public static function dock(mode:int):void 
+		{
+			console.view.dockingMode = mode;
 		}
 		
 		//TODO: Reimplement at instance level and delegate to static

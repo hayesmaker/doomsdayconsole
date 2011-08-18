@@ -117,7 +117,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 			TextUtils.selectWordAtCaretIndex(_inputTextField);
 		}
 		public function caretToEnd():void {
-			moveCaretToIndex(-1);
+			moveCaretToIndex( -1);
 		}
 		public function caretToStart():void {
 			moveCaretToIndex(0);
@@ -125,6 +125,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 		
 		public function focus():void
 		{
+			if (stage.focus == _inputTextField) return;
 			stage.focus = _inputTextField;
 			caretToEnd();
 		}

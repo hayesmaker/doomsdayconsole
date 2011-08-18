@@ -39,8 +39,9 @@
 			colorPickerTF = new TextField();
 			addChild(colorPickerTF);
 			colorPickerTF.defaultTextFormat = TextFormats.windowDefaultFormat;
-			colorPickerTF.text = "Superlong text";
+			colorPickerTF.text = "Colorpicker";
 			colorPickerTF.background = true;
+			colorPickerTF.embedFonts = true;
 			colorPickerTF.border = true;
 			colorPickerTF.autoSize = TextFieldAutoSize.LEFT;
 			colorPickerTF.y = -colorPickerTF.height;
@@ -94,12 +95,16 @@
 		
 		private function sample():void
 		{
-			sampleBMD.lock();
-			sampleBMD.fillRect(sampleBMD.rect, 0x00000000);
-			sampleBMD.draw(stage, matrix, null, null, clipRect);
-			sampleBMD.unlock();
-			_color = sampleBMD.getPixel(1, 1);
-			colorPickerTF.text = "0x" + color;
+			try{
+				sampleBMD.lock();
+				sampleBMD.fillRect(sampleBMD.rect, 0x00000000);
+				sampleBMD.draw(stage, matrix, null, null, clipRect);
+				sampleBMD.unlock();
+				_color = sampleBMD.getPixel(1, 1);
+				colorPickerTF.text = "0x" + color;
+			}catch (e:Error) {
+				
+			}
 		}
 		public function get color():String {
 			var str:String = _color.toString(16).toUpperCase();

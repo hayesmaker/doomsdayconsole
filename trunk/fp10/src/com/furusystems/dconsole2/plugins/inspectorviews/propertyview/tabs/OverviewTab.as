@@ -18,7 +18,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 			var i:int;
 			if (scope.obj is DisplayObject) {
 				var displayObject:DisplayObject = scope.obj as DisplayObject;
-				if (displayObject != displayObject.root) addField(new PropertyField(scope.obj, "name", "string", scope.obj["name"]));
+				if (displayObject != displayObject.root) addField(new PropertyField(scope.obj, "name", "string", "readwrite"));
 				for (i = 0; i < scope.accessors.length; i++) 
 				{
 					if (scope.accessors[i].name.toLowerCase() == "parent") {
