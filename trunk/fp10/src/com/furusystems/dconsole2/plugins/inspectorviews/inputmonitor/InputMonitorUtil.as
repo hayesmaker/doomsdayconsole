@@ -91,8 +91,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 				out += "\tx: " + d.mouseX + "\n";
 				out += "\ty: " + d.mouseY + "\n";
 				if(mouseDown){
-					var hitTestResult:Boolean = d.hitTestPoint(d.mouseX, d.mouseY);
-					var hitTestResult2:Boolean = d.hitTestPoint(d.mouseX, d.mouseY, true);
+					var hitTestResult:Boolean = d.hitTestPoint(stage.mouseX, stage.mouseY, false);
+					var hitTestResult2:Boolean = d.hitTestPoint(stage.mouseX, stage.mouseY, true);
 					out += "\thitTest: " + hitTestResult + "\n";
 					out += "\thitTestShape: " + hitTestResult2 + "\n";
 				}
