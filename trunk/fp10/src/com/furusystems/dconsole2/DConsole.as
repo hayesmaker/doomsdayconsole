@@ -691,14 +691,16 @@
 			_dockingGuides.resize();
 		}
 		
-		private function doSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):Boolean
+		private function doSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):Vector.<String>
 		{
-			if (searchString.length < 1) return false;
+			var outResult:Vector.<String> = new Vector.<String>();
+			if (searchString.length < 1) return outResult;
 			var found:Boolean = false;
 			var result:Vector.<String>;
 			var maxrow:int = 4;
 			if(includeScopeMethods){
-				result = _scopeManager.doSearch(searchString,ScopeManager.SEARCH_METHODS);
+				result = _scopeManager.doSearch(searchString, ScopeManager.SEARCH_METHODS);
+				outResult = outResult.concat(result);
 				var out:String = "";
 				var count:int = 0;
 				if(result.length>0){
@@ -719,6 +721,7 @@
 			}
 			if(includeCommands){
 				result = _commandManager.doSearch(searchString);
+				outResult = outResult.concat(result);
 				count = 0;
 				out = "";
 				if(result.length>0){
@@ -738,7 +741,8 @@
 				}
 			}
 			if (includeAccessors){
-				result = _scopeManager.doSearch(searchString,ScopeManager.SEARCH_ACCESSORS);
+				result = _scopeManager.doSearch(searchString, ScopeManager.SEARCH_ACCESSORS);
+				outResult = outResult.concat(result);
 				count = 0;
 				out = "";
 				if(result.length>0){
@@ -757,7 +761,8 @@
 					found = true;
 				}
 			}
-			result = _scopeManager.doSearch(searchString,ScopeManager.SEARCH_CHILDREN);
+			result = _scopeManager.doSearch(searchString, ScopeManager.SEARCH_CHILDREN);
+			outResult = outResult.concat(result);
 			count = 0;
 			out = "";
 			if(result.length>0){
@@ -779,7 +784,7 @@
 			//TODO: Do we really need this junk feedback?
 				//print("No matches for '" + searchString + "'",ConsoleMessageTypes.ERROR);
 			//}
-			return found;
+			return outResult;
 		
 		}
 		
@@ -1083,7 +1088,13 @@
 					var getSet:Boolean = (firstWord == _getCommand.trigger || firstWord == _setCommand.trigger);
 					var call:Boolean = (firstWord == _callCommand.trigger);
 					var select:Boolean = (firstWord == _selectCommand.trigger);
-					if (doSearch(word, !isFirstWord || select, isFirstWord, call)) {
+					var searchResult:Vector.<String> = doSearch(word, !isFirstWord || select, isFirstWord, call);
+					if (searchResult.length == 1) {
+						input.selectWordAtCaret();
+						input.inputTextField.replaceSelectedText(searchResult[0] + " ");
+						input.moveCaretToIndex(wordIndex + searchResult[0].length+1);
+						return true;
+					}else if (searchResult.length>1) {
 						input.moveCaretToIndex(wordIndex + word.length);
 						return true;
 					}
