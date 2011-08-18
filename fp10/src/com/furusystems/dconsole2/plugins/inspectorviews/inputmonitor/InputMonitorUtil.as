@@ -35,6 +35,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		private var kbm:KeyboardAccumulator = null;
 		private var output:TextField;
 		private var mouseDown:Boolean = false;
+		private var pm:PluginManager;
 		
 		public function InputMonitorUtil() 
 		{
@@ -71,6 +72,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		public override function shutdown(pm:PluginManager):void 
 		{
 			super.shutdown(pm);
+			this.pm = null;
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			kbm.dispose();
@@ -82,10 +84,27 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 			var out:String = "Stage mouse:\n";
 			out += "\tx: " + stage.mouseX+"\n";
 			out += "\ty: " + stage.mouseY+"\n";
-			out += "\tLMB: " + mouseDown+"\n";
+			out += "\tLMB: " + mouseDown + "\n";
+			if (pm.scopeManager.currentScope.obj is DisplayObject) {
+				var d:DisplayObject = DisplayObject(pm.scopeManager.currentScope.obj);
+				out += "Local mouse:\n";
+				out += "\tx: " + d.mouseX + "\n";
+				out += "\ty: " + d.mouseY + "\n";
+				if(mouseDown){
+					var hitTestResult:Boolean = d.hitTestPoint(stage.mouseX, stage.mouseY);
+					var hitTestResult2:Boolean = d.hitTestPoint(stage.mouseX, stage.mouseY, true);
+					out += "\thitTest: " + hitTestResult + "\n";
+					out += "\thitTestShape: " + hitTestResult2 + "\n";
+				}
+			}
 			out += "\n"+kbm.toString();
 			output.text = out;
 			//_tabs.updateTabs();
+		}
+		public override function initialize(pm:PluginManager):void 
+		{
+			super.initialize(pm);
+			this.pm = pm;
 		}
 		override public function populate(object:Object):void 
 		{

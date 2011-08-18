@@ -28,11 +28,14 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 			_keys[""+e.keyCode] = e.charCode;
 		}
 		public function toString():String {
+			var count:int = 0;
 			var out:String = "Active keys:\n";
-			for(var key:String in _keys) {
+			for (var key:String in _keys) {
+				count++;
 				out += "\tkc"+key + " / " + "cc "+_keys[key] + "\n";
 			}
-			return out;
+			if (count > 0) return out;
+			return "";
 		}
 		
 		public function dispose():void 
