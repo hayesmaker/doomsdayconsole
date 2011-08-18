@@ -14,8 +14,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		public function KeyboardAccumulator(stage:Stage)
 		{
 			this._stage = stage;
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, int.MAX_VALUE);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp, false, int.MAX_VALUE);
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void 

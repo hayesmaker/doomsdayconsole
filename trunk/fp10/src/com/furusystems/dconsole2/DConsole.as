@@ -105,6 +105,8 @@
 		private var _defaultInputCallback:Function;
 		private var _mainConsoleView:ConsoleView;
 		private var _debugDraw:DebugDraw;
+		
+		private var _debugMode:Boolean = false; //Internal debugging flag
 				
 		static public const DOCK_TOP:int = 0;
 		static public const DOCK_BOT:int = 1;
@@ -195,7 +197,8 @@
 		
 		private function onTextInput(e:TextEvent):void 
 		{
-			if (_cancelNextSpace && e.text==" ") {
+			//if (_cancelNextSpace && e.text==" ") {
+			if (_cancelNextSpace) {
 				e.preventDefault();
 			}
 			_cancelNextSpace = false;
@@ -479,17 +482,18 @@
 			addSystemMessage("Help");
 			addSystemMessage("\tKeyboard commands");
 			addSystemMessage("\t\tControl+Shift+Enter (default) -> Show/hide console");
-			addSystemMessage("\t\tControl+Space -> (When out of focus) Set the keyboard focus to the input field");
-			addSystemMessage("\t\tControl+Space -> (When in focus) Skip to end of line and append a space");
-			addSystemMessage("\t\tControl+Space -> (While caret is on an unknown term) Context sensitive search");
+			addSystemMessage("\t\tShift+Space -> (When out of focus) Set the keyboard focus to the input field");
+			//addSystemMessage("\t\tControl+Space -> (When in focus) Skip to end of line and append a space");
+			addSystemMessage("\t\tSpace -> (While caret is on an unknown term) Context sensitive search");
 			addSystemMessage("\t\tEnter -> Execute line");
 			addSystemMessage("\t\tPage up/Page down -> Vertical scroll by page");
 			addSystemMessage("\t\tArrow up -> Recall the previous executed line");
 			addSystemMessage("\t\tArrow down -> Recall the more recent executed line");
-			addSystemMessage("\t\tCtrl + Arrow keys -> Scroll");
+			addSystemMessage("\t\tShift + Arrow keys -> Scroll");
 			addSystemMessage("\t\tMouse functions");
 			addSystemMessage("\t\tMousewheel -> Vertical scroll line by line");
 			addSystemMessage("\t\tClick drag below the input line -> Change console height");
+			addSystemMessage("\t\tClick drag console header -> Move the console window");
 			addSystemMessage("\tMisc");
 			addSystemMessage("\t\tUse the 'commands' command to list available commmands");
 		}
@@ -675,6 +679,8 @@
 			stage.addEventListener(Event.RESIZE, onStageResize);
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_scopeManager.selectBaseScope();
+			
+			view.setHeaderText("Doomsday Console "+Version.Major + "." + Version.Minor + " revision " + Version.Revision);
 			
 			onStageResize(e);
 		}
@@ -881,7 +887,7 @@
 				var cmd:String = "";
 				var _testCmd:Boolean = false;
 				if (e.keyCode == Keyboard.UP) {
-					if (!e.ctrlKey) {
+					if (!e.shiftKey) {
 						cmd = _persistence.historyUp();
 						_testCmd = true;
 					}else {
@@ -889,7 +895,7 @@
 					}
 					
 				}else if (e.keyCode == Keyboard.DOWN) {
-					if (!e.ctrlKey) {
+					if (!e.shiftKey) {
 						cmd = _persistence.historyDown();
 						_testCmd = true;
 					}else {
@@ -913,21 +919,19 @@
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return; //Ignore if invisible
-			var trigger:Boolean = false;
-				trigger = e.keyCode == Keyboard.SPACE && (_masterKeyMode==e.ctrlKey);
-			//if (_masterKeyMode) {
-			//}else {
-				//trigger = e.keyCode == Keyboard.SPACE && !e.ctrlKey;
-			//}
-			if (trigger) {
-				if (visible && stage.focus != input) {
-					input.focus();
-				}else if (stage.focus == input) {
-				}
+			var trigger1:Boolean = e.keyCode == Keyboard.SPACE && (_masterKeyMode == e.shiftKey);
+			var trigger2:Boolean = e.keyCode == Keyboard.SPACE && (_masterKeyMode != e.shiftKey);
+			
+			if (trigger1) {
 				if (doComplete()) {
-					_cancelNextSpace = true;
-					e.stopImmediatePropagation();
-					e.stopPropagation();
+					cancelSpaceBar(e);
+				}
+				return;
+			}
+			if (trigger2) {
+				if (visible && stage.focus != input && stage.focus != input.inputTextField) {
+					input.focus();
+					cancelSpaceBar(e);
 				}
 				return;
 			}
@@ -935,7 +939,7 @@
 				PimpCentral.send(Notifications.ESCAPE_KEY, null, this);
 				return;
 			}
-			if (e.ctrlKey) {
+			if (e.shiftKey) {
 				switch(e.keyCode) {
 					case Keyboard.UP:
 					output.scroll(1);
@@ -994,6 +998,14 @@
 			}
 		}
 		
+		private function cancelSpaceBar(e:KeyboardEvent):void 
+		{
+			if(_debugMode) trace("Cancel space");
+			_cancelNextSpace = true;
+			//e.stopImmediatePropagation();
+			e.stopPropagation();
+		}
+		
 		/**
 		 * Sets the handling method for repeated messages with identical values
 		 * @param	filter
@@ -1004,7 +1016,7 @@
 				case ConsoleMessageRepeatMode.IGNORE:
 				print("Repeat mode: Repeated messages are now ignored",ConsoleMessageTypes.SYSTEM);
 				break;
-				case ConsoleMessageRepeatMode.PASSTHROUGH:
+				case ConsoleMessageRepeatMode.ALLOW:
 				print("Repeat mode: Repeated messages are now allowed",ConsoleMessageTypes.SYSTEM);
 				break;
 				case ConsoleMessageRepeatMode.STACK:
@@ -1021,6 +1033,7 @@
 			var flag:Boolean = false; 
 			
 			if (input.text.length < 1) return false;
+			
 			var word:String = input.wordAtCaret;
 			
 			var isFirstWord:Boolean = input.text.lastIndexOf(word) < 1;
@@ -1030,7 +1043,8 @@
 			}else {
 				firstWord = input.firstWord;
 			}
-			if (_autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord)||!isNaN(Number(word))) {
+			var wordKnown:Boolean = _autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord);
+			if (wordKnown || !isNaN(Number(word))) { 
 				//this word is okay, so accept the completion
 				var wordIndex:int = input.firstIndexOfWordAtCaret;
 				//is there currently a selection?
@@ -1038,7 +1052,7 @@
 					input.moveCaretToIndex(input.selectionBeginIndex);
 					wordIndex = input.selectionBeginIndex;
 				}else if (input.text.charAt(input.caretIndex) == " " && input.caretIndex != input.text.length - 1) {
-					input.moveCaretToIndex(input.caretIndex - 1);
+					//input.moveCaretToIndex(input.caretIndex - 1);
 				}
 				
 				word = input.wordAtCaret;
@@ -1070,6 +1084,7 @@
 					var call:Boolean = (firstWord == _callCommand.trigger);
 					var select:Boolean = (firstWord == _selectCommand.trigger);
 					if (doSearch(word, !isFirstWord || select, isFirstWord, call)) {
+						input.moveCaretToIndex(wordIndex + word.length);
 						return true;
 					}
 				}
