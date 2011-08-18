@@ -83,13 +83,16 @@
 			return _currentScope;
 		}
 		public function setScope(o:*, force:Boolean = false, printResults:Boolean = true):void {
-			if (o is Stage) return; //TODO: Stage selections really shouldn't be disallowed. But Stage object is so weird :-/
+			if (o is Stage && DConsole.STAGE_SAFE_MODE) {
+				DConsole.addErrorMessage("Stage safe mode active, access prohibited");
+				return; //TODO: Stage selections really shouldn't be disallowed. But Stage object is so weird :-/
+			}
 			if (o is DConsole && DConsole.CONSOLE_SAFE_MODE) {
 				DConsole.addErrorMessage("Console safe mode active, access prohibited");
 				return;
 			}
-			if (!force && currentScope.obj === o) {
-				if (printResults) {
+			if(currentScope.obj===o){
+				if (force&&printResults) {
 					printScope();
 					printDownPath();
 				}
