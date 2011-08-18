@@ -8,7 +8,7 @@
 	{
 		public static const STACK:int = 0;
 		public static const IGNORE:int = 1;
-		public static const PASSTHROUGH:int = 2;
+		public static const ALLOW:int = 2;
 	}
 
 }
