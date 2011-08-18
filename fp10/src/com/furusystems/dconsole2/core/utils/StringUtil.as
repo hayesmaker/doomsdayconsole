@@ -11,6 +11,22 @@ package com.furusystems.dconsole2.core.utils
 		public function StringUtil()
 		{
 		}
+		public static function verboseToBoolean(input:String):Boolean {
+			input = input.toLowerCase();
+			switch(input) {
+				case "on":
+				case "yes":
+				case "true":
+				case "1":
+					return true;
+				case "off":
+				case "no":
+				case "false":
+				case "0":
+				default:
+					return false;
+			}
+		}
 		
 		public static function stripWhitespace(str:String):String {
 			while (str.charAt(str.length - 1) == " ") 

@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.output 
 {
+	import com.furusystems.dconsole2.core.utils.StringUtil;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
@@ -187,16 +188,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		/**
 		 * Toggle display of message timestamp
 		 */
-		public function toggleTimestamp(toggle:String = null):void {
-			switch(toggle) {
-				case "on":
-				showTimeStamp = true;
-				break;
-				case "off":
-				showTimeStamp = false;
-				break;
-				default:
+		public function toggleTimestamp(input:String = null):void {
+			if (input == null) {
 				showTimeStamp = !showTimeStamp;
+			}else {
+				showTimeStamp = StringUtil.verboseToBoolean(input);
 			}
 			if (showTimeStamp) DConsole.print("Timestamp on",ConsoleMessageTypes.SYSTEM)
 			else DConsole.print("Timestamp off",ConsoleMessageTypes.SYSTEM);
@@ -206,9 +202,14 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			scroll(e.delta);
 		}
 		
-		public function toggleLineNumbers():void
+		public function toggleLineNumbers(input:String = null):void
 		{
-			(showLineNum = !showLineNum) ? DConsole.print("Line numbers: on", ConsoleMessageTypes.SYSTEM) : DConsole.print("Line numbers: off", ConsoleMessageTypes.SYSTEM);
+			if (input == null) {
+				showLineNum = !showLineNum;
+			}else {
+				showLineNum = StringUtil.verboseToBoolean(input);
+			}
+			showLineNum ? DConsole.print("Line numbers: on", ConsoleMessageTypes.SYSTEM) : DConsole.print("Line numbers: off", ConsoleMessageTypes.SYSTEM);
 			_dirty = true;
 		}
 		public function scroll(deltaY:int = 0, deltaX:int = 0):void {
