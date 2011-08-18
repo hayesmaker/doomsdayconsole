@@ -2,6 +2,7 @@
 {
 	//{ imports
 	import com.furusystems.dconsole2.core.gui.debugdraw.DebugDraw;
+	import com.furusystems.dconsole2.core.helpmanager.HelpManager;
 	import com.furusystems.dconsole2.core.utils.StringUtil;
 	import com.furusystems.logging.slf4as.Logging;
 	import com.furusystems.messaging.pimp.Message;
@@ -106,6 +107,8 @@
 		private var _mainConsoleView:ConsoleView;
 		private var _debugDraw:DebugDraw;
 		
+		private var _helpManager:HelpManager;
+		
 		private var _debugMode:Boolean = false; //Internal debugging flag
 				
 		static public const DOCK_TOP:int = 0;
@@ -127,6 +130,8 @@
 			
 			_logManager = new DLogManager();
 			_mainConsoleView = new ConsoleView(this);
+			
+			_helpManager = new HelpManager();
 			
 			output.currentLog = _logManager.currentLog;
 			
@@ -169,6 +174,25 @@
 			_setCommand = new FunctionCallCommand("set", _scopeManager.setPropertyOnObject, "Introspection", "Sets a variable within the current introspection scope");
 			_getCommand = new FunctionCallCommand("get", _scopeManager.getPropertyOnObject, "Introspection", "Prints a variable within the current introspection scope");
 			_selectCommand = new FunctionCallCommand("select", select, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
+			
+			var basicHelp:String = "";
+			basicHelp += "\tKeyboard commands\n";
+			basicHelp += "\t\tControl+Shift+Enter (default) -> Show/hide console\n";
+			basicHelp += "\t\tShift+Space -> (When out of focus) Set the keyboard focus to the input field\n";
+			basicHelp += "\t\tSpace -> (While caret is on an unknown term) Context sensitive search\n";
+			basicHelp += "\t\tEnter -> Execute line\n";
+			basicHelp += "\t\tPage up/Page down -> Vertical scroll by page\n";
+			basicHelp += "\t\tArrow up -> Recall the previous executed line\n";
+			basicHelp += "\t\tArrow down -> Recall the more recent executed line\n";
+			basicHelp += "\t\tShift + Arrow keys -> Scroll\n";
+			basicHelp += "\t\tMouse functions\n";
+			basicHelp += "\t\tMousewheel -> Vertical scroll line by line\n";
+			basicHelp += "\t\tClick drag below the input line -> Change console height\n";
+			basicHelp += "\t\tClick drag console header -> Move the console window\n";
+			basicHelp += "\tMisc\n";
+			basicHelp+="\t\tUse the 'commands' command to list available commmands";
+			
+			_helpManager.addTopic("Basic instructions", basicHelp);
 			
 			print("Welcome to Doomsday Console II - www.doomsday.no",ConsoleMessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),ConsoleMessageTypes.SYSTEM);
@@ -259,7 +283,7 @@
 			createCommand("showLineNumbers", output.toggleLineNumbers, "View", "Toggles or sets the display of line numbers");
 			createCommand("setQuicksearch", toggleQuickSearch, "System", "Toggles or sets trigger key to search commands and methods for the current word");
 			
-			createCommand("help", getHelp, "System", "Output basic instructions");
+			createCommand("help", getHelp, "System", "Output instructions. Append an argument to read more about that topic.");
 			createCommand("clearhistory", _persistence.clearHistory, "System", "Clears the stored command history");
 			createCommand("dock", setDockVerbose, "System", "Docks the console to either 'top'(default) 'bottom'/'bot' or 'window'");
 			createCommand("maximizeConsole", maximize,"System","Sets console height to fill the screen");
@@ -477,25 +501,14 @@
 			System.exit(code);
 		}
 		
-		private function getHelp():void
+		private function getHelp(topic:String = ""):void
 		{
-			addSystemMessage("Help");
-			addSystemMessage("\tKeyboard commands");
-			addSystemMessage("\t\tControl+Shift+Enter (default) -> Show/hide console");
-			addSystemMessage("\t\tShift+Space -> (When out of focus) Set the keyboard focus to the input field");
-			//addSystemMessage("\t\tControl+Space -> (When in focus) Skip to end of line and append a space");
-			addSystemMessage("\t\tSpace -> (While caret is on an unknown term) Context sensitive search");
-			addSystemMessage("\t\tEnter -> Execute line");
-			addSystemMessage("\t\tPage up/Page down -> Vertical scroll by page");
-			addSystemMessage("\t\tArrow up -> Recall the previous executed line");
-			addSystemMessage("\t\tArrow down -> Recall the more recent executed line");
-			addSystemMessage("\t\tShift + Arrow keys -> Scroll");
-			addSystemMessage("\t\tMouse functions");
-			addSystemMessage("\t\tMousewheel -> Vertical scroll line by line");
-			addSystemMessage("\t\tClick drag below the input line -> Change console height");
-			addSystemMessage("\t\tClick drag console header -> Move the console window");
-			addSystemMessage("\tMisc");
-			addSystemMessage("\t\tUse the 'commands' command to list available commmands");
+			if (topic == "") {
+				addSystemMessage(_helpManager.getTopic("Basic instructions"));
+				addSystemMessage(_helpManager.getToc());
+			}else {
+				addSystemMessage(_helpManager.getTopic(topic));
+			}
 		}
 		public function executeStatement(statement:String, echo:Boolean = false):*{
 			if (echo) print(statement, ConsoleMessageTypes.USER);

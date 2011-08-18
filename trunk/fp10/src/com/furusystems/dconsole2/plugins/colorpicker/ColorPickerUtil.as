@@ -1,5 +1,11 @@
 ﻿package com.furusystems.dconsole2.plugins.colorpicker 
 {
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
+	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.DConsole;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.Bitmap;
@@ -12,12 +18,6 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.ui.Mouse;
-	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
-	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
-	import com.furusystems.dconsole2.core.plugins.PluginManager;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
-	import com.furusystems.dconsole2.core.style.TextFormats;
-	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...

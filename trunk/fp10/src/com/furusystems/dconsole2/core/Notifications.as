@@ -87,6 +87,13 @@ package com.furusystems.dconsole2.core
 		 * Sent when the console outputs a new error message. Payload holds the message object
 		 */
 		public static const ERROR:Message = new Message();
+		
+		/**
+		 * Sent by plugins to add and remove topics. The message data should be a HelpTopic instance
+		 */
+		public static const HELP_TOPIC_ADD_REQUEST:Message = new Message();
+		
+		public static const HELP_TOPIC_REMOVE_REQUEST:Message = new Message();
 	}
 
 }
