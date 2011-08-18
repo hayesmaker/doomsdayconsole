@@ -45,7 +45,7 @@
 	<inspector>
 		<fore>WHITE</fore>
 		<back>BLACK</back>
-		<alpha>0.9</alpha>
+		<alpha>1</alpha>
 		<treeview>
 			<alpha>0.5</alpha>
 			<fore>LIGHT_GRAY</fore>
@@ -54,8 +54,8 @@
 		<propertyview>
 			<tabs>
 				<header>
-					<fore>BLACK</fore>
-					<back>FURU_ORANGE</back>
+					<fore>LIGHT_GRAY</fore>
+					<back>DARK_GRAY</back>
 				</header>
 				<content>
 					<fore>BLACK</fore>
@@ -65,8 +65,8 @@
 			<fields>
 				<back>BLACK</back>
 				<name>
-					<fore>BLACK</fore>
-					<back>WHITE</back>
+					<fore>WHITE</fore>
+					<back>GRAY</back>
 				</name>
 				<value>
 					<fore>WHITE</fore>

@@ -27,8 +27,12 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		private var _type:String;
 		private var _doubleClickTarget:Object;
 		private var _prevWidth:Number = 0;
+		private var access:String;
+		public static var FOCUSED_FIELD:ControlField = null;
+		
 		public function ControlField(property:String,type:String = "string",access:String = "readwrite") 
 		{
+			this.access = access;
 			targetProperty = property;
 			_type = type;
 			tf = new TextField();
@@ -47,32 +51,35 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 			var writeable:Boolean = true;
 			switch(type.toLowerCase()) {
 				case "boolean":
-				enableMouseWheelControl = true;
-				break;
+					enableMouseWheelControl = true;
+					break;
 				case "uint":
-				tf.restrict = "0123456789xABCDEF";
-				enableMouseWheelControl = true;
-				break;
+					tf.restrict = "0123456789xABCDEF";
+					enableMouseWheelControl = true;
+					break;
 				case "int":
-				tf.restrict = "0123456789xABCDEF-";
-				enableMouseWheelControl = true;
-				break;
+					tf.restrict = "0123456789xABCDEF-";
+					enableMouseWheelControl = true;
+					break;
 				case "number":
-				tf.restrict = "0123456789xABCDEF.-";
-				enableMouseWheelControl = true;
-				break;
+					tf.restrict = "0123456789xABCDEF.-";
+					enableMouseWheelControl = true;
+					break;
 				case "array":
-				readOnly = true;
-				value = "Array";
-				writeable = false;
-				break;
+					readOnly = true;
+					value = "Array";
+					writeable = false;
+					break;
+				case "string":
+					writeable = true;
+					break;
 				case "object":
 				default:
-				if (type.toLowerCase().indexOf("::") > -1) {
-					enableDoubleClickToSelect();
-				}
-				writeable = false;
-				break;
+					if (type.toLowerCase().indexOf("::") > -1) {
+						enableDoubleClickToSelect();
+					}
+					writeable = false;
+					break;
 			}
 			readOnly = ((access != "readwrite" && access != "writeonly") || !writeable);
 			if (enableMouseWheelControl && !readOnly) { 
@@ -112,6 +119,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 			removeEventListener(KeyboardEvent.KEY_DOWN, onEnter);
 			tf.backgroundColor = 0xFFFFFF - tf.backgroundColor;
 			tf.textColor = 0xFFFFFF - tf.textColor;
+			FOCUSED_FIELD = null;
 		}
 		
 		private function onFocusIn(e:FocusEvent):void 
@@ -124,6 +132,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 				//info("Select all");
 				tf.setSelection( -1, tf.text.length);
 			}
+			FOCUSED_FIELD = this;
 		}
 		
 		private function onEnter(e:KeyboardEvent):void 
@@ -135,6 +144,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		
 		private function onMouseWheel(e:MouseEvent):void 
 		{
+			if (!hasFocus) return;
 			var d:Number = Math.max( -1, Math.min(1, e.delta));
 			if(_type!="Boolean"){
 				var num:Number = Number(tf.text);

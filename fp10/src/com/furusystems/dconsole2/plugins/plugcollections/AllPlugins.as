@@ -9,6 +9,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 	import com.furusystems.dconsole2.plugins.CommandMapperUtil;
 	import com.furusystems.dconsole2.plugins.controller.ControllerUtil;
 	import com.furusystems.dconsole2.plugins.FontUtil;
+	import com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor.InputMonitorUtil;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.PropertyViewUtil;
 	import com.furusystems.dconsole2.plugins.inspectorviews.treeview.TreeViewUtil;
 	import com.furusystems.dconsole2.plugins.invokegesture.InvokeGestureUtil;
@@ -56,6 +57,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 				StageUtil,
 				ChainsawConnectorUtil,
 				InvokeGestureUtil,
+				InputMonitorUtil,
 				TreeViewUtil
 			]);
 		}

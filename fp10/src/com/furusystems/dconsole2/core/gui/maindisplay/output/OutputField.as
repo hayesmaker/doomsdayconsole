@@ -381,11 +381,12 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 							fmt.color = Math.random() * 0xFFFFFF;
 							textOutput.setTextFormat(fmt, idx + sindex, idx + sindex + str.length - sindex);
 						}
-					}else{
-						textOutput.setTextFormat(fmt, idx, idx + str.length);
+					}else {
+						if(str.length>0) textOutput.setTextFormat(fmt, idx, idx + str.length);
 					}
 				}catch (e:Error) {
 					currentLogVector.splice(i, 1);
+					DConsole.addErrorMessage(e.message);
 					DConsole.addErrorMessage("The console encountered a message draw error. Did you attempt to log a ByteArray?");
 					drawMessages();
 				}

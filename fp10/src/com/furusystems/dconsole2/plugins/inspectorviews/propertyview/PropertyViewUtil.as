@@ -1,14 +1,5 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview 
 {
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
-	
 	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
 	import com.furusystems.dconsole2.core.interfaces.IThemeable;
 	import com.furusystems.dconsole2.core.introspection.descriptions.AccessorDesc;
@@ -21,6 +12,15 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.*;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs.*;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	
 	/**
 	 * ...
 	 * @author Andreas Roenning
@@ -39,7 +39,18 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 			_scrollableContent.addChild(_tabs);
 			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
 			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			scrollXEnabled = false;
+		}
+		
+		
+		private function onMouseWheel(e:MouseEvent):void 
+		{
+			if(ControlField.FOCUSED_FIELD == null){
+				scrollByDelta(0, e.delta * 5);
+			}else {
+				
+			}
 		}
 		override public function initialize(pm:PluginManager):void 
 		{
