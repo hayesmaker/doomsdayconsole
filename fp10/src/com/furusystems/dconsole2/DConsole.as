@@ -1140,6 +1140,11 @@
 		 * If true, the console instance cannot be selected by the console. The default is true, which is recommended.
 		 */
 		public static var CONSOLE_SAFE_MODE:Boolean = true;
+		/**
+		 * If true, the stage can't be selected by the console. The default is true, because Stage properties behave strangely when rapidly messed with.
+		 * Need to examine this further.
+		 */
+		public static var STAGE_SAFE_MODE:Boolean = true;
 		
 		/**
 		 * Removes the default input callback
