@@ -2,6 +2,7 @@
 {
 	//{ imports
 	import com.furusystems.dconsole2.core.gui.debugdraw.DebugDraw;
+	import com.furusystems.dconsole2.core.utils.StringUtil;
 	import com.furusystems.logging.slf4as.Logging;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -249,15 +250,18 @@
 			//addCommand(new FunctionCallCommand("consoleHeight", setHeight, "View", "Change the number of lines to display. Example: setHeight 5"));
 			createCommand("about", about, "System", "Credits etc");
 			createCommand("clear", clear, "View", "Clear the console");
-			createCommand("timestampDisplay", output.toggleTimestamp, "View", "Toggle display of message timestamp");
+			
+			createCommand("showTimestamps", output.toggleTimestamp, "View", "Toggle or set display of message timestamp");
+			createCommand("showTags", toggleTags, "View", "Toggle or set the display of message tags");
+			createCommand("showLineNumbers", output.toggleLineNumbers, "View", "Toggles or sets the display of line numbers");
+			createCommand("setQuicksearch", toggleQuickSearch, "System", "Toggles or sets trigger key to search commands and methods for the current word");
+			
 			createCommand("help", getHelp, "System", "Output basic instructions");
 			createCommand("clearhistory", _persistence.clearHistory, "System", "Clears the stored command history");
 			createCommand("dock", setDockVerbose, "System", "Docks the console to either 'top'(default) 'bottom'/'bot' or 'window'");
 			createCommand("maximizeConsole", maximize,"System","Sets console height to fill the screen");
 			createCommand("minimizeConsole", minimize, "System", "Sets console height to 1");
-			createCommand("toggleQuickSearch", toggleQuickSearch, "System", "Toggles ctrl+space to search commands and methods for the current word");
 			createCommand("setRepeatFilter", setRepeatFilter, "System", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough");
-			createCommand("toggleLineNumbers", output.toggleLineNumbers, "System", "Toggles the display of line numbers");
 			createCommand("repeat", repeatCommand, "System", "Repeats command string X Y times");
 			addCommand(new FunctionCallCommand("reset", resetConsole, "System", "Resets and clears the console"), false);
 
@@ -277,8 +281,8 @@
 			//createCommand("goto", output.goto, "Utility", "Scrolls to the specified line, if possible"); //TODO: Current enter key behavior overrides this one. Bummer.
 			//createCommand("getLoader", getLoader, "Utility", "Returns a 'dumb' Loader getting data from the url X");
 			createCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)");
-			createCommand("toggleTags", toggleTags, "System", "Toggles the display of tags");
-			createCommand("tag", selectTag, "System", "Quick-select a tag [x]");
+			
+			//createCommand("tag", selectTag, "System", "Quick-select a tag [x]");
 			
 			addCommand(_callCommand);
 			addCommand(_getCommand);
@@ -359,9 +363,13 @@
 			
 		}
 		
-		private function toggleTags():void
+		private function toggleTags(input:String = null):void
 		{
-			view.output.showTag = !view.output.showTag;
+			if(input==null){
+				view.output.showTag = !view.output.showTag;
+			}else {
+				view.output.showTag = StringUtil.verboseToBoolean(input);
+			}
 			view.output.update();
 		}
 		
@@ -447,9 +455,13 @@
 			}
 		}
 		
-		private function toggleQuickSearch():void
+		private function toggleQuickSearch(input:String = null):void
 		{
-			setQuickSearch(!_quickSearchEnabled);
+			if (input == null) {
+				setQuickSearch(!_quickSearchEnabled);
+			}else {
+				setQuickSearch(StringUtil.verboseToBoolean(input));
+			}
 		}
 		private function onScaleHandleDrag(e:Event):void 
 		
@@ -673,9 +685,9 @@
 			_dockingGuides.resize();
 		}
 		
-		private function doSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):void
+		private function doSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):Boolean
 		{
-			if (searchString.length < 1) return;
+			if (searchString.length < 1) return false;
 			var found:Boolean = false;
 			var result:Vector.<String>;
 			var maxrow:int = 4;
@@ -707,7 +719,7 @@
 					print("Commands matching '" + searchString + "'", ConsoleMessageTypes.SYSTEM);
 					for (i = 0; i < result.length; i++) 
 					{
-						out += result[i] + " ";
+						out += "\t"+result[i] + " ";
 						count++;
 						if (count > maxrow) {
 							count = 0;
@@ -757,9 +769,11 @@
 				if (out != "") print(out, ConsoleMessageTypes.INFO);
 				found = true;
 			}
-			if (!found) {
-				print("No matches for '" + searchString + "'",ConsoleMessageTypes.ERROR);
-			}
+			//if (!found) {
+			//TODO: Do we really need this junk feedback?
+				//print("No matches for '" + searchString + "'",ConsoleMessageTypes.ERROR);
+			//}
+			return found;
 		
 		}
 		
@@ -1051,10 +1065,14 @@
 				}
 				return true;
 			}else {
-				var getSet:Boolean = (firstWord == _getCommand.trigger || firstWord == _setCommand.trigger);
-				var call:Boolean = (firstWord == _callCommand.trigger);
-				var select:Boolean = (firstWord == _selectCommand.trigger);
-				doSearch(word, !isFirstWord || select, isFirstWord, call);
+				if(_quickSearchEnabled){
+					var getSet:Boolean = (firstWord == _getCommand.trigger || firstWord == _setCommand.trigger);
+					var call:Boolean = (firstWord == _callCommand.trigger);
+					var select:Boolean = (firstWord == _selectCommand.trigger);
+					if (doSearch(word, !isFirstWord || select, isFirstWord, call)) {
+						return true;
+					}
+				}
 				if (flag) {
 					input.selectWordAtCaret();
 				}else{
