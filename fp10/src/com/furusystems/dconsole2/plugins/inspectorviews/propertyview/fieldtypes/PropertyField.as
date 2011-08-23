@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 {
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -28,7 +29,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		private var _splitRatio:Number = 0.5;
 		private var _access:String;
 		private var _objRef:Dictionary = new Dictionary(true);
-		public function PropertyField(object:Object,property:String,type:String,access:String = "readwrite") 
+		public function PropertyField(console:DConsole, object:Object,property:String,type:String,access:String = "readwrite") 
 		{
 			super(property);
 			_access = access;
@@ -38,7 +39,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 			nameField.background = true;
 			nameField.backgroundColor = Colors.INSPECTOR_PROPERTY_FIELD_NAME_BG;
 			addChild(nameField);
-			controlField = new ControlField(property, type, access);
+			controlField = new ControlField(console, property, type, access);
 			nameField.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver, false, 0, true);
 			nameField.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut, false, 0, true);
 			controlField.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver, false, 0, true);

@@ -28,10 +28,12 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		private var _doubleClickTarget:Object;
 		private var _prevWidth:Number = 0;
 		private var access:String;
+		private var _console:DConsole;
 		public static var FOCUSED_FIELD:ControlField = null;
 		
-		public function ControlField(property:String,type:String = "string",access:String = "readwrite") 
+		public function ControlField(console:DConsole, property:String,type:String = "string",access:String = "readwrite") 
 		{
+			_console = console;
 			this.access = access;
 			targetProperty = property;
 			_type = type;
@@ -104,12 +106,12 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		{
 			if (_doubleClickTarget) {
 				if (_doubleClickTarget is DisplayObject) {
-					DConsole.console.executeStatement("select " + DisplayObject(_doubleClickTarget).name);
+					_console.executeStatement("select " + DisplayObject(_doubleClickTarget).name);
 				}else {
-					DConsole.console.executeStatement("select " + targetProperty);
+					_console.executeStatement("select " + targetProperty);
 				}
 			}else {
-				DConsole.console.executeStatement("select " + targetProperty);
+				_console.executeStatement("select " + targetProperty);
 			}
 		}
 		
@@ -197,9 +199,9 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		{
 			try {
 				if (type == "string") {
-					DConsole.console.executeStatement("set " + targetProperty + " '" + value+"'", true);
+					_console.executeStatement("set " + targetProperty + " '" + value+"'", true);
 				}else{
-					DConsole.console.executeStatement("set " + targetProperty + " " + value, true);
+					_console.executeStatement("set " + targetProperty + " " + value, true);
 				}
 			}catch (e:Error) {
 				Error(e.message);

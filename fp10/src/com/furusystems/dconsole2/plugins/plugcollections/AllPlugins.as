@@ -8,6 +8,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 	import com.furusystems.dconsole2.plugins.colorpicker.ColorPickerUtil;
 	import com.furusystems.dconsole2.plugins.CommandMapperUtil;
 	import com.furusystems.dconsole2.plugins.controller.ControllerUtil;
+	import com.furusystems.dconsole2.plugins.dialog.DialogUtil;
 	import com.furusystems.dconsole2.plugins.FontUtil;
 	import com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor.InputMonitorUtil;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.PropertyViewUtil;
@@ -40,6 +41,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 				MeasurementBracketUtil,
 				ColorPickerUtil,
 				ClassFactoryUtil,
+				DialogUtil,
 				ControllerUtil,
 				LogFileUtil,
 				BatchRunnerUtil,

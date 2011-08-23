@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.dialog 
 {
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.logging.slf4as.ILogger;
 	import com.furusystems.logging.slf4as.Logging;
 	import com.furusystems.messaging.pimp.PimpCentral;
@@ -13,10 +14,10 @@ package com.furusystems.dconsole2.plugins.dialog
 		static private const L:ILogger = Logging.getLogger(DialogSequence);
 		private var _requests:Vector.<DialogRequest> = new Vector.<DialogRequest>();
 		private var _results:DialogResult = new DialogResult();
-		public function DialogSequence(desc:DialogDesc) 
+		public function DialogSequence(console:DConsole, desc:DialogDesc) 
 		{
 			for each(var question:String in desc.requests) {
-				var request:DialogRequest = new DialogRequest(question, this);
+				var request:DialogRequest = new DialogRequest(console, question, this);
 				addRequest(request);
 			}
 		}

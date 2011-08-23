@@ -21,6 +21,7 @@ package com.furusystems.dconsole2.plugins.dialog
 	{
 		static private const L:ILogger = Logging.getLogger(DialogUtil);
 		private var _currentDialog:DialogSequence;
+		private var _console:DConsole;
 		public function DialogUtil() 
 		{
 			
@@ -29,15 +30,15 @@ package com.furusystems.dconsole2.plugins.dialog
 		private function abortDialog():void 
 		{
 			_currentDialog = null;
-			DConsole.print("Dialog aborted", ConsoleMessageTypes.SYSTEM);
-			DConsole.clearOverrideCallback();
+			_console.print("Dialog aborted", ConsoleMessageTypes.SYSTEM);
+			_console.clearOverrideCallback();
 			PimpCentral.send(DialogNotifications.ABORT_DIALOG, null, this);
 			PimpCentral.removeReceiver(this, Notifications.ESCAPE_KEY);
 		}
 		
 		private function startDialog(dialog:DialogDesc):void 
 		{
-			_currentDialog = new DialogSequence(dialog);
+			_currentDialog = new DialogSequence(_console, dialog);
 			_currentDialog.next();
 			PimpCentral.addReceiver(this, Notifications.ESCAPE_KEY);
 		}
@@ -54,6 +55,7 @@ package com.furusystems.dconsole2.plugins.dialog
 		public function initialize(pm:PluginManager):void 
 		{
 			PimpCentral.addReceiver(this, DialogNotifications.START_DIALOG);
+			_console = pm.console;
 		}
 		
 		public function shutdown(pm:PluginManager):void 

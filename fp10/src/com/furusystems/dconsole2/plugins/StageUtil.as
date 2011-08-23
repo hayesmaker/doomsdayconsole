@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
@@ -29,21 +30,21 @@ package com.furusystems.dconsole2.plugins
 		public function initialize(pm:PluginManager):void
 		{
 			_console = pm.console;
-			pm.console.createCommand("alignStage", alignStage, "Stage", "Sets stage.align to TOP_LEFT and stage.scaleMode to NO_SCALE");
-			pm.console.createCommand("setFrameRate", setFramerate, "Stage", "Sets stage.frameRate");
-			pm.console.createCommand("toggleFullscreen", toggleFullscreen, "FullscreenUtil", "Toggles stage.displayState between FULL_SCREEN and NORMAL");
+			_console.createCommand("alignStage", alignStage, "Stage", "Sets stage.align to TOP_LEFT and stage.scaleMode to NO_SCALE");
+			_console.createCommand("setFrameRate", setFramerate, "Stage", "Sets stage.frameRate");
+			_console.createCommand("toggleFullscreen", toggleFullscreen, "FullscreenUtil", "Toggles stage.displayState between FULL_SCREEN and NORMAL");
 
 		}
 		private function setFramerate(rate:int = 60):void
 		{
 			_console.stage.frameRate = rate;
-			DConsole.addSystemMessage("Framerate set to " + _console.stage.frameRate);
+			_console.print("Framerate set to " + _console.stage.frameRate, ConsoleMessageTypes.SYSTEM);
 		}
 		private function alignStage():void
 		{
 			_console.stage.align = StageAlign.TOP_LEFT;
 			_console.stage.scaleMode = StageScaleMode.NO_SCALE;
-			DConsole.addSystemMessage("StageAlign set to TOP_LEFT, StageScaleMode set to NO_SCALE");
+			_console.print("StageAlign set to TOP_LEFT, StageScaleMode set to NO_SCALE", ConsoleMessageTypes.SYSTEM);
 		}
 		private function toggleFullscreen():void {
 			switch(_console.stage.displayState) {
@@ -58,9 +59,9 @@ package com.furusystems.dconsole2.plugins
 		
 		public function shutdown(pm:PluginManager):void
 		{
-			pm.console.removeCommand("alignStage");
-			pm.console.removeCommand("setFrameRate");
-			pm.console.removeCommand("toggleFullscreen");
+			_console.removeCommand("alignStage");
+			_console.removeCommand("setFrameRate");
+			_console.removeCommand("toggleFullscreen");
 			_console = null;
 		}
 		

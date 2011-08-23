@@ -12,6 +12,7 @@ package com.furusystems.dconsole2.plugins
 	public class PerformanceTesterUtil implements IDConsolePlugin
 	{
 		private const commandString:String = "testMethods";
+		private var _console:DConsole;
 		public function PerformanceTesterUtil() 
 		{
 			
@@ -26,7 +27,8 @@ package com.furusystems.dconsole2.plugins
 		
 		public function initialize(pm:PluginManager):void
 		{
-			pm.console.addCommand(new FunctionCallCommand(commandString, doFunctionTest, "Performance", "Runs a set of methods [...x] and returns a table of execution times in milliseconds"));
+			_console = pm.console;
+			_console.addCommand(new FunctionCallCommand(commandString, doFunctionTest, "Performance", "Runs a set of methods [...x] and returns a table of execution times in milliseconds"));
 		}
 		
 		private function doFunctionTest(...functions):void
@@ -44,7 +46,7 @@ package com.furusystems.dconsole2.plugins
 			{
 				out += i + "\t" + test(validEntries[i]) + "\n";
 			}
-			DConsole.print(out);
+			_console.print(out);
 		}
 		private function test(f:Function):Number {
 			var btime:Number = getTimer();
@@ -55,6 +57,7 @@ package com.furusystems.dconsole2.plugins
 		public function shutdown(pm:PluginManager):void
 		{
 			pm.console.removeCommand(commandString);
+			_console = null;
 		}
 		
 	}

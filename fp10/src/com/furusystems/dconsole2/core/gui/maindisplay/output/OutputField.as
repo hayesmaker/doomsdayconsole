@@ -1,21 +1,5 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.output 
 {
-	import com.furusystems.dconsole2.core.utils.StringUtil;
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.geom.Rectangle;
-	import flash.text.AntiAliasType;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import flash.text.TextLineMetrics;
-	import flash.utils.Timer;
-	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
-	
 	import com.furusystems.dconsole2.core.gui.layout.IContainable;
 	import com.furusystems.dconsole2.core.gui.SimpleScrollbarNorm;
 	import com.furusystems.dconsole2.core.interfaces.IThemeable;
@@ -28,7 +12,18 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.StyleManager;
 	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.utils.StringUtil;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.text.TextLineMetrics;
+	
 	/**
 	 * Handles rendering of a vector of messages
 	 * @author Andreas Roenning
@@ -51,8 +46,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		public var showTag:Boolean = true; //TODO: Make this private?
 		private var _dirty:Boolean = false;
 		private const TRUNCATE:Boolean = false;
-		public function OutputField() 
+		private var _console:DConsole;
+		public function OutputField(console:DConsole) 
 		{
+			_console = console;
 			_textOutput = new TextField();
 			_textOutput.defaultTextFormat = TextFormats.outputTformatOld;
 			_textOutput.embedFonts = TextFormats.INPUT_FONT.charAt(0) != "_";
@@ -194,8 +191,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			}else {
 				showTimeStamp = StringUtil.verboseToBoolean(input);
 			}
-			if (showTimeStamp) DConsole.print("Timestamp on",ConsoleMessageTypes.SYSTEM)
-			else DConsole.print("Timestamp off",ConsoleMessageTypes.SYSTEM);
+			if (showTimeStamp) _console.print("Timestamp on",ConsoleMessageTypes.SYSTEM)
+			else _console.print("Timestamp off",ConsoleMessageTypes.SYSTEM);
 		}
 		private function onMouseWheel(e:MouseEvent):void 
 		{
@@ -209,7 +206,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			}else {
 				showLineNum = StringUtil.verboseToBoolean(input);
 			}
-			showLineNum ? DConsole.print("Line numbers: on", ConsoleMessageTypes.SYSTEM) : DConsole.print("Line numbers: off", ConsoleMessageTypes.SYSTEM);
+			showLineNum ? _console.print("Line numbers: on", ConsoleMessageTypes.SYSTEM) : _console.print("Line numbers: off", ConsoleMessageTypes.SYSTEM);
 			_dirty = true;
 		}
 		public function scroll(deltaY:int = 0, deltaX:int = 0):void {
@@ -387,8 +384,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 					}
 				}catch (e:Error) {
 					currentLogVector.splice(i, 1);
-					DConsole.addErrorMessage(e.message);
-					DConsole.addErrorMessage("The console encountered a message draw error. Did you attempt to log a ByteArray?");
+					_console.print(e.message, ConsoleMessageTypes.ERROR);
+					_console.print("The console encountered a message draw error. Did you attempt to log a ByteArray?", ConsoleMessageTypes.ERROR);
 					drawMessages();
 				}
 				//_logManager.currentLog.setClean();

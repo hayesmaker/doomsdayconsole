@@ -1,5 +1,6 @@
 ﻿package com.furusystems.dconsole2.core.introspection 
 {
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
@@ -45,7 +46,7 @@
 			try{
 				setScope(DisplayObjectContainer(_currentScope.obj).getChildByName(String(md.data)));
 			}catch (e:Error) {
-				DConsole.addErrorMessage(DConsole.TAG,"Null reference, couldn't select target.");
+				console.print("Null reference, couldn't select target.", ConsoleMessageTypes.ERROR);
 			}
 		}
 		
@@ -54,7 +55,7 @@
 			try{
 				setScope(_currentScope.obj[md.data]);
 			}catch (e:Error) {
-				DConsole.addErrorMessage(DConsole.TAG,"Null reference, couldn't select target.");
+				console.print("Null reference, couldn't select target.", ConsoleMessageTypes.ERROR);
 			}
 		}
 		
@@ -84,11 +85,11 @@
 		}
 		public function setScope(o:*, force:Boolean = false, printResults:Boolean = true):void {
 			if (o is Stage && DConsole.STAGE_SAFE_MODE) {
-				DConsole.addErrorMessage("Stage safe mode active, access prohibited");
+				console.print("Stage safe mode active, access prohibited", ConsoleMessageTypes.ERROR);
 				return; //TODO: Stage selections really shouldn't be disallowed. But Stage object is so weird :-/
 			}
 			if (o is DConsole && DConsole.CONSOLE_SAFE_MODE) {
-				DConsole.addErrorMessage("Console safe mode active, access prohibited");
+				console.print("Console safe mode active, access prohibited", ConsoleMessageTypes.ERROR);
 				return;
 			}
 			if(currentScope.obj===o){
@@ -267,7 +268,7 @@
 			try{
 				currentScope.obj[propertyName] = arg;
 			}catch (e:Error) {
-				DConsole.addErrorMessage("Property '" + propertyName + "' could not be set");
+				console.print("Property '" + propertyName + "' could not be set", ConsoleMessageTypes.ERROR);
 			}
 			try{
 				return currentScope.obj[propertyName];

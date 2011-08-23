@@ -1,15 +1,16 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 {
 	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
+	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Roenning
 	 */
 	public class ChildField extends PropertyField
 	{
-		public function ChildField(child:ChildScopeDesc) 
+		public function ChildField(console:DConsole, child:ChildScopeDesc) 
 		{
-			super(null, child.name, "string", "readonly");
+			super(console, null, child.name, "string", "readonly");
 			controlField.value = child.type;
 			//super(null, child.name, child.type, child.object);
 			//readOnly = true;

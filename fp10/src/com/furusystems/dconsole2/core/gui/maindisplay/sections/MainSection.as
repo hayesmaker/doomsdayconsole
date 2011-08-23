@@ -30,7 +30,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 		{
 			_console = console;
 			filterTabs = new FilterTabRow();
-			output = new OutputField();
+			output = new OutputField(console);
 			input = new InputField();
 			assistant = new Assistant();
 			addChild(filterTabs);

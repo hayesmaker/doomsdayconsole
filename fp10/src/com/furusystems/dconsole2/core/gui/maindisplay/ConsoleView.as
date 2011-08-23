@@ -432,7 +432,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			inspector.enabled = p > 0;
 			_mainSplit.setSplitPos(p);
 			
-			DConsole(DConsole.console).persistence.verticalSplitRatio.value = _mainSplit.splitRatio;
+			_console.persistence.verticalSplitRatio.value = _mainSplit.splitRatio;
 			doLayout();
 		}
 		override public function addChild(child:DisplayObject):DisplayObject 
