@@ -118,16 +118,16 @@
 						}
 						return val;
 					}catch (e:Error) {
-						DConsole.addErrorMessage(e.message);
+						_console.print(e.message, ConsoleMessageTypes.ERROR);
 						return null;
 					}
 					throw new Error(e.message);
 				}catch (e:Error) {
-					DConsole.addErrorMessage(e.getStackTrace())
+					_console.print(e.getStackTrace(), ConsoleMessageTypes.ERROR);
 					return null;
 				}
 			}else {
-				DConsole.addErrorMessage("Abstract command, no action");
+				_console.print("Abstract command, no action", ConsoleMessageTypes.ERROR);
 				return null;
 			}
 		}

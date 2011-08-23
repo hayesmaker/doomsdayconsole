@@ -10,6 +10,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.*;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs.*;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -32,6 +33,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 		private static const TAB_ICON:BitmapData = Bitmap(new BitmapIcon()).bitmapData;
 		
 		private var _tabs:TabCollection;
+		private var _console:DConsole;
 		public function PropertyViewUtil() 
 		{
 			_tabs = new TabCollection();
@@ -55,6 +57,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 		override public function initialize(pm:PluginManager):void 
 		{
 			super.initialize(pm);
+			_console = pm.console;
 			populate(pm.scopeManager.currentScope);
 		}
 		override public function onFrameUpdate(e:Event = null):void 
@@ -68,12 +71,12 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 			_tabs.clear();
 			var t:PropertyTab;
 			var i:int;
-			t = new OverviewTab(scope);
+			t = new OverviewTab(_console, scope);
 			_tabs.add(t);
-			t = new InheritanceTab(scope);
+			t = new InheritanceTab(_console, scope);
 			_tabs.add(t);
 			if (scope.obj is DisplayObject) {
-				t = new TransformTab(scope);
+				t = new TransformTab(_console, scope);
 				_tabs.add(t);
 				t.averageSplits();
 			}
@@ -82,7 +85,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 				for (i = 0; i < scope.children.length; i++) 
 				{
 					var cd:ChildScopeDesc = scope.children[i];
-					t.addField(new ChildField(cd));
+					t.addField(new ChildField(_console, cd));
 				}
 				_tabs.add(t);
 			}
@@ -101,7 +104,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 				for (i = 0; i < scope.variables.length; i++) 
 				{
 					var vd:VariableDesc = scope.variables[i];
-					t.addField(new PropertyField(scope.obj, vd.name, vd.type)).width = scrollRect.width;
+					t.addField(new PropertyField(_console, scope.obj, vd.name, vd.type)).width = scrollRect.width;
 				}
 				t.sortFields();
 				_tabs.add(t);
@@ -114,7 +117,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 					var ad:AccessorDesc = scope.accessors[i];
 					var f:PropertyField;
 					//if (ad.access == "writeonly") continue;
-					f = new PropertyField(scope.obj, ad.name, ad.type, ad.access);
+					f = new PropertyField(_console, scope.obj, ad.name, ad.type, ad.access);
 					t.addField(f);
 				}
 				t.sortFields();

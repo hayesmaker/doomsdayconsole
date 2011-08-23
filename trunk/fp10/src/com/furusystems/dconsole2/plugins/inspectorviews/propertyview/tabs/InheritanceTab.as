@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 {
+	import com.furusystems.dconsole2.DConsole;
 	import flash.utils.getQualifiedClassName;
 	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.PropertyField;
@@ -10,7 +11,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 	public class InheritanceTab extends PropertyTab
 	{
 		
-		public function InheritanceTab(scope:IntrospectionScope) 
+		public function InheritanceTab(console:DConsole, scope:IntrospectionScope) 
 		{
 			var className:String = getQualifiedClassName(scope.obj);
 			super("Inheritance", false);
@@ -18,14 +19,14 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 			var f:PropertyField;
 			for (i = 0; i < scope.inheritanceChain.length; i++) 
 			{
-				f = new PropertyField(null, "Extends", "string");
+				f = new PropertyField(console, null, "Extends", "string");
 				f.controlField.value = scope.inheritanceChain[i];
 				f.readOnly = true;
 				addField(f);
 			}
 			for (i = 0; i < scope.interfaces.length; i++) 
 			{
-				f = new PropertyField(null, "Implements", "string");
+				f = new PropertyField(console, null, "Implements", "string");
 				f.controlField.value = scope.interfaces[i];
 				f.readOnly = true;
 				addField(f);

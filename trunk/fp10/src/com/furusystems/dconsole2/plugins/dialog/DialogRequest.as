@@ -13,16 +13,18 @@ package com.furusystems.dconsole2.plugins.dialog
 	{
 		private var _question:String;
 		private var _sequence:DialogSequence;
+		private var _console:DConsole;
 		
-		public function DialogRequest(question:String,sequence:DialogSequence) 
+		public function DialogRequest(console:DConsole, question:String,sequence:DialogSequence) 
 		{
+			_console = console;
 			_sequence = sequence;
 			_question = question;
 		}
 		public function execute():void {
-			DConsole.print(_question, ConsoleMessageTypes.SYSTEM);
+			_console.print(_question, ConsoleMessageTypes.SYSTEM);
 			PimpCentral.send(Notifications.ASSISTANT_MESSAGE_REQUEST, _question + " (Type your response and hit enter)");
-			DConsole.setOverrideCallback(handleResponse);
+			_console.setOverrideCallback(handleResponse);
 		}
 		
 		private function handleResponse(response:String):void 
@@ -39,7 +41,7 @@ package com.furusystems.dconsole2.plugins.dialog
 			}
 			_sequence.addResult(parsed);
 			PimpCentral.send(Notifications.ASSISTANT_CLEAR_REQUEST);
-			DConsole.clearOverrideCallback();
+			_console.clearOverrideCallback();
 			_sequence.next();
 		}
 		

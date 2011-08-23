@@ -30,6 +30,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		[Embed(source='assets/displaylist_icon.png')]
 		private static var BitmapIcon:Class;
 		private static const TAB_ICON:BitmapData = Bitmap(new BitmapIcon()).bitmapData;
+		private var _console:DConsole;
 		
 		protected var _root:DisplayObjectContainer;
 		protected var _rootNode:ListNode;
@@ -90,9 +91,9 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		override protected function onShow():void 
 		{
 			populate(stage);	
-			if (DConsole.getCurrentTarget() is DisplayObject) {
-				if (DisplayObject(DConsole.getCurrentTarget()).stage) {
-					select(DisplayObject(DConsole.getCurrentTarget()));
+			if (_console.currentScope.obj is DisplayObject) {
+				if (DisplayObject(_console.currentScope.obj).stage) {
+					select(DisplayObject(_console.currentScope.obj));
 				}
 			}
 			super.onShow();
@@ -131,7 +132,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		
 		public function onDisplayObjectSelected(displayObject:DisplayObject):void
 		{
-			//DConsole.console.executeStatement("select "+displayObject.name,true);
 			PimpCentral.send(Notifications.SCOPE_CHANGE_REQUEST, displayObject, this);
 		}
 		override public function populate(object:Object):void {
@@ -160,6 +160,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		}
 		override public function initialize(pm:PluginManager):void 
 		{
+			_console = pm.console;
 			super.initialize(pm);
 		}
 	}
