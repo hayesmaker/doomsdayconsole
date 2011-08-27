@@ -134,7 +134,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 		
 		public function onThemeChange(md:MessageData):void
 		{
-			_inputTextField.borderColor = ColorUtils.gainColor24(Colors.INPUT_BG, 30);
+			_inputTextField.borderColor = Colors.INPUT_BORDER;
 			_inputTextField.backgroundColor = Colors.INPUT_BG;
 			_inputTextField.textColor = Colors.INPUT_FG;
 		}

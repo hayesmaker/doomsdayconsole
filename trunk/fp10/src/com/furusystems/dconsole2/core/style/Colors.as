@@ -19,8 +19,8 @@ package com.furusystems.dconsole2.core.style
 		public static var DROPDOWN_BG:uint =  BaseColors.BLACK;
 		public static var DROPDOWN_FG:uint =  BaseColors.WHITE;
 		
-		public static var SCALEHANDLE_BG:uint =  BaseColors.V_DARK_GRAY;
-		public static var SCALEHANDLE_FG:uint =  BaseColors.DARK_GRAY;
+		public static var SCALEHANDLE_BG:uint =  BaseColors.BLACK;
+		public static var SCALEHANDLE_FG:uint =  BaseColors.WHITE;
 		
 		public static var SCROLLBAR_FG:uint =  BaseColors.BLACK;
 		public static var SCROLLBAR_BG:uint =  BaseColors.WHITE;
@@ -65,6 +65,8 @@ package com.furusystems.dconsole2.core.style
 		
 		public static var INSPECTOR_PROPERTY_CONTROL_FIELD_BG:uint =  BaseColors.BLACK;
 		public static var INSPECTOR_PROPERTY_CONTROL_FIELD_FG:uint =  BaseColors.WHITE;
+		public static var BUTTON_BORDER:uint =  BaseColors.GRAY;
+		
 		public static function update(sm:StyleManager):void {
 			CORE = sm.theme.data.core.back;
 			ENABLED = sm.theme.data.labels.enabled;
@@ -107,6 +109,7 @@ package com.furusystems.dconsole2.core.style
 			BUTTON_ACTIVE_BG = sm.theme.data.buttons.active.back;
 			BUTTON_INACTIVE_FG = sm.theme.data.buttons.inactive.fore;
 			BUTTON_INACTIVE_BG = sm.theme.data.buttons.inactive.back;
+			BUTTON_BORDER = sm.theme.data.buttons.border;
 		}
 	}
 

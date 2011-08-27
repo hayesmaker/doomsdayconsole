@@ -13,7 +13,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 		
 		public function InheritanceTab(console:DConsole, scope:IntrospectionScope) 
 		{
-			var className:String = getQualifiedClassName(scope.obj);
+			var className:String = getQualifiedClassName(scope.targetObject);
 			super("Inheritance", false);
 			var i:int;			
 			var f:PropertyField;

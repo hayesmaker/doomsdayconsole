@@ -40,11 +40,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 			_active = b;
 			graphics.clear();
 			if(!_active){
-				graphics.lineStyle(0, Colors.INPUT_BORDER);
+				graphics.lineStyle(0, Colors.BUTTON_BORDER);
 				graphics.beginFill(Colors.BUTTON_INACTIVE_BG);
 				label.textColor = Colors.BUTTON_INACTIVE_FG;
 			}else {
-				graphics.lineStyle(0, Colors.CORE);
+				graphics.lineStyle(0, Colors.BUTTON_BORDER);
 				graphics.beginFill(Colors.BUTTON_ACTIVE_BG);
 				label.textColor = Colors.BUTTON_ACTIVE_FG;
 			}

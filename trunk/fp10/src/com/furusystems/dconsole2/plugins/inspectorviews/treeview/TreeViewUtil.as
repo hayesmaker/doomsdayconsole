@@ -91,9 +91,9 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		override protected function onShow():void 
 		{
 			populate(stage);	
-			if (_console.currentScope.obj is DisplayObject) {
-				if (DisplayObject(_console.currentScope.obj).stage) {
-					select(DisplayObject(_console.currentScope.obj));
+			if (_console.currentScope.targetObject is DisplayObject) {
+				if (DisplayObject(_console.currentScope.targetObject).stage) {
+					select(DisplayObject(_console.currentScope.targetObject));
 				}
 			}
 			super.onShow();

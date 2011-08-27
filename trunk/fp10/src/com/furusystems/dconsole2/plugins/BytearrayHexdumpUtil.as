@@ -98,7 +98,7 @@ package  com.furusystems.dconsole2.plugins
 		
 		public function hexDump(startIndex:String = "", len:String = ""):String {
 			var _startIndex:int, _endIndex:int, _len:int;
-			var b:ByteArray = _scopeManager.currentScope.obj as ByteArray;
+			var b:ByteArray = _scopeManager.currentScope.targetObject as ByteArray;
 			var result:String;
 			
 			if (b) {

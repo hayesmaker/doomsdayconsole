@@ -44,7 +44,7 @@
 		private function onChildNameScopeChangeRequest(md:MessageData):void
 		{
 			try{
-				setScope(DisplayObjectContainer(_currentScope.obj).getChildByName(String(md.data)));
+				setScope(DisplayObjectContainer(_currentScope.targetObject).getChildByName(String(md.data)));
 			}catch (e:Error) {
 				console.print("Null reference, couldn't select target.", ConsoleMessageTypes.ERROR);
 			}
@@ -53,7 +53,7 @@
 		private function onPropertyScopeChangeRequest(md:MessageData):void
 		{
 			try{
-				setScope(_currentScope.obj[md.data]);
+				setScope(_currentScope.targetObject[md.data]);
 			}catch (e:Error) {
 				console.print("Null reference, couldn't select target.", ConsoleMessageTypes.ERROR);
 			}
@@ -61,7 +61,7 @@
 		
 		private function onPropertyChangeRequest(md:MessageData):void
 		{
-			_currentScope.obj[md.data.name] = md.data.newValue;
+			_currentScope.targetObject[md.data.name] = md.data.newValue;
 			PimpCentral.send(Notifications.PROPERTY_CHANGE_ON_SCOPE, _currentScope, this);
 		}
 		public function createScope(o:*,justReturn:Boolean = false):IntrospectionScope {
@@ -71,7 +71,7 @@
 			c.accessors = InspectionUtils.getAccessors(o);
 			c.methods = InspectionUtils.getMethods(o);
 			c.variables = InspectionUtils.getVariables(o);
-			c.obj = o;
+			c.targetObject = o;
 			c.xml = describeType(o);
 			c.qualifiedClassName = getQualifiedClassName(o);
 			c.inheritanceChain = InspectionUtils.getInheritanceChain(o);
@@ -92,7 +92,7 @@
 				console.print("Console safe mode active, access prohibited", ConsoleMessageTypes.ERROR);
 				return;
 			}
-			if(currentScope.obj===o){
+			if(currentScope.targetObject===o){
 				if (force&&printResults) {
 					printScope();
 					printDownPath();
@@ -114,11 +114,11 @@
 		
 		public function getScopeByName(str:String):*{
 			try{
-				if (currentScope.obj[str]) return currentScope.obj[str];
+				if (currentScope.targetObject[str]) return currentScope.targetObject[str];
 				else throw new Error();
 			}catch(e:Error){
 				try {
-					return(currentScope.obj.getChildByName(str));
+					return(currentScope.targetObject.getChildByName(str));
 				}catch (e:Error) {
 				}
 			}
@@ -134,8 +134,8 @@
 			if (!_currentScope) {
 				throw new Error("No current scope; cannot switch to parent");
 			}
-			if (_currentScope.obj is DisplayObject) {
-				setScope(_currentScope.obj.parent);
+			if (_currentScope.targetObject is DisplayObject) {
+				setScope(_currentScope.targetObject.parent);
 			}
 			else {
 				throw new Error("Current scope is not a DisplayObject; cannot switch to parent");
@@ -184,7 +184,7 @@
 				var vd:VariableDesc = a[i];
 				console.print("		" + vd.name + ": " + vd.type);
 				try{
-					cv = currentScope.obj[vd.name];
+					cv = currentScope.targetObject[vd.name];
 					console.print("			value: " + ((cv is ByteArray) ? "[ByteArray]" : cv.toString()));
 				}catch (e:Error) {
 					
@@ -197,7 +197,7 @@
 				var ad:AccessorDesc = b[i];
 				console.print("		" + ad.name + ": " + ad.type);
 				try{
-					cv = currentScope.obj[ad.name];
+					cv = currentScope.targetObject[ad.name];
 					console.print("			value: " + ((cv is ByteArray) ? "[ByteArray]" : cv.toString()));
 				}catch (e:Error) {
 					
@@ -251,10 +251,10 @@
 		}
 		
 		public function printScope():void {
-			if (currentScope.obj is ByteArray) {
+			if (currentScope.targetObject is ByteArray) {
 				console.print("scope : [ByteArray]");
 			}else{
-				console.print("scope : " + currentScope.obj.toString());
+				console.print("scope : " + currentScope.targetObject.toString());
 			}
 		}
 		
@@ -266,30 +266,30 @@
 				arg = false;
 			}
 			try{
-				currentScope.obj[propertyName] = arg;
+				currentScope.targetObject[propertyName] = arg;
 			}catch (e:Error) {
 				console.print("Property '" + propertyName + "' could not be set", ConsoleMessageTypes.ERROR);
 			}
 			try{
-				return currentScope.obj[propertyName];
+				return currentScope.targetObject[propertyName];
 			}catch (e:Error) {
 				return null;
 			}
 		}
 		public function getPropertyOnObject(propertyName:String):String{
-			return currentScope.obj[propertyName].toString();
+			return currentScope.targetObject[propertyName].toString();
 		}
 		public function selectBaseScope():void {
 			setScope(console.parent);
 		}
 		public function callMethodOnScope(...args:Array):* {
 			var cmd:String = args.shift();
-			var func:Function = currentScope.obj[cmd];
-			return func.apply(currentScope.obj, args);
+			var func:Function = currentScope.targetObject[cmd];
+			return func.apply(currentScope.targetObject, args);
 		}
 		public function updateScope():void
 		{
-			setScope(currentScope.obj, true);
+			setScope(currentScope.targetObject, true);
 		}
 		public function doSearch(search:String,searchMode:int = SEARCH_METHODS):Vector.<String>
 		{

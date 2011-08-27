@@ -329,8 +329,8 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		}
 		private function startMeasure(selectMode:Boolean = false):void
 		{
-			if(_scopeManager.currentScope.obj is DisplayObject){
-				invoke(selectMode, _scopeManager.currentScope.obj as DisplayObject);
+			if(_scopeManager.currentScope.targetObject is DisplayObject){
+				invoke(selectMode, _scopeManager.currentScope.targetObject as DisplayObject);
 			}else {
 				invoke(selectMode, _console.stage);
 			}
