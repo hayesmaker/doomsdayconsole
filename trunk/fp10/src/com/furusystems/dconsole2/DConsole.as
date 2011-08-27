@@ -944,8 +944,7 @@
 					cancelSpaceBar(e);
 				}
 				return;
-			}
-			if (trigger2) {
+			}else if (trigger2) {
 				if (visible && stage.focus != input && stage.focus != input.inputTextField) {
 					input.focus();
 					cancelSpaceBar(e);
@@ -1102,12 +1101,14 @@
 					var select:Boolean = (firstWord == _selectCommand.trigger);
 					var searchResult:Vector.<String> = doSearch(word, !isFirstWord || select, isFirstWord, call);
 					if (searchResult.length == 1) {
-						input.selectWordAtCaret();
-						input.inputTextField.replaceSelectedText(searchResult[0] + " ");
-						input.moveCaretToIndex(wordIndex + searchResult[0].length+1);
-						return true;
+						if(searchResult[0].indexOf(word)==0){
+							input.selectWordAtCaret();
+							input.inputTextField.replaceSelectedText(searchResult[0] + " ");
+							input.moveCaretToIndex(wordIndex + searchResult[0].length + 1);
+							return true;
+						}
 					}else if (searchResult.length>1) {
-						input.moveCaretToIndex(wordIndex + word.length);
+						//input.moveCaretToIndex(wordIndex + word.length);
 						return true;
 					}
 				}
