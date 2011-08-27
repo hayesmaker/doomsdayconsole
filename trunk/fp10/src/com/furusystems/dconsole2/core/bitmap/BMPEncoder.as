@@ -1,4 +1,4 @@
-package  {
+package com.furusystems.dconsole2.core.bitmap {
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
