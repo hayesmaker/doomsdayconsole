@@ -18,9 +18,20 @@
 		<fore>BASE1</fore>
 		<back>BASE02</back>
 	</tooltip>
-	<dropdowns>
-		<fore>BASE1</fore>
+	<scalehandle>
+		<fore>BASE01</fore>
 		<back>BASE02</back>
+	</scalehandle>
+	<dropdowns>
+		<border>BASE03</border>
+		<active>
+			<fore>BASE0</fore>
+			<back>BASE02</back>
+		</active>
+		<inactive>
+			<fore>BASE01</fore>
+			<back>BASE03</back>
+		</inactive>
 	</dropdowns>
 	<scrollbars>
 		<fore>BASE1</fore>

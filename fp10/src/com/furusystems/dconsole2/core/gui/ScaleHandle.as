@@ -1,5 +1,7 @@
 ﻿package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -18,10 +20,11 @@
 	 * ...
 	 * @author Andreas Roenning
 	 */
-	public class ScaleHandle extends Sprite implements IContainable
+	public class ScaleHandle extends Sprite implements IContainable,IThemeable
 	{
 		
 		private var _dragging:Boolean = false;
+		private var allotedRect:Rectangle;
 		public function ScaleHandle() 
 		{
 			//buttonMode = true;
@@ -33,6 +36,7 @@
 			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			alpha = 0;
+			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 		}
 		
 		private function onMouseOut(e:MouseEvent):void 
@@ -61,6 +65,23 @@
 		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */
 		
 		public function onParentUpdate(allotedRect:Rectangle):void
+		{
+			this.allotedRect = allotedRect;
+			graphics.clear();
+			x = allotedRect.x;
+			y = allotedRect.y;
+			graphics.beginFill(Colors.SCALEHANDLE_BG, 1);
+			var h:Number = GUIUnits.SQUARE_UNIT / 2;
+			graphics.drawRect(0, 0, allotedRect.width, h);
+			graphics.endFill();
+			graphics.lineStyle(0, Colors.SCALEHANDLE_FG);
+			graphics.moveTo(3, h / 2);
+			graphics.lineTo(allotedRect.width - 3, h / 2);
+		}
+		
+		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemeable */
+		
+		public function onThemeChange(md:MessageData):void 
 		{
 			graphics.clear();
 			x = allotedRect.x;

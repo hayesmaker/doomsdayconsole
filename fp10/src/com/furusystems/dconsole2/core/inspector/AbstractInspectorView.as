@@ -144,9 +144,8 @@ package com.furusystems.dconsole2.core.inspector
 			return this;
 		}
 		
-		public function get tabIcon():BitmapData
-		{
-			throw new NotImplementedError();
+		public function get title():String {
+			throw new NotImplementedError("An inspector view must have a title");
 		}
 		
 		public function update(pm:PluginManager):void

@@ -63,7 +63,7 @@ package com.furusystems.dconsole2.core.inspector
 		public function addView(v:IDConsoleInspectorPlugin):void {
 			v.associateWithInspector(this);
 			_viewContainer.addChild(v.view);
-			_modeSelector.addButton(v);
+			_modeSelector.addOption(v);
 			_views.push(v.view);
 			setCurrentView(v.view);
 			v.view.resize();

@@ -1,5 +1,6 @@
 ﻿package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import flash.display.BlendMode;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -19,18 +20,13 @@
 	{
 		private var titleField:TextField;
 		private var headerBar:Sprite = new Sprite();
-		private var barHeight:int = 14;
+		private var barHeight:int = GUIUnits.SQUARE_UNIT;
 		private var barWidth:int;
 		private var optionsList:Sprite = new Sprite();
 		private var options:Vector.<DropDownOption> = new Vector.<DropDownOption>;
 		private var optionHeight:Number;
-		private var inverter:Shape = new Shape();
+		//private var inverter:Shape = new Shape();
 		private var selection:DropDownOption;
-		public function setTitle(newTitle:String):void {
-			titleField.text = newTitle;
-			barWidth = titleField.textWidth + 4;
-			draw();
-		}
 		public function DropDown(title:String = "Dropdown") 
 		{
 			
@@ -39,47 +35,61 @@
 			buttonMode = true;
 			titleField = new TextField();
 			titleField.autoSize = TextFieldAutoSize.LEFT;
-			titleField.defaultTextFormat = TextFormats.windowDefaultFormat;
-			titleField.text = title;
+			titleField.defaultTextFormat = TextFormats.consoleTitleFormat;
+			titleField.embedFonts = titleField.defaultTextFormat.font.charAt(0) != "_";
+			titleField.selectable = false;
 			titleField.mouseEnabled = false;
-			titleField.y = -2;
+			titleField.y = 1;
+			setTitle(title,false);
 			
 			headerBar.addChild(titleField);
 			
-			headerBar.graphics.beginFill(Colors.DROPDOWN_BG);
+			headerBar.graphics.clear();
+			headerBar.graphics.beginFill(Colors.DROPDOWN_FG_INACTIVE);
 			headerBar.graphics.drawRect(0, 0, barWidth, barHeight);
 			headerBar.graphics.endFill();
+			titleField.textColor = Colors.DROPDOWN_FG_ACTIVE;
+			
 			optionsList.visible = false;
-			inverter.blendMode = BlendMode.INVERT;
-			optionsList.addChild(inverter);
+			//inverter.visible = false;
+			//inverter.blendMode = BlendMode.INVERT;
+			//optionsList.addChild(inverter);
 			optionsList.y = barHeight;
-			filters = [new DropShadowFilter(4, 45, 0, 0.1, 8, 8)];
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 		
 		private function onMouseDown(e:MouseEvent):void 
 		{
-			optionsList.setChildIndex(inverter, optionsList.numChildren - 1);
+			//optionsList.setChildIndex(inverter, optionsList.numChildren - 1);
 			optionsList.visible = true;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			filters = [new DropShadowFilter(4, 45, 0, 0.1, 8, 8)];
 		}
 		
 		private function onMouseMove(e:MouseEvent):void 
 		{
 			var idx:int = Math.floor(optionsList.mouseY / optionHeight);
-			inverter.visible = (idx >= 0 && idx < options.length);
-			inverter.y = idx * optionHeight;
-			if (inverter.visible) {
+			var b:Boolean = (idx >= 0 && idx < options.length);
+			//inverter.y = idx * optionHeight;
+			if (b) {
 				selection = options[idx];
 			}else{
 				selection = null;
 			}
 		}
-		
+		public function setTitle(newTitle:String,redraw:Boolean = false):void {
+			titleField.text = newTitle;
+			barWidth = titleField.textWidth + 4;
+			if(redraw) draw();
+		}
 		private function onMouseUp(e:MouseEvent):void 
 		{
-			if (selection) dispatchEvent(new DropDownEvent(DropDownEvent.SELECTION, selection));
+			filters = [];
+			if (selection) {
+				dispatchEvent(new DropDownEvent(DropDownEvent.SELECTION, selection));
+				setTitle(selection.title,true);
+			}
 			optionsList.visible = false;
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -88,7 +98,28 @@
 			options.push(o);
 			o.index = options.length - 1;
 			optionsList.addChild(o);
+			if (o.isDefault) {
+				setTitle(o.title);
+			}
 			draw();
+		}
+		
+		public function updateAppearance():void 
+		{
+			for each(var o:DropDownOption in options) {
+				o.updateAppearance();
+			}
+			draw();
+		}
+		
+		public function removeOption(title:String):void 
+		{
+			//TODO: Remove options
+		}
+		
+		public function setCurrentSelection(title:String):void 
+		{
+			setTitle(title, true);
 		}
 		
 		private function draw():void
@@ -102,22 +133,33 @@
 				h += options[i].height;
 				if (options[i].width > w) w = options[i].width;
 			}
+			for each(var o:DropDownOption in options) {
+				o.setWidth(w);
+			}
 			barWidth = w;
 			optionsList.graphics.clear();
-			optionsList.graphics.lineStyle(0);
+			//optionsList.graphics.lineStyle(Colors.DROPDOWN_BORDER);
 			
-			optionsList.graphics.beginFill(Colors.DROPDOWN_BG);
+			optionsList.graphics.beginFill(Colors.DROPDOWN_BG_ACTIVE);
 			optionsList.graphics.drawRect(0, 0, w, h);
-			inverter.graphics.clear();
-			inverter.graphics.beginFill(BaseColors.WHITE);
-			inverter.graphics.drawRect(1, 1, barWidth-1, optionHeight-1);
-			inverter.graphics.endFill();
+			
+			headerBar.graphics.clear();
+			headerBar.graphics.beginFill(Colors.DROPDOWN_FG_INACTIVE);
+			headerBar.graphics.drawRect(0, 0, barWidth, barHeight);
+			headerBar.graphics.endFill();
+			titleField.textColor = Colors.DROPDOWN_FG_ACTIVE;
+			titleField.backgroundColor = Colors.DROPDOWN_BG_ACTIVE;
+			
+			//inverter.graphics.clear();
+			//inverter.graphics.beginFill(BaseColors.WHITE);
+			//inverter.graphics.drawRect(1, 1, Math.max(2,barWidth-1), Math.max(2,optionHeight-1));
+			//inverter.graphics.endFill();
 			redrawBar();
 		}
 		private function redrawBar():void {
 			headerBar.graphics.clear();
-			headerBar.graphics.beginFill(Colors.DROPDOWN_BG);
-			headerBar.graphics.lineStyle(0);
+			headerBar.graphics.beginFill(Colors.DROPDOWN_BG_ACTIVE);
+			headerBar.graphics.lineStyle(0,Colors.DROPDOWN_BORDER);
 			headerBar.graphics.drawRect(0, 0, barWidth, barHeight);
 			headerBar.graphics.endFill();
 		}

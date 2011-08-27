@@ -28,9 +28,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 	 */
 	public class InputMonitorUtil extends AbstractInspectorView implements IThemeable
 	{
-		[Embed(source='assets/ioMonitorIcon.png')]
-		private static var BitmapIcon:Class;
-		private static const TAB_ICON:BitmapData = Bitmap(new BitmapIcon()).bitmapData;
 		
 		private var kbm:KeyboardAccumulator = null;
 		private var output:TextField;
@@ -128,7 +125,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		public function onThemeChange(md:MessageData):void
 		{
 		}
-		override public function get tabIcon():BitmapData { return TAB_ICON; }
+		override public function get title():String { return "Input"; }
 		
 		override public function get descriptionText():String { 
 			return "Adds a dynamically updating table of current mouse and keyboard inputs";
