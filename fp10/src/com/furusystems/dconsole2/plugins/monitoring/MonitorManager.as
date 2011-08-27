@@ -96,7 +96,7 @@
 		
 		public function destroyMonitor():void
 		{
-			if (removeMonitor(scopeManager.currentScope.obj)) {
+			if (removeMonitor(scopeManager.currentScope.targetObject)) {
 				console.print("Removed", ConsoleMessageTypes.SYSTEM);
 			}else {
 				console.print("No such monitor", ConsoleMessageTypes.ERROR);
@@ -105,7 +105,7 @@
 		
 		public function createMonitor(...properties:Array):void
 		{
-			properties.unshift(scopeManager.currentScope.obj);
+			properties.unshift(scopeManager.currentScope.targetObject);
 			addMonitor.apply(this, properties);
 		}
 		public function setMonitorInterval(i:int = 300):int {

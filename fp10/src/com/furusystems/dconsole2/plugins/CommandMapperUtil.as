@@ -36,7 +36,7 @@ package com.furusystems.dconsole2.plugins
 			var target:IntrospectionScope = _console.currentScope;
 			for (var i:int = 0; i < target.methods.length; i++) 
 			{
-				_console.createCommand(target.methods[i].name, target.obj[target.methods[i].name], target.obj.toString());
+				_console.createCommand(target.methods[i].name, target.targetObject[target.methods[i].name], target.targetObject.toString());
 				methodsCreated[target.methods[i].name] = 1;
 			}
 		}

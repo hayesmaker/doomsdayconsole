@@ -31,7 +31,7 @@
 		
 		private function onScopeChanged(md:MessageData):void 
 		{
-			referenceDict["this"] = IntrospectionScope(md.data).obj;
+			referenceDict["this"] = IntrospectionScope(md.data).targetObject;
 		}
 		public function clearReferenceByName(name:String):void
 		{
@@ -66,7 +66,7 @@
 			if (!id) {
 				id = "ref" + uid;
 			}
-			referenceDict[id] = scopeManager.currentScope.obj;
+			referenceDict[id] = scopeManager.currentScope.targetObject;
 			printReferences();
 		}
 		public function createReference(o:*):void

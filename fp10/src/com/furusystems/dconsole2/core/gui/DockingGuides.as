@@ -23,7 +23,7 @@ package com.furusystems.dconsole2.core.gui
 		}
 		public function resize():void {
 			graphics.clear();
-			graphics.lineStyle(3, BaseColors.WARNING_ORANGE);
+			graphics.lineStyle(3, BaseColors.ORANGE);
 			graphics.lineTo(stage.stageWidth, 0);
 		}
 		public function show(position:int):void {

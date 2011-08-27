@@ -1,36 +1,13 @@
 ﻿package com.furusystems.dconsole2
 {
 	//{ imports
-	import com.furusystems.dconsole2.core.gui.debugdraw.DebugDraw;
-	import com.furusystems.dconsole2.core.helpmanager.HelpManager;
-	import com.furusystems.dconsole2.core.utils.StringUtil;
-	import com.furusystems.logging.slf4as.Logging;
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.desktop.Clipboard;
-	import flash.desktop.ClipboardFormats;
-	import flash.display.DisplayObject;
-	import flash.display.Loader;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
-	import flash.events.Event;
-	import flash.events.KeyboardEvent;
-	import flash.events.TextEvent;
-	import flash.geom.Rectangle;
-	import flash.net.URLRequest;
-	import flash.system.Capabilities;
-	import flash.system.System;
-	import flash.ui.Keyboard;
 	import com.furusystems.dconsole2.core.commands.CommandManager;
 	import com.furusystems.dconsole2.core.commands.ConsoleCommand;
 	import com.furusystems.dconsole2.core.commands.FunctionCallCommand;
-	
 	import com.furusystems.dconsole2.core.DSprite;
 	import com.furusystems.dconsole2.core.errors.CommandError;
 	import com.furusystems.dconsole2.core.errors.ConsoleAuthError;
+	import com.furusystems.dconsole2.core.gui.debugdraw.DebugDraw;
 	import com.furusystems.dconsole2.core.gui.DockingGuides;
 	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
 	import com.furusystems.dconsole2.core.gui.maindisplay.ConsoleView;
@@ -40,6 +17,7 @@
 	import com.furusystems.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
 	import com.furusystems.dconsole2.core.gui.ScaleHandle;
 	import com.furusystems.dconsole2.core.gui.ToolTip;
+	import com.furusystems.dconsole2.core.helpmanager.HelpManager;
 	import com.furusystems.dconsole2.core.input.KeyBindings;
 	import com.furusystems.dconsole2.core.input.KeyboardManager;
 	import com.furusystems.dconsole2.core.introspection.InspectionUtils;
@@ -60,8 +38,29 @@
 	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteDictionary;
 	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteManager;
 	import com.furusystems.dconsole2.core.text.TextUtils;
+	import com.furusystems.dconsole2.core.utils.StringUtil;
 	import com.furusystems.dconsole2.core.Version;
 	import com.furusystems.dconsole2.logging.ConsoleLogBinding;
+	import com.furusystems.logging.slf4as.Logging;
+	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
+	import flash.display.DisplayObject;
+	import flash.display.Loader;
+	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.TextEvent;
+	import flash.geom.Rectangle;
+	import flash.net.URLRequest;
+	import flash.system.Capabilities;
+	import flash.system.System;
+	import flash.ui.Keyboard;
+	
 	//}
 	/**
 	 * ActionScript 3 logger, commandline interface and utility platform
@@ -534,13 +533,13 @@
 			if(secondElement){
 				if (cmd == _callCommand) {
 					try{
-						helpText = InspectionUtils.getMethodTooltip(_scopeManager.currentScope.obj, secondElement);
+						helpText = InspectionUtils.getMethodTooltip(_scopeManager.currentScope.targetObject, secondElement);
 					}catch (e:Error) {
 						helpText = cmd.helpText;
 					}
 				}else if (cmd == _setCommand || cmd == _getCommand) {
 					try {
-						helpText = InspectionUtils.getAccessorTooltip(_scopeManager.currentScope.obj, secondElement);
+						helpText = InspectionUtils.getAccessorTooltip(_scopeManager.currentScope.targetObject, secondElement);
 					}catch (e:Error) {
 						helpText = cmd.helpText;
 					}
@@ -1225,7 +1224,7 @@
 		 * @see select
 		 */
 		public static function getCurrentTarget():Object {
-			return (console as DConsole).scopeManager.currentScope.obj;
+			return (console as DConsole).scopeManager.currentScope.targetObject;
 		}
 		/**
 		 * Get the singleton IConsole instance

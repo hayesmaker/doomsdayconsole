@@ -14,16 +14,16 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 		
 		public function OverviewTab(console:DConsole, scope:IntrospectionScope) 
 		{
-			var className:String = getQualifiedClassName(scope.obj);
+			var className:String = getQualifiedClassName(scope.targetObject);
 			super(className.split("::").pop(), true);
 			var i:int;
-			if (scope.obj is DisplayObject) {
-				var displayObject:DisplayObject = scope.obj as DisplayObject;
-				if (displayObject != displayObject.root) addField(new PropertyField(console, scope.obj, "name", "string", "readwrite"));
+			if (scope.targetObject is DisplayObject) {
+				var displayObject:DisplayObject = scope.targetObject as DisplayObject;
+				if (displayObject != displayObject.root) addField(new PropertyField(console, scope.targetObject, "name", "string", "readwrite"));
 				for (i = 0; i < scope.accessors.length; i++) 
 				{
 					if (scope.accessors[i].name.toLowerCase() == "parent") {
-						addField(new PropertyField(console, scope.obj, scope.accessors[i].name, scope.accessors[i].type, scope.obj[scope.accessors[i].name]));
+						addField(new PropertyField(console, scope.targetObject, scope.accessors[i].name, scope.accessors[i].type, scope.targetObject[scope.accessors[i].name]));
 						break;
 					}
 				}

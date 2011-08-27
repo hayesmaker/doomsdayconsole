@@ -74,7 +74,7 @@
 			_resizeHandle.graphics.beginFill(BaseColors.RED, 0);
 			_resizeHandle.graphics.drawRect(0, 0, SCALE_HANDLE_SIZE, SCALE_HANDLE_SIZE);
 			_resizeHandle.graphics.endFill();
-			_resizeHandle.graphics.lineStyle(0, BaseColors.DARK_GRAY);
+			_resizeHandle.graphics.lineStyle(0, BaseColors.GRAY);
 			_resizeHandle.graphics.moveTo(SCALE_HANDLE_SIZE, 0);
 			_resizeHandle.graphics.lineTo(0, SCALE_HANDLE_SIZE);
 			_resizeHandle.graphics.moveTo(SCALE_HANDLE_SIZE, 5);
@@ -218,11 +218,11 @@
 			GRADIENT_MATRIX.createGradientBox(rect.width * 3, rect.height * 3);
 			
 			_background.graphics.clear();	
-			_background.graphics.beginGradientFill(GradientType.RADIAL, [BaseColors.GRAY, BaseColors.LIGHT_GRAY], [1, 1], [0, 255], GRADIENT_MATRIX);
+			_background.graphics.beginGradientFill(GradientType.RADIAL, [BaseColors.GRAY, BaseColors.BLACK], [1, 1], [0, 255], GRADIENT_MATRIX);
 			_background.graphics.drawRect(0, 0, rect.width, rect.height);
 			
 			_header.graphics.clear();
-			_header.graphics.beginFill(BaseColors.V_DARK_GRAY);
+			_header.graphics.beginFill(BaseColors.BLACK);
 			_header.graphics.drawRect(0, 0, rect.width, BAR_HEIGHT);
 			_header.graphics.endFill();
 			

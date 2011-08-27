@@ -35,7 +35,7 @@ package com.furusystems.dconsole2.plugins.controller
 		
 		private function createController(...properties:Array):void
 		{
-			addController(_scopeManager.currentScope.obj, properties, 0, 0);
+			addController(_scopeManager.currentScope.targetObject, properties, 0, 0);
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */

@@ -85,8 +85,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 			out += "\tx: " + stage.mouseX+"\n";
 			out += "\ty: " + stage.mouseY+"\n";
 			out += "\tLMB: " + mouseDown + "\n";
-			if (pm.scopeManager.currentScope.obj is DisplayObject) {
-				var d:DisplayObject = DisplayObject(pm.scopeManager.currentScope.obj);
+			if (pm.scopeManager.currentScope.targetObject is DisplayObject) {
+				var d:DisplayObject = DisplayObject(pm.scopeManager.currentScope.targetObject);
 				out += "Local mouse:\n";
 				out += "\tx: " + d.mouseX + "\n";
 				out += "\ty: " + d.mouseY + "\n";

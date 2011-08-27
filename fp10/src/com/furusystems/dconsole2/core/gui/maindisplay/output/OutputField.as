@@ -277,7 +277,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 				//if ((msg.type == ConsoleMessageTypes.TRACE && !showTraceValues) || !msg.visible) continue;
 				var visible:Boolean = msg.visible;
 				var fmt:TextFormat;
-				textOutput.defaultTextFormat = fmt = TextFormats.outputTformatLineNo;
+				textOutput.defaultTextFormat = fmt = TextFormats.outputTformatDebug;
 				var lineNumStr:String = lineNum.toString();
 				if (lineNum < 100) {
 					lineNumStr = "0" + lineNumStr;
@@ -287,27 +287,24 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 				}
 				if (showLineNum) {
 					lineLength += lineNumStr.length + 2;
-					textOutput.appendText("[" + lineNumStr + "]");
+					appendWithFormat("[" + lineNumStr + "]", TextFormats.outputTformatLineNo);
 				}
-				
-				textOutput.defaultTextFormat = fmt = visible?TextFormats.outputTformatOld:TextFormats.outputTformatHidden;
 				if (showTimeStamp) {
-					textOutput.defaultTextFormat = visible?TextFormats.outputTformatTimeStamp:TextFormats.outputTformatHidden;
+					fmt = visible?TextFormats.outputTformatTimeStamp:TextFormats.outputTformatHidden;
 					date.setTime(msg.timestamp)
-					var dateStr:String = date.toLocaleDateString() + " " + date.toLocaleTimeString() + " ";
+					var dateStr:String = " "+date.toLocaleDateString() + " " + date.toLocaleTimeString() + " ";
 					lineLength += dateStr.length;
-					textOutput.appendText(dateStr);
+					appendWithFormat(dateStr, fmt);
 				}
 				if (showTag && msg.tag != "" && msg.tag != DConsole.TAG && visible) { 
-					textOutput.defaultTextFormat = visible?TextFormats.outputTformatTag:TextFormats.outputTformatHidden;
-					textOutput.appendText(" " + msg.tag);
+					fmt = visible?TextFormats.outputTformatTag:TextFormats.outputTformatHidden;
 					lineLength += (1 + msg.tag.length);
-					textOutput.defaultTextFormat = fmt;
+					appendWithFormat(" " + msg.tag, fmt);
 				}
 				if (msg.type == ConsoleMessageTypes.USER) {
-					textOutput.appendText(" < ");
+					appendWithFormat(" < ", TextFormats.outputTformatAux);
 				}else {
-					textOutput.appendText(" > ");
+					appendWithFormat(" > ", TextFormats.outputTformatAux);
 				}
 				lineLength += 3;
 				var _hooray:Boolean = false;
@@ -332,9 +329,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 							_hooray = true;
 							fmt = TextFormats.hoorayFormat; 
 						break;
+						case ConsoleMessageTypes.INFO:
+							fmt = TextFormats.outputTformatInfo;
+						break;
 						case ConsoleMessageTypes.TRACE:
 						case ConsoleMessageTypes.DEBUG:
-						case ConsoleMessageTypes.INFO:
 						default:
 							if(i==currentLogVector.length-1){
 								fmt = TextFormats.outputTformatNew;
@@ -368,9 +367,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 				}
 				
 				if (i != _scrollRange-1) {
-					textOutput.appendText(str + "\n");
+					appendWithFormat(str + "\n", fmt);
 				}else {
-					textOutput.appendText(str);
+					appendWithFormat(str, fmt);
 				}
 				try {
 					if (_hooray) {
@@ -380,6 +379,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 							textOutput.setTextFormat(fmt, idx + sindex, idx + sindex + str.length - sindex);
 						}
 					}else {
+						//if(str.length>0) textOutput.setTextFormat(fmt, idx, idx + str.length);
 						if(str.length>0) textOutput.setTextFormat(fmt, idx, idx + str.length);
 					}
 				}catch (e:Error) {
@@ -391,6 +391,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 				//_logManager.currentLog.setClean();
 			}
 			_scrollbar.draw(_textOutput.height, _scrollIndex, maxScroll);
+		}
+		private function appendWithFormat(string:String, format:TextFormat):void {
+			var idx:int = textOutput.length;
+			textOutput.appendText(string);
+			textOutput.setTextFormat(format, idx, textOutput.length);
 		}
 		
 		private function clear():void 

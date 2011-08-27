@@ -75,7 +75,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 			_tabs.add(t);
 			t = new InheritanceTab(_console, scope);
 			_tabs.add(t);
-			if (scope.obj is DisplayObject) {
+			if (scope.targetObject is DisplayObject) {
 				t = new TransformTab(_console, scope);
 				_tabs.add(t);
 				t.averageSplits();
@@ -104,7 +104,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 				for (i = 0; i < scope.variables.length; i++) 
 				{
 					var vd:VariableDesc = scope.variables[i];
-					t.addField(new PropertyField(_console, scope.obj, vd.name, vd.type)).width = scrollRect.width;
+					t.addField(new PropertyField(_console, scope.targetObject, vd.name, vd.type)).width = scrollRect.width;
 				}
 				t.sortFields();
 				_tabs.add(t);
@@ -117,7 +117,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 					var ad:AccessorDesc = scope.accessors[i];
 					var f:PropertyField;
 					//if (ad.access == "writeonly") continue;
-					f = new PropertyField(_console, scope.obj, ad.name, ad.type, ad.access);
+					f = new PropertyField(_console, scope.targetObject, ad.name, ad.type, ad.access);
 					t.addField(f);
 				}
 				t.sortFields();
