@@ -27,9 +27,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 	 */
 	public class TreeViewUtil extends AbstractInspectorView implements IRenderable,IThemeable
 	{
-		[Embed(source='assets/displaylist_icon.png')]
-		private static var BitmapIcon:Class;
-		private static const TAB_ICON:BitmapData = Bitmap(new BitmapIcon()).bitmapData;
 		private var _console:DConsole;
 		
 		protected var _root:DisplayObjectContainer;
@@ -153,7 +150,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			_mouseSelectButton.updateAppearance();
 		}
 		
-		override public function get tabIcon():BitmapData { return TAB_ICON; }
+		override public function get title():String { return "Display list"; }
 		
 		override public function get descriptionText():String { 
 			return "Adds a tree view representing the current displaylist";

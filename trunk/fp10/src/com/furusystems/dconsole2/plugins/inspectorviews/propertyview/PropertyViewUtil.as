@@ -28,9 +28,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	 */
 	public class PropertyViewUtil extends AbstractInspectorView implements IThemeable
 	{
-		[Embed(source='assets/magnifierIcon.png')]
-		private static var BitmapIcon:Class;
-		private static const TAB_ICON:BitmapData = Bitmap(new BitmapIcon()).bitmapData;
 		
 		private var _tabs:TabCollection;
 		private var _console:DConsole;
@@ -154,7 +151,9 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 		{
 			_tabs.update(true);
 		}
-		override public function get tabIcon():BitmapData { return TAB_ICON; }
+		override public function get title():String {
+			return "Properties";
+		}
 		
 		override public function get descriptionText():String { 
 			return "Adds a dynamically updating table of editable properties for the current scope";

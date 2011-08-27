@@ -16,8 +16,11 @@ package com.furusystems.dconsole2.core.style
 		public static var TOOLTIP_BG:uint =  BaseColors.BLACK;
 		public static var TOOLTIP_FG:uint =  BaseColors.WHITE;
 		
-		public static var DROPDOWN_BG:uint =  BaseColors.BLACK;
-		public static var DROPDOWN_FG:uint =  BaseColors.WHITE;
+		public static var DROPDOWN_BORDER:uint =  BaseColors.BLACK;
+		public static var DROPDOWN_BG_ACTIVE:uint =  BaseColors.BLACK;
+		public static var DROPDOWN_FG_ACTIVE:uint =  BaseColors.WHITE;
+		public static var DROPDOWN_BG_INACTIVE:uint =  BaseColors.BLACK;
+		public static var DROPDOWN_FG_INACTIVE:uint =  BaseColors.WHITE;
 		
 		public static var SCALEHANDLE_BG:uint =  BaseColors.BLACK;
 		public static var SCALEHANDLE_FG:uint =  BaseColors.WHITE;
@@ -74,8 +77,11 @@ package com.furusystems.dconsole2.core.style
 			LOCKED = sm.theme.data.labels.locked;
 			TOOLTIP_FG = sm.theme.data.tooltip.fore;
 			TOOLTIP_BG = sm.theme.data.tooltip.back;
-			DROPDOWN_FG = sm.theme.data.dropdowns.fore;
-			DROPDOWN_BG = sm.theme.data.dropdowns.back;
+			DROPDOWN_BORDER = sm.theme.data.dropdowns.border;
+			DROPDOWN_FG_ACTIVE = sm.theme.data.dropdowns.active.fore;
+			DROPDOWN_BG_ACTIVE = sm.theme.data.dropdowns.active.back;
+			DROPDOWN_FG_INACTIVE = sm.theme.data.dropdowns.inactive.fore;
+			DROPDOWN_BG_INACTIVE = sm.theme.data.dropdowns.inactive.back;
 			SCALEHANDLE_BG = sm.theme.data.core.back; //TODO: Some modifier for alphas
 			SCROLLBAR_FG = sm.theme.data.scrollbars.fore;
 			SCROLLBAR_BG = sm.theme.data.scrollbars.back;
@@ -104,6 +110,9 @@ package com.furusystems.dconsole2.core.style
 			INSPECTOR_PROPERTY_FIELD_NAME_BG = sm.theme.data.inspector.propertyview.fields.name.back;
 			INSPECTOR_PROPERTY_CONTROL_FIELD_FG = sm.theme.data.inspector.propertyview.fields.value.fore;
 			INSPECTOR_PROPERTY_CONTROL_FIELD_BG = sm.theme.data.inspector.propertyview.fields.value.back;
+			
+			SCALEHANDLE_BG = sm.theme.data.scalehandle.back;
+			SCALEHANDLE_FG = sm.theme.data.scalehandle.fore;
 			
 			BUTTON_ACTIVE_FG = sm.theme.data.buttons.active.fore;
 			BUTTON_ACTIVE_BG = sm.theme.data.buttons.active.back;

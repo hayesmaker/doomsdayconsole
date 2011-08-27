@@ -38,7 +38,7 @@
 		public static const outputTformatAux:TextFormat = 	makeFormat(OUTPUT_FONT, 		OUTPUT_SIZE, 		TextColors.TEXT_AUX);
 		//TODO: Running out of colors here. Need to take another gander at these	
 		public static const consoleTitleFormat:TextFormat = 	makeFormat(GUI_FONT, 		GUI_SIZE, 		BaseColors.WHITE);
-		public static const windowDefaultFormat:TextFormat = 	makeFormat(GUI_FONT, 		GUI_SIZE, 		BaseColors.BLACK);
+		public static const windowDefaultFormat:TextFormat = 	makeFormat(GUI_FONT, 		GUI_SIZE, 		BaseColors.WHITE);
 		/**
 		 * Returns a textformat copy with inverted color
 		 * @param	tformat

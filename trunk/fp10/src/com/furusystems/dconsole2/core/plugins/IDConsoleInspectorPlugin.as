@@ -11,8 +11,8 @@ package com.furusystems.dconsole2.core.plugins
 	public interface IDConsoleInspectorPlugin extends IUpdatingDConsolePlugin
 	{
 		function get view():AbstractInspectorView;
-		function get tabIcon():BitmapData;
 		function associateWithInspector(inspector:Inspector):void;
+		function get title():String;
 	}
 	
 }
