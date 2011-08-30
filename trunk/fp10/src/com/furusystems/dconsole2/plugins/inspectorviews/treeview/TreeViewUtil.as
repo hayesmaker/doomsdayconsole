@@ -28,6 +28,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 	public class TreeViewUtil extends AbstractInspectorView implements IRenderable,IThemeable
 	{
 		private var _console:DConsole;
+		private var _pm:PluginManager;
 		
 		protected var _root:DisplayObjectContainer;
 		protected var _rootNode:ListNode;
@@ -39,6 +40,36 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			_mouseSelectButton = new EyeDropperButton();
 			//addChild(_mouseSelectButton).y = 2; //TODO: Show button when functionality implemented
 			_mouseSelectButton.addEventListener(MouseEvent.MOUSE_DOWN, activateMouseSelect);
+			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
+		}
+		
+		private function onScopeChangeComplete():void 
+		{
+			consolidateSelection();
+		}
+		
+		private function consolidateSelection():void 
+		{
+			if (_pm.scopeManager.currentScope.targetObject is DisplayObject) {
+				//trace("\tIt's a display object");
+				if (DisplayObject(_pm.scopeManager.currentScope.targetObject).stage != null) {
+					//trace("\tIt's on stage");
+					if (ListNode.table[_pm.scopeManager.currentScope.targetObject] != null) {
+						//trace("\tThere's a node for it");
+						select(_pm.scopeManager.currentScope.targetObject as DisplayObject);
+					}else {
+						//trace("\tThere is no node for it");
+					}
+				}
+			}else {
+				//trace("NEGATIVE");
+				clearSelection();
+			}
+		}
+		
+		public function clearSelection():void 
+		{
+			ListNode.clearSelections();
 		}
 		
 		private function activateMouseSelect(e:MouseEvent):void 
@@ -46,7 +77,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			
 		}
 		public function setSelection(node:ListNode):void {
-			scrollTo(node);
+			select(node.displayObject);
+			//scrollTo(node);
 		}
 		public function render():void
 		{
@@ -62,7 +94,10 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		
 		public function set rootNode(value:DisplayObjectContainer):void 
 		{
-			if (_rootNode) _scrollableContent.removeChild(_rootNode);
+			if (_rootNode) {
+				_scrollableContent.removeChild(_rootNode);
+			}
+			ListNode.clearTable();
 			_rootNode = new ListNode(value, null, this);
 			_scrollableContent.addChildAt(_rootNode, 0);
 			render();
@@ -87,15 +122,15 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		}
 		override protected function onShow():void 
 		{
-			populate(stage);	
-			if (_console.currentScope.targetObject is DisplayObject) {
-				if (DisplayObject(_console.currentScope.targetObject).stage) {
-					select(DisplayObject(_console.currentScope.targetObject));
-				}
-			}
+			populate(stage);
+			consolidateSelection();
 			super.onShow();
 		}
+		public function rebuild():void {
+			
+		}
 		public function select(target:DisplayObject):void {
+			//trace("Select: " + target);
 			var node:ListNode;
 			if (ListNode.table[target] != null) {
 				//not found
@@ -103,7 +138,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			}else {
 				node = DFS.search(target, _rootNode);
 			}
-			collapseAll();
+			//collapseAll();
 			if (!node) return;
 			while (node.parentNode != null) {
 				node = node.parentNode;
@@ -111,6 +146,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			}
 			render();
 			scrollTo(ListNode.table[target]);
+			ListNode.table[target].selected = true;
 		}
 		public function collapseAll():void {
 			for each (var node:ListNode in ListNode.table) 
@@ -157,8 +193,16 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		}
 		override public function initialize(pm:PluginManager):void 
 		{
+			_pm = pm;
 			_console = pm.console;
+			consolidateSelection();
 			super.initialize(pm);
+		}
+		public override function shutdown(pm:PluginManager):void 
+		{
+			_pm = null;
+			_console = null;
+			super.shutdown(pm);
 		}
 	}
 }

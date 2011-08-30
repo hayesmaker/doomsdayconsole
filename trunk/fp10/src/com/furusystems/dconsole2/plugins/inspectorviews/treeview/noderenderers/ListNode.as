@@ -1,5 +1,7 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 {
+	import com.furusystems.dconsole2.core.style.TextColors;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -21,8 +23,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 	
 	public final class ListNode extends Sprite implements INodeRenderer
 	{
-		public static const table:Dictionary = new Dictionary(true);
-		private static const tf:TextFormat = new TextFormat("_sans", 10, Colors.TREEVIEW_FG);
+		public static var table:Dictionary = new Dictionary(true);
 		private static var lastSelected:ListNode = null;
 		
 		private var displayObjectReference:Dictionary = new Dictionary(true);
@@ -45,7 +46,19 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 			if (displayObjectReference[0] != null) return DisplayObject(displayObjectReference[0]);
 			throw new Error("Display object reference is null");
 		}
+		public static function clearSelections():void {
+			for each(var l:ListNode in table) {
+				l.selected = false;
+			}
+		}
+		
+		public static function clearTable():void 
+		{
+			table = new Dictionary(true);
+			lastSelected = null;
+		}
 		public function set displayObject(d:DisplayObject):void {
+			
 			displayObjectReference[0] = d;
 		}
 		public function ListNode(displayObject:DisplayObject, parent:ListNode, treeView:TreeViewUtil)
@@ -60,8 +73,9 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 			
 			_labelField = new TextField();
 			_labelField.autoSize = TextFieldAutoSize.LEFT;
-			_labelField.defaultTextFormat = tf;
+			_labelField.defaultTextFormat = TextFormats.windowDefaultFormat;
 			_labelField.textColor = Colors.TREEVIEW_FG;
+			_labelField.embedFonts = true;
 			_labelField.selectable = false;
 			_labelField.addEventListener(MouseEvent.CLICK, onClick);
 			//_labelField.doubleClickEnabled = true;
@@ -70,21 +84,23 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 			
 			setLabel();
 			
-			_selectedOverlay = new Shape();
-			_selectedOverlay.blendMode = BlendMode.INVERT;
-			_selectedOverlay.visible = _selected;
-			addChild(_selectedOverlay);
+			//_selectedOverlay = new Shape();
+			//_selectedOverlay.blendMode = BlendMode.INVERT;
+			//_selectedOverlay.visible = _selected;
+			//addChild(_selectedOverlay);
 			addChild(plusButton);
 			addChild(minusButton);
 			plusButton.visible = minusButton.visible = false;
 			
 			plusButton.addEventListener(MouseEvent.CLICK, onPlusClick, false, 0, true);
 			minusButton.addEventListener(MouseEvent.CLICK, onMinusClick, false, 0, true);
+			buildChildren();
 		}
 		
 		private function onMinusClick(e:MouseEvent):void 
 		{
 			expanded = false;
+			//treeView.setSelection(this);
 			treeView.render();
 			treeView.scrollTo(this);
 		}
@@ -98,7 +114,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 		private function onClick(e:MouseEvent):void 
 		{
 			treeView.onDisplayObjectSelected(displayObject);
-			selected = true;
 		}
 		private function onMouseOut(e:MouseEvent):void 
 		{
@@ -118,7 +133,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 		
 		public function render():void
 		{
-			_labelField.textColor = Colors.TREEVIEW_FG;
+			_labelField.textColor = _selected?TextColors.TEXT_INFO:TextColors.TEXT_AUX;
 			graphics.clear();
 			graphics.lineStyle(0, Colors.TREEVIEW_FG);
 			clear();
@@ -224,13 +239,15 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview.noderenderers
 		 */
 		public function set selected(value:Boolean):void 
 		{
+			if (_selected == value) return;
 			if (lastSelected && lastSelected != this) lastSelected.selected = false;
 			var rect:Rectangle = _labelField.getRect(this);
-			_selectedOverlay.visible = _selected = value;
-			_selectedOverlay.graphics.clear();
-			_selectedOverlay.graphics.beginFill(BaseColors.BLACK);
-			_selectedOverlay.graphics.drawRect(0, 0, hasChildren?rect.width + 12:rect.width, rect.height);
-			_selectedOverlay.graphics.endFill();
+			_selected = value;
+			_labelField.textColor = _selected?TextColors.TEXT_INFO:TextColors.TEXT_AUX;
+			//_selectedOverlay.graphics.clear();
+			//_selectedOverlay.graphics.beginFill(BaseColors.BLACK);
+			//_selectedOverlay.graphics.drawRect(0, 0, hasChildren?rect.width + 12:rect.width, rect.height);
+			//_selectedOverlay.graphics.endFill();
 			lastSelected = this;
 		}
 		
