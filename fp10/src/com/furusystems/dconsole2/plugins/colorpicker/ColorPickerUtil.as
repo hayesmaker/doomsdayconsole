@@ -154,6 +154,12 @@
 			return "Adds a color picker utility for sampling colors from the stage";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

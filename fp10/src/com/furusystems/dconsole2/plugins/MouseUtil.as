@@ -34,6 +34,11 @@ package com.furusystems.dconsole2.plugins
 		{
 			return "Adds command shortcuts for Mouse.show() and Mouse.hide()";
 		}
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
 		
 	}
 

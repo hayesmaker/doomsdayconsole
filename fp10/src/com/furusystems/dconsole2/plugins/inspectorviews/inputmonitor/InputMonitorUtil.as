@@ -130,6 +130,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		override public function get descriptionText():String { 
 			return "Adds a dynamically updating table of current mouse and keyboard inputs";
 		}
+		
+		
 	}
 
 }

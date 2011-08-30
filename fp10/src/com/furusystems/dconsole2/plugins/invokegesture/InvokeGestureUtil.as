@@ -118,6 +118,12 @@ package com.furusystems.dconsole2.plugins.invokegesture
 			_bl.y = _br.y = _stage.stageHeight - _bl.height;
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 		
 	}
 

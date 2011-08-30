@@ -22,6 +22,15 @@ package com.furusystems.dconsole2.plugins.notepad
 		override public function get descriptionText():String { 
 			return "Adds a simple persistent text input window to the inspector";
 		}
+		override public function get title():String 
+		{
+			return "Notepad";
+		}
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
 		
 		
 	}

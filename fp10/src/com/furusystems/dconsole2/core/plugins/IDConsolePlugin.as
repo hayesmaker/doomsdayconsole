@@ -21,6 +21,11 @@ package com.furusystems.dconsole2.core.plugins
 		 * Should return a short text describing this plugin
 		 */
 		function get descriptionText():String;
+		
+		/**
+		 * Returns a list of plugin types this plugin requires
+		 */
+		function get dependencies():Vector.<Class>;
 	}
 	
 }

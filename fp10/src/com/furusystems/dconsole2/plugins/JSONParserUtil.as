@@ -49,6 +49,12 @@ package com.furusystems.dconsole2.plugins
 			return "Adds JSON parsing of command arguments";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

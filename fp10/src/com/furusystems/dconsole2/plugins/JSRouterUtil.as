@@ -105,6 +105,12 @@ package com.furusystems.dconsole2.plugins
 			return "Enables console access to javascript log/alert, and javascript access to console executeStatement";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

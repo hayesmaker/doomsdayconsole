@@ -59,6 +59,12 @@ package com.furusystems.dconsole2.plugins.mediatester
 			return "Enables the creation of rudimentary media players for testing streamed/progressive content";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

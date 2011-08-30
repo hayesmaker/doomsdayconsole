@@ -2,6 +2,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 {
 	import com.furusystems.dconsole2.core.plugins.IPluginBundle;
 	import com.furusystems.dconsole2.plugins.BatchRunnerUtil;
+	import com.furusystems.dconsole2.plugins.BugReporterUtil;
 	import com.furusystems.dconsole2.plugins.BytearrayHexdumpUtil;
 	import com.furusystems.dconsole2.plugins.ChainsawConnectorUtil;
 	import com.furusystems.dconsole2.plugins.ClassFactoryUtil;
@@ -60,6 +61,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 				ChainsawConnectorUtil,
 				InvokeGestureUtil,
 				InputMonitorUtil,
+				BugReporterUtil,
 				TreeViewUtil
 			]);
 		}

@@ -13,10 +13,6 @@ package com.furusystems.dconsole2.plugins
 	{
 		private var _pmanager:PluginManager;
 		private var _fileRef:FileReference = new FileReference();
-		private function saveLogXML():void {
-			var xml:XML = buildLogXML();
-			_fileRef.save(xml, "ConsoleLog_" + xml.@date + ".xml");
-		}
 		public function buildLogXML():XML {
 			var messages:Vector.<ConsoleMessage> = _pmanager.logManager.currentLog.messages;
 			var logDoc:XML = <log4j:log xmlns:log4j="http://logging.apache.org/log4j/" />;
@@ -67,7 +63,7 @@ package com.furusystems.dconsole2.plugins
 			return logDoc;
 		}
 		
-		private function saveLogTXT():void
+		private function buildLogTxt():String
 		{
 			var messages:Vector.<ConsoleMessage> = _pmanager.logManager.currentLog.messages;
 			var out:String = "";
@@ -111,22 +107,28 @@ package com.furusystems.dconsole2.plugins
 				}
 				out += messages[i].text + "\r\n";
 			}
-			var dateStr:String = new Date().toString().split(" ").join("_");
-			dateStr = dateStr.split(":").join("-");
-			_fileRef.save(out, "ConsoleLog_" + dateStr + ".txt");
+			return out;
+			//var dateStr:String = new Date().toString().split(" ").join("_");
+			//dateStr = dateStr.split(":").join("-");
+			//_fileRef.save(out, "ConsoleLog_" + dateStr + ".txt");
 		}
 		
 		private function saveLog(arg:String = "txt"):void
 		{
+			var data:*;
+			var extension:String;
 			switch(arg.toLowerCase()) {
 				case "txt":
 				case "text":
-				saveLogTXT();
+					data = buildLogTxt();
+					extension = ".txt";
 				break;
 				case "xml":
-				saveLogXML();
+					data = buildLogXML();
+					extension = ".xml";
 				break;
 			}
+			_fileRef.save(data, "ConsoleLog_" + new Date().toString() + extension);
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
@@ -146,6 +148,12 @@ package com.furusystems.dconsole2.plugins
 		public function get descriptionText():String
 		{
 			return "Enables the saving of console sessions to file";
+		}
+		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
 		}
 		
 	}

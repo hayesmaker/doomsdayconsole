@@ -46,6 +46,12 @@ package com.furusystems.dconsole2.plugins
 			return "Enables readouts of embedded fonts";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

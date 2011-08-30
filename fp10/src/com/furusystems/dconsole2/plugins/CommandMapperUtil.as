@@ -50,6 +50,12 @@ package com.furusystems.dconsole2.plugins
 			_console = null;
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

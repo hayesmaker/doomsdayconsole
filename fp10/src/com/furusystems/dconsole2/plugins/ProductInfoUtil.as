@@ -162,6 +162,12 @@ package com.furusystems.dconsole2.plugins
 		{
 			return "Displays the contents of Flex ProductInfo tag (Flex SWFs only)";
 		}
+		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
 
 	}
 }
