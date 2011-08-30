@@ -71,6 +71,12 @@ package com.furusystems.dconsole2.plugins
 			return "Enables batch running of console statements from file";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

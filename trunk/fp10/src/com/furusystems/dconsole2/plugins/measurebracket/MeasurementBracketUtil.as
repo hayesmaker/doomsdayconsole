@@ -362,6 +362,12 @@ package com.furusystems.dconsole2.plugins.measurebracket
 			return "Enables a scalable, snapping measurement bracket for accurate pixel measurements";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 	
 }

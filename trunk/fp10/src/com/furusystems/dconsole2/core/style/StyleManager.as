@@ -54,6 +54,13 @@ package com.furusystems.dconsole2.core.style
 			if (_loadTallyTarget == 0) consolidateStyle();
 		}
 		
+		public function setThemeXML (colors:XML, theme:XML):void 
+		{
+			setColors(colors);
+			setTheme(theme);
+			consolidateStyle();
+		}
+		
 		private function onColorsLoaded(e:Event):void 
 		{
 			setColors(XML(_colorLoader.data));

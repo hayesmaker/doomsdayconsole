@@ -46,7 +46,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 		private function onMouseWheel(e:MouseEvent):void 
 		{
 			if(ControlField.FOCUSED_FIELD == null){
-				scrollByDelta(0, e.delta * 5);
+				scrollByDelta(0, e.delta * 5);7
 			}else {
 				
 			}
@@ -158,6 +158,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 		override public function get descriptionText():String { 
 			return "Adds a dynamically updating table of editable properties for the current scope";
 		}
+		
 	}
 
 }

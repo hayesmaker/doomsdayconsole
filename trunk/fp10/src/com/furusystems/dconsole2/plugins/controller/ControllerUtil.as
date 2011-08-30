@@ -66,6 +66,12 @@ package com.furusystems.dconsole2.plugins.controller
 			return "Enables the creation of GUI widgets for interactive alteration of properties";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

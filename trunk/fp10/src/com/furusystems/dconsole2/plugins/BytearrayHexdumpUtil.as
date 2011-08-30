@@ -151,5 +151,11 @@ package  com.furusystems.dconsole2.plugins
 		{
 			return "Enables the reading of ByteArrays as paged, tabulated hexadecimal";
 		}
+		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
 	}
 }

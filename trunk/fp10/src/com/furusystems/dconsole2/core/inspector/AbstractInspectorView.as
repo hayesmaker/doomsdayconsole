@@ -166,6 +166,12 @@ package com.furusystems.dconsole2.core.inspector
 		{
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

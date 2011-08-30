@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.core.plugins 
 {
+	import com.furusystems.dconsole2.plugins.ScreenshotUtil;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.utils.describeType;
@@ -62,6 +63,11 @@ package com.furusystems.dconsole2.core.plugins
 			if (obj is IDConsolePlugin) {
 				var plugInstance:IDConsolePlugin = obj as IDConsolePlugin;
 				if (_pluginMap[plug] == null) {
+					if (plugInstance.dependencies.length > 0) {
+						for each(var c:Class in plugInstance.dependencies) {
+							registerPlugin(c);
+						}
+					}
 					plugInstance.initialize(this);
 					_pluginMap[plug] = plugInstance;
 					if (plugInstance is IDConsoleInspectorPlugin) {
@@ -121,6 +127,14 @@ package com.furusystems.dconsole2.core.plugins
 			for each(var plug:IUpdatingDConsolePlugin in _updatingPlugins) {
 				plug.update(this);
 			}
+		}
+		
+		public function getPluginByType(type:Class):IDConsolePlugin 
+		{
+			if (_pluginMap[type] != null) {
+				return _pluginMap[type] as IDConsolePlugin;
+			}
+			return null;
 		}
 		public function get console():DConsole {
 			return _console;

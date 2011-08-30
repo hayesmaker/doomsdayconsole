@@ -17,7 +17,7 @@ package com.furusystems.dconsole2.plugins
 		private const _fileRef:FileReference = new FileReference();
 		private var _console:DConsole;
 		
-		private function getScreenshot(target:DisplayObject = null):BitmapData
+		public function getScreenshot(target:DisplayObject = null):BitmapData
 		{
 			var bmd:BitmapData;
 			_console.isVisible = false;
@@ -32,12 +32,15 @@ package com.furusystems.dconsole2.plugins
 			return bmd;
 		}
 		
-		private function saveScreenshot(target:DisplayObject = null,title:String = ""):void
+		public function saveScreenshot(target:DisplayObject = null,title:String = ""):void
 		{
 			var screenGrab:BitmapData = getScreenshot(target);
 			var pngBytes:ByteArray = PNGEncoder.encode(screenGrab);
 			if (title == "") title = "Screenshot";
 			_fileRef.save(pngBytes, title + ".png");
+		}
+		public function getPNG(bitmapData:BitmapData):ByteArray {
+			return PNGEncoder.encode(bitmapData);
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
@@ -58,6 +61,12 @@ package com.furusystems.dconsole2.plugins
 		public function get descriptionText():String
 		{
 			return "Enables saving of screenshots of selections or the full stage";
+		}
+		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
 		}
 		
 	}

@@ -86,6 +86,12 @@ package com.furusystems.dconsole2.plugins
 			return "Enables the creation of class instances, and access to class types from 'getDefinitionByName'";
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }

@@ -1472,6 +1472,11 @@
 			console.view.dockingMode = mode;
 		}
 		
+		public function setStyle(colors:XML,theme:XML):void 
+		{
+			_styleManager.setThemeXML(colors, theme);
+		}
+		
 		//TODO: Reimplement at instance level and delegate to static
 		/**
 		 * Lock

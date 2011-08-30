@@ -50,6 +50,12 @@ package com.furusystems.dconsole2.plugins
 			pm.console.removeCommand("loadDisplayObject");
 		}
 		
+				
+		public function get dependencies():Vector.<Class> 
+		{
+			return new Vector.<Class>();
+		}
+		
 	}
 
 }
