@@ -74,7 +74,7 @@
 			consoleTitleFormat.color = BaseColors.WHITE;
 			windowDefaultFormat.color = BaseColors.BLACK;
 			
-			trace("Text color: " + outputTformatTag.color.toString(16));
+			//trace("Text color: " + outputTformatTag.color.toString(16));
 		}
 		
 	}
