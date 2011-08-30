@@ -94,6 +94,10 @@ package com.furusystems.dconsole2.core
 		public static const HELP_TOPIC_ADD_REQUEST:Message = new Message();
 		
 		public static const HELP_TOPIC_REMOVE_REQUEST:Message = new Message();
+		/**
+		 * Sent by the scope manager when a scope change is about to take place
+		 */
+		public static const SCOPE_CHANGE_BEGUN:Message = new Message();
 	}
 
 }
