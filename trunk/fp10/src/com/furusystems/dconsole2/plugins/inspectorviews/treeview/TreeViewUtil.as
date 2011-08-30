@@ -196,10 +196,24 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			_pm = pm;
 			_console = pm.console;
 			consolidateSelection();
+			_console.createCommand("searchDlByName", searchDisplayListByName, "Display", "Searches the display list for a named display object");
 			super.initialize(pm);
+		}
+		
+		private function searchDisplayListByName(name:String):void 
+		{
+			for each(var dl:ListNode in ListNode.table) {
+				if (dl.displayObject != null&&dl.displayObject.name!=null) {
+					if (dl.displayObject.name.toLowerCase() == name.toLowerCase()) {
+						PimpCentral.send(Notifications.SCOPE_CHANGE_REQUEST, dl.displayObject);
+						return;
+					}
+				}
+			}
 		}
 		public override function shutdown(pm:PluginManager):void 
 		{
+			_console.removeCommand("searchDlByName");
 			_pm = null;
 			_console = null;
 			super.shutdown(pm);
