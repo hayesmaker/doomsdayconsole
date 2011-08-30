@@ -1091,7 +1091,7 @@
 					if (input.text.charAt(input.text.length-1)!=" ") {
 						input.inputTextField.appendText(" ");
 					}
-					input.caretToEnd();
+					input.moveCaretToEnd();
 				}
 				return true;
 			}else {
@@ -1107,8 +1107,8 @@
 							input.moveCaretToIndex(wordIndex + searchResult[0].length + 1);
 							return true;
 						}
-					}else if (searchResult.length>1) {
-						//input.moveCaretToIndex(wordIndex + word.length);
+					}else if (searchResult.length > 1) {
+						input.moveCaretToEnd();
 						return true;
 					}
 				}

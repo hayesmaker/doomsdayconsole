@@ -24,6 +24,7 @@ package com.furusystems.dconsole2.plugins.plugcollections
 	import com.furusystems.dconsole2.plugins.PerformanceTesterUtil;
 	import com.furusystems.dconsole2.plugins.ProductInfoUtil;
 	import com.furusystems.dconsole2.plugins.ScreenshotUtil;
+	import com.furusystems.dconsole2.plugins.SelectionHistoryUtil;
 	import com.furusystems.dconsole2.plugins.StageUtil;
 	import com.furusystems.dconsole2.plugins.StatsOutputUtil;
 	import com.furusystems.dconsole2.plugins.SystemInfoUtil;
@@ -62,7 +63,8 @@ package com.furusystems.dconsole2.plugins.plugcollections
 				InvokeGestureUtil,
 				InputMonitorUtil,
 				BugReporterUtil,
-				TreeViewUtil
+				TreeViewUtil,
+				SelectionHistoryUtil
 			]);
 		}
 		

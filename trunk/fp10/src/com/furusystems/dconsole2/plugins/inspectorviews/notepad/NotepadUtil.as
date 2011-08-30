@@ -1,4 +1,4 @@
-package com.furusystems.dconsole2.plugins.notepad 
+package com.furusystems.dconsole2.plugins.inspectorviews.notepad 
 {
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	import com.furusystems.dconsole2.core.inspector.Inspector;

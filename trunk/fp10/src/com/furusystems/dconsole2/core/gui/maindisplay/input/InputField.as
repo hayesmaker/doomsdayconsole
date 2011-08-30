@@ -116,10 +116,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 		public function selectWordAtCaret():void {
 			TextUtils.selectWordAtCaretIndex(_inputTextField);
 		}
-		public function caretToEnd():void {
+		public function moveCaretToEnd():void {
 			moveCaretToIndex( -1);
 		}
-		public function caretToStart():void {
+		public function moveCaretToStart():void {
 			moveCaretToIndex(0);
 		}
 		
@@ -127,7 +127,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 		{
 			if (stage.focus == _inputTextField) return;
 			stage.focus = _inputTextField;
-			caretToEnd();
+			moveCaretToEnd();
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.interfaces.IThemable */

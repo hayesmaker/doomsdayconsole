@@ -99,6 +99,7 @@
 				}
 				return;
 			}
+			PimpCentral.send(Notifications.SCOPE_CHANGE_BEGUN, _currentScope, this);
 			try {
 				createScope(o);
 				autoCompleteManager.scopeDict = currentScope.autoCompleteDict;
