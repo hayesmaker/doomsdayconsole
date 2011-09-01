@@ -72,6 +72,7 @@
 	{
 		
 		//{ members
+		public var ignoreBlankLines:Boolean = true;
 		private var _initialized:Boolean = false;
 		private var _autoCompleteManager:AutocompleteManager;
 		private var _globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
@@ -92,7 +93,6 @@
 		private var _bgLayer:Sprite = new Sprite();
 		private var _topLayer:Sprite = new Sprite();
 		private var _consoleBackground:Sprite = new Sprite();
-		public var ignoreBlankLines:Boolean = true;
 		private var _keystroke:uint = KeyBindings.ENTER;
 		private var _modifier:uint = KeyBindings.CTRL_SHIFT;
 		private var _lock:ConsoleLock = new ConsoleLock();
@@ -303,13 +303,9 @@
 			
 			createCommand("commands", _commandManager.listCommands, "Utility", "Output a list of available commands. Add a second argument to search.");
 			createCommand("search", searchCurrentLog, "Utility", "Searches the current log for a string and scrolls to the first matching line");
-			//createCommand("addSearch", addSearch, "Utility", "Adds a search tab for the given term");
-			//createCommand("goto", output.goto, "Utility", "Scrolls to the specified line, if possible"); //TODO: Current enter key behavior overrides this one. Bummer.
-			//createCommand("getLoader", getLoader, "Utility", "Returns a 'dumb' Loader getting data from the url X");
 			createCommand("toClipboard", toClipBoard, "Utility", "Takes value X and puts it in the system clipboard (great for grabbing command XML output)");
 			
-			//createCommand("tag", selectTag, "System", "Quick-select a tag [x]");
-			
+		
 			addCommand(_callCommand);
 			addCommand(_getCommand);
 			addCommand(_setCommand);
@@ -511,11 +507,7 @@
 		}
 		public function executeStatement(statement:String, echo:Boolean = false):*{
 			if (echo) print(statement, ConsoleMessageTypes.USER);
-			try{
-				return _commandManager.tryCommand(statement);
-			}catch (e:Error) {
-				addErrorMessage(e.message+" '"+statement+"'");
-			}
+			return _commandManager.tryCommand(statement);
 		}
 		
 		private function updateAssistantText(e:Event = null):void 
@@ -1059,7 +1051,8 @@
 			}else {
 				firstWord = input.firstWord;
 			}
-			var wordKnown:Boolean = _autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord);
+			var wordKnown:Boolean;
+			wordKnown = _autoCompleteManager.isKnown(word, !isFirstWord, isFirstWord);
 			if (wordKnown || !isNaN(Number(word))) { 
 				//this word is okay, so accept the completion
 				var wordIndex:int = input.firstIndexOfWordAtCaret;
@@ -1409,7 +1402,7 @@
 		 * @param keystroke	The keystroke
 		 * @param modifier	The modifier
 		 */ 
-		public static function setKeyboardShortcut(keystroke:uint, modifier:uint):Boolean {
+		public static function setKeyboardShortcut(key:uint, modifier:uint):Boolean {
 			var success:Boolean = false;
 			/*
 			 * If is a valid keyboard shortcut
@@ -1417,11 +1410,11 @@
 			 * 1. If the console is not initialized store for later, and modify after creation.
 			 * 2. If the console is initialized call instance.changeKeyboardShortcut
 			 */
-			if(KeyboardManager.instance.validateKeyboardShortcut(keystroke, modifier)){
+			if(KeyboardManager.instance.validateKeyboardShortcut(key, modifier)){
 				if(!_instance){
-					keyboardShortcut = [keystroke, modifier];
+					keyboardShortcut = [key, modifier];
 				} else {
-					console.changeKeyboardShortcut(keystroke, modifier);
+					console.changeKeyboardShortcut(key, modifier);
 				}
 				success = true;
 			}
@@ -1434,8 +1427,8 @@
 		 * @param keystroke	The key
 		 * @param modifier	The modifier 
 		 */ 
-		private static function changeKeyboardShortcut(keystroke:uint, modifier:uint):void {
-			console.changeKeyboardShortcut(keystroke, modifier);
+		private static function changeKeyboardShortcut(key:uint, modifier:uint):void {
+			console.changeKeyboardShortcut(key, modifier);
 		}
 		
 		/**
@@ -1477,26 +1470,23 @@
 			_styleManager.setThemeXML(colors, theme);
 		}
 		
-		//TODO: Reimplement at instance level and delegate to static
 		/**
 		 * Lock
 		 * 
 		 * @param secret The secret to lock the console with.
 		 */
-		/*public static function lock(secret:String):void {
-			lockWithKeyCodes(KeyBindings.toCharCodes(secret));
-		}*/
+		public static function setMagicWord(secret:String):void {
+			DConsole(console)._lock.lockWithKeycodes(KeyBindings.toCharCodes(secret), DConsole(console).toggleDisplay);
+		}
 		
 		/**
 		 * Lock with keyCodes
 		 * 
 		 * @param keyCodes The keyCodes to lock the console with.
 		 */ 
-		/*public static function lockWithKeyCodes(keyCodes:Array):void {
-			console.lock.lock(keyCodes, console.toggleDisplay);
-		}*/
-		
-		//}
+		public static function setMagicSequence(keyCodes:Array):void {
+			DConsole(console)._lock.lockWithKeycodes(keyCodes, DConsole(console).toggleDisplay);
+		}
 	}
 	
 }

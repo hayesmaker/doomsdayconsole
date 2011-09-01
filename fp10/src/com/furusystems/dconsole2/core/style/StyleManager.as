@@ -119,6 +119,7 @@ package com.furusystems.dconsole2.core.style
 		
 		private function consolidateStyle():void
 		{
+			trace("Consolidate styles");
 			TextFormats.refresh();
 			PimpCentral.send(Notifications.THEME_CHANGED, null, this);
 		}

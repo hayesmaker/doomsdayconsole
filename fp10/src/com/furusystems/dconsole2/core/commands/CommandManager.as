@@ -88,7 +88,7 @@
 					return val;
 				}
 			}
-			throw new CommandError("No such command");
+			throw new CommandError("'"+str+"' is not a command.");
 		}
 		public function doCommand(command:ConsoleCommand,commandArgs:Vector.<CommandArgument> = null,sub:Boolean = false):*
 		{
