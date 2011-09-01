@@ -49,7 +49,7 @@ package com.furusystems.dconsole2.core.security
 		 *  Will return false if we could not unlock previous lock or the keyCode sequence is not a valid sequence 
 		 *  and also if it was not possible to bind the keyCodes as alock. 
 		 */ 
-		public function lock(keyCodes:Array, callback:Function):Boolean {
+		public function lockWithKeycodes(keyCodes:Array, callback:Function):Boolean {
 			var success:Boolean = true;
 			
 			/*

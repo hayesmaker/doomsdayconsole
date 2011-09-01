@@ -410,6 +410,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			var sm:StyleManager = StyleManager(md.source);
 			drawBackground();
 			_scrollbar.draw(_textOutput.height, _scrollIndex, maxScroll);
+			drawMessages();
 		}
 		
 		public function scrollToBottom():void
