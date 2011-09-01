@@ -28,6 +28,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 		private var _scrollPos:Number = 0;
 		private var _clickOffsetX:Number = 0;
 		private var _scrolling:Boolean = false;
+		private var _buttons:Array;
 		public function FilterTabRow() 
 		{
 			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
@@ -100,16 +101,16 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 		{
 			_buttonContainer.removeAllChildren();
 			var btnNames:Vector.<String> = _logManager.getLogNames();
-			var a:Array = [];
+			_buttons = [];
 			for (var i:int = 0; i < btnNames.length; i++) 
 			{
 				var btn:FilterTabButton = new FilterTabButton(btnNames[i]);
 				if (btn.logName.toLowerCase() == _logManager.currentLog.name.toLowerCase()) {
 					btn.active = true;
 				}
-				a.push(btn);
+				_buttons.push(btn);
 			}
-			_buttonContainer.addChildren(a, 0);
+			_buttonContainer.addChildren(_buttons, 0);
 		}
 		
 		private function onLogCreated(md:MessageData):void
@@ -122,6 +123,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 			graphics.beginFill(Colors.FILTER_BG);
 			graphics.drawRect(0, 0, width, GUIUnits.SQUARE_UNIT);
 			scrollRect = new Rectangle(0, 0, width, GUIUnits.SQUARE_UNIT);
+			for each(var b:FilterTabButton in _buttons) {
+				b.redraw();
+			}
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.gui.layout.IContainable */

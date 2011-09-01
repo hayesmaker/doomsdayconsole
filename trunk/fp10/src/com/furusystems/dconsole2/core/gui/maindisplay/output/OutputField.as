@@ -392,13 +392,18 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			}
 			_scrollbar.draw(_textOutput.height, _scrollIndex, maxScroll);
 		}
+		/**
+		 * Add text to the output with a format
+		 * @param	string
+		 * @param	format
+		 */
 		private function appendWithFormat(string:String, format:TextFormat):void {
 			var idx:int = textOutput.length;
 			textOutput.appendText(string);
 			textOutput.setTextFormat(format, idx, textOutput.length);
 		}
 		
-		private function clear():void 
+		public function clear():void 
 		{
 			_textOutput.text = "";
 		}
