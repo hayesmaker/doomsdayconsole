@@ -32,6 +32,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 			addEventListener(MouseEvent.CLICK, onClick, false, 0, true);
 		}
 		
+		public function redraw():void 
+		{
+			active = _active;
+		}
+		
 		private function onClick(e:MouseEvent):void 
 		{
 			PimpCentral.send(Notifications.LOG_BUTTON_CLICKED, _name, this);

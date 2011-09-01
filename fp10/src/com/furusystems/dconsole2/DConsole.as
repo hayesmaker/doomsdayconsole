@@ -7,6 +7,7 @@
 	import com.furusystems.dconsole2.core.DSprite;
 	import com.furusystems.dconsole2.core.errors.CommandError;
 	import com.furusystems.dconsole2.core.errors.ConsoleAuthError;
+	import com.furusystems.dconsole2.core.errors.ErrorStrings;
 	import com.furusystems.dconsole2.core.gui.debugdraw.DebugDraw;
 	import com.furusystems.dconsole2.core.gui.DockingGuides;
 	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
@@ -969,7 +970,9 @@
 					return;
 				}
 				var success:Boolean = false;
-				print("'" + input.text + "'", ConsoleMessageTypes.USER);
+				var passToDefault:Boolean = false;
+				var errorMessage:String = "";
+				print(input.text, ConsoleMessageTypes.USER);
 				if (_overrideCallback != null) {
 					_overrideCallback(input.text);
 					success = true;
@@ -979,18 +982,27 @@
 						success = true;
 					}catch (error:ConsoleAuthError) {
 						//TODO: This needs a more graceful solution. Dual auth error prints = lame
-					}catch (error:CommandError) {
-						if (_defaultInputCallback != null) {
-							var ret:* = _defaultInputCallback(input.text);
-							if (ret) {
-								print(ret, ConsoleMessageTypes.INFO);
-							}
-						}else {
-							print(error.message, ConsoleMessageTypes.ERROR);
+					}catch (error:ArgumentError) {
+						switch(error.message) {
+							case ErrorStrings.STRING_PARSE_ERROR_TERMINATION:
+								passToDefault = true;
+								break;
 						}
+						errorMessage = error.message;
+					}catch (error:CommandError) {
+						passToDefault = true;
+						errorMessage = error.message;
 					}catch (error:Error) {
 						print(error.message, ConsoleMessageTypes.ERROR);
 					}
+				}
+				if (passToDefault && _defaultInputCallback != null) {
+					var ret:* = _defaultInputCallback(input.text);
+					if (ret) {
+						print(ret, ConsoleMessageTypes.INFO);
+					}
+				}else {
+					print(errorMessage, ConsoleMessageTypes.ERROR);
 				}
 				output.scrollToBottom();
 				input.clear();
@@ -1122,6 +1134,10 @@
 		
 		public function set defaultInputCallback(value:Function):void 
 		{
+			if (value == null) {
+				_defaultInputCallback = null;
+				return;
+			}
 			if (value.length != 1) throw new Error("Default input callback must take exactly one argument");
 			_defaultInputCallback = value;
 		}

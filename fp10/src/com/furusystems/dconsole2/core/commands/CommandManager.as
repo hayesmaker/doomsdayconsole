@@ -60,7 +60,7 @@
 			try{
 				args = ArgumentSplitterUtil.slice(cmdStr);
 			}catch (e:Error) {
-				_console.print(e.getStackTrace(), ConsoleMessageTypes.ERROR);
+				//_console.print(e.getStackTrace(), ConsoleMessageTypes.ERROR);
 				throw e;
 				return;
 			}
