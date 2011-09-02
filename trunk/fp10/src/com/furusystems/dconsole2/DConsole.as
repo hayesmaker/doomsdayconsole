@@ -102,10 +102,12 @@
 		private var _autoCreateTagLogs:Boolean = true; //If true, automatically create new logs when a new tag is encountered
 		private var _dockingGuides:DockingGuides;
 		private var _overrideCallback:Function = null;
-		private var _cancelNextSpace:Boolean = false;
+		private var _cancelNextKey:Boolean = false;
 		private var _defaultInputCallback:Function;
 		private var _mainConsoleView:ConsoleView;
 		private var _debugDraw:DebugDraw;
+		
+		private var _trigger:uint = Keyboard.SPACE;
 		
 		private var _helpManager:HelpManager;
 		
@@ -222,10 +224,10 @@
 		private function onTextInput(e:TextEvent):void 
 		{
 			//if (_cancelNextSpace && e.text==" ") {
-			if (_cancelNextSpace) {
+			if (_cancelNextKey) {
 				e.preventDefault();
 			}
-			_cancelNextSpace = false;
+			_cancelNextKey = false;
 		}
 		public function get currentScope():IntrospectionScope {
 			return _scopeManager.currentScope;
@@ -329,20 +331,23 @@
 			
 			createCommand("loadTheme", _styleManager.load, "Theme", "Loads theme xml from urls; [x] theme [y] color table");
 			
-			createCommand("switch", switchMasterKey);
 		}
 		
-		
-		private var _masterKeyMode:Boolean = false;
-		private function switchMasterKey():void 
-		{
-			_masterKeyMode = !_masterKeyMode;
-			if (_masterKeyMode) {
-				addSystemMessage("Current trigger is ctrl+space");
-			}else {
-				addSystemMessage("Current trigger is space, ctrl+space overrides");
+		public function setMasterKey(key:uint):void {
+			if (key == Keyboard.ENTER) {
+				throw new Error("The master key can not be the enter key");
 			}
+			_trigger = key;
 		}
+		//private function switchMasterKey():void 
+		//{
+			//_masterKeyMode = !_masterKeyMode;
+			//if (_masterKeyMode) {
+				//addSystemMessage("Current trigger is ctrl+space");
+			//}else {
+				//addSystemMessage("Current trigger is space, ctrl+space overrides");
+			//}
+		//}
 		
 		private function setDockVerbose(mode:String):void 
 		{
@@ -929,20 +934,28 @@
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return; //Ignore if invisible
-			var trigger1:Boolean = e.keyCode == Keyboard.SPACE && (_masterKeyMode == e.shiftKey);
-			var trigger2:Boolean = e.keyCode == Keyboard.SPACE && (_masterKeyMode != e.shiftKey);
+			var trigger1:Boolean = e.keyCode == _trigger;
+			//var trigger2:Boolean = e.keyCode == _trigger && (!e.shiftKey);
 			
-			if (trigger1) {
+			if(!e.shiftKey&&trigger1){
 				if (doComplete()) {
-					cancelSpaceBar(e);
+					if (shouldCancel(e.keyCode)) {
+						cancelKey(e);
+					}
 				}
 				return;
-			}else if (trigger2) {
-				if (visible && stage.focus != input && stage.focus != input.inputTextField) {
-					input.focus();
-					cancelSpaceBar(e);
-				}
-				return;
+				//if (trigger1) {
+					//if (doComplete()) {
+						//cancelKey(e);
+					//}
+					//return;
+				//}else if (trigger2) {
+					//if (visible && stage.focus != input && stage.focus != input.inputTextField) {
+						//input.focus();
+						//cancelKey(e);
+					//}
+					//return;
+				//}
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
 				PimpCentral.send(Notifications.ESCAPE_KEY, null, this);
@@ -1018,11 +1031,14 @@
 			}
 		}
 		
-		private function cancelSpaceBar(e:KeyboardEvent):void 
+		private function shouldCancel(keyCode:uint):Boolean 
 		{
-			if(_debugMode) trace("Cancel space");
-			_cancelNextSpace = true;
-			//e.stopImmediatePropagation();
+			return keyCode >= 13 ||  keyCode == Keyboard.SPACE;
+		}
+		
+		private function cancelKey(e:KeyboardEvent):void 
+		{
+			_cancelNextKey = true;
 			e.stopPropagation();
 		}
 		
@@ -1502,6 +1518,11 @@
 		 */ 
 		public static function setMagicSequence(keyCodes:Array):void {
 			DConsole(console)._lock.lockWithKeycodes(keyCodes, DConsole(console).toggleDisplay);
+		}
+		
+		public static function setMasterKey(key:uint):void 
+		{
+			DConsole(console).setMasterKey(key);
 		}
 	}
 	
