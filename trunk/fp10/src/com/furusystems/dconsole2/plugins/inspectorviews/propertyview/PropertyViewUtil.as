@@ -11,6 +11,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes.*;
 	import com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs.*;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -30,7 +31,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 	{
 		
 		private var _tabs:TabCollection;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		public function PropertyViewUtil() 
 		{
 			_tabs = new TabCollection();

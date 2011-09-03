@@ -51,7 +51,7 @@ package com.furusystems.dconsole2.plugins.irc
 			nc.addEventListener(Event.CONNECT, onConnect);
 			nc.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
 			
-			pm.console.defaultInputCallback = tellChannel;
+			//pm.console.defaultInputCallback = tellChannel;
 			pm.console.createCommand("send", send, "IRC", "Sends a message to the current IRC channel.");
 			pm.console.createCommand("join", join,"IRC","Joins an IRC channel.");
 			pm.console.createCommand("part", part,"IRC","Parts the designated IRC channel.");

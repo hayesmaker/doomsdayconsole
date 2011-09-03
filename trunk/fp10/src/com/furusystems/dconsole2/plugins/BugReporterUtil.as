@@ -3,6 +3,7 @@ package com.furusystems.dconsole2.plugins
 	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.BitmapData;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
@@ -15,7 +16,7 @@ package com.furusystems.dconsole2.plugins
 	 */
 	public class BugReporterUtil implements IDConsolePlugin
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var _screenshotUtil:ScreenshotUtil;
 		private var _logFileUtil:LogFileUtil;
 		
@@ -38,7 +39,7 @@ package com.furusystems.dconsole2.plugins
 		private function saveBugReport():void 
 		{
 			_console.print("Building bug report");
-			var screen:BitmapData = _screenshotUtil.getScreenshot(_console.root);
+			var screen:BitmapData = _screenshotUtil.getScreenshot(_console.view.root);
 			var log:XML = _logFileUtil.buildLogXML();
 			var dateString:String = "";
 			var d:Date = new Date();

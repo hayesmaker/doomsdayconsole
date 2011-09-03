@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.utils.getTimer;
 	import com.furusystems.dconsole2.core.commands.FunctionCallCommand;
 	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
@@ -12,7 +13,7 @@ package com.furusystems.dconsole2.plugins
 	public class PerformanceTesterUtil implements IDConsolePlugin
 	{
 		private const commandString:String = "testMethods";
-		private var _console:DConsole;
+		private var _console:IConsole;
 		public function PerformanceTesterUtil() 
 		{
 			
@@ -28,7 +29,7 @@ package com.furusystems.dconsole2.plugins
 		public function initialize(pm:PluginManager):void
 		{
 			_console = pm.console;
-			_console.addCommand(new FunctionCallCommand(commandString, doFunctionTest, "Performance", "Runs a set of methods [...x] and returns a table of execution times in milliseconds"));
+			_console.createCommand(commandString, doFunctionTest, "Performance", "Runs a set of methods [...x] and returns a table of execution times in milliseconds");
 		}
 		
 		private function doFunctionTest(...functions):void

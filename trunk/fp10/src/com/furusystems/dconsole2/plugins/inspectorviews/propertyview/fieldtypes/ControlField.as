@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -28,10 +29,10 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		private var _doubleClickTarget:Object;
 		private var _prevWidth:Number = 0;
 		private var access:String;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		public static var FOCUSED_FIELD:ControlField = null;
 		
-		public function ControlField(console:DConsole, property:String,type:String = "string",access:String = "readwrite") 
+		public function ControlField(console:IConsole, property:String,type:String = "string",access:String = "readwrite") 
 		{
 			_console = console;
 			this.access = access;

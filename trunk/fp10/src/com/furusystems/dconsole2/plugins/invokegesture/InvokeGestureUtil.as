@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.invokegesture 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -15,7 +16,7 @@ package com.furusystems.dconsole2.plugins.invokegesture
 	 */
 	public class InvokeGestureUtil implements IDConsolePlugin 
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var _stage:Stage;
 		private var _tl:Rectangle = new Rectangle(0, 0, 30, 30);
 		private var _tr:Rectangle = new Rectangle(0, 0, 30, 30);
@@ -39,15 +40,15 @@ package com.furusystems.dconsole2.plugins.invokegesture
 		
 		public function initialize(pm:PluginManager):void 
 		{
-			pm.console.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			pm.console.view.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_console = pm.console;
-			if (_console.stage) onAddedToStage(); 
+			if (_console.view.stage) onAddedToStage(); 
 		}
 		
 		private function onAddedToStage(e:Event = null):void 
 		{
-			_console.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			_stage = _console.stage;
+			_console.view.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_stage = _console.view.stage;
 			_stage.addEventListener(Event.RESIZE, onStageResize);
 			onStageResize();
 			setupGesture();

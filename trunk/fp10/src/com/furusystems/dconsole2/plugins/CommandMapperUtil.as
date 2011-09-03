@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.utils.Dictionary;
 	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
 	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
@@ -11,8 +12,9 @@ package com.furusystems.dconsole2.plugins
 	 */
 	public class CommandMapperUtil implements IDConsolePlugin
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var methodsCreated:Dictionary = new Dictionary();
+		private var _pm:PluginManager;
 		public function CommandMapperUtil() 
 		{
 			
@@ -28,12 +30,13 @@ package com.furusystems.dconsole2.plugins
 		public function initialize(pm:PluginManager):void
 		{
 			_console = pm.console;
+			_pm = pm;
 			pm.console.createCommand("quickmap", doMap,"CommandMapperUtil","Maps every method of the current scope to a command if possible");
 		}
 		
 		private function doMap():void
 		{
-			var target:IntrospectionScope = _console.currentScope;
+			var target:IntrospectionScope = _pm.scopeManager.currentScope;
 			for (var i:int = 0; i < target.methods.length; i++) 
 			{
 				_console.createCommand(target.methods[i].name, target.targetObject[target.methods[i].name], target.targetObject.toString());
@@ -48,6 +51,7 @@ package com.furusystems.dconsole2.plugins
 				pm.console.removeCommand(m);
 			}
 			_console = null;
+			_pm = null;
 		}
 		
 				

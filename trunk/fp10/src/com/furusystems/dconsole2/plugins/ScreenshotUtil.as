@@ -1,6 +1,7 @@
 package com.furusystems.dconsole2.plugins 
 {
 	import com.adobe.images.PNGEncoder;
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.net.FileReference;
@@ -15,20 +16,20 @@ package com.furusystems.dconsole2.plugins
 	public class ScreenshotUtil implements IDConsolePlugin
 	{
 		private const _fileRef:FileReference = new FileReference();
-		private var _console:DConsole;
+		private var _console:IConsole;
 		
 		public function getScreenshot(target:DisplayObject = null):BitmapData
 		{
 			var bmd:BitmapData;
-			_console.isVisible = false;
+			DConsole(_console).isVisible = false;
 			if (target == null){
-				bmd = new BitmapData(_console.stage.stageWidth, _console.stage.stageHeight, true, 0);
-				bmd.draw(_console.stage);
+				bmd = new BitmapData(_console.view.stage.stageWidth, _console.view.stage.stageHeight, true, 0);
+				bmd.draw(_console.view.stage);
 			}else {
 				bmd = new BitmapData(target.width, target.height, true, 0);
 				bmd.draw(target);
 			}
-			_console.isVisible = true;
+			DConsole(_console).isVisible = true;
 			return bmd;
 		}
 		

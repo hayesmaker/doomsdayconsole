@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.mediatester
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.Sprite;
 	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
@@ -11,7 +12,7 @@ package com.furusystems.dconsole2.plugins.mediatester
 	public class MediaTesterUtil extends Sprite implements IDConsolePlugin
 	{
 		private var _videoPlayers:Vector.<SimpleVideoPlayer>;
-		internal var _console:DConsole;
+		internal var _console:IConsole;
 		
 		private function playVideo(url:String = "-1", application:String = ""):void
 		{

@@ -26,7 +26,9 @@ package com.furusystems.dconsole2.plugins.plugcollections
 				SystemInfoUtil,
 				StatsOutputUtil,
 				JSONParserUtil,
-				StageUtil
+				StageUtil,
+				SelectionHistoryUtil,
+				BugReporterUtil
 			]);
 		}
 		

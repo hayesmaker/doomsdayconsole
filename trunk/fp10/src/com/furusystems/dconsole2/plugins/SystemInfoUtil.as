@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.system.Capabilities;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
@@ -11,7 +12,7 @@ package com.furusystems.dconsole2.plugins
 	 */
 	public class SystemInfoUtil implements IDConsolePlugin
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		
 		public function SystemInfoUtil() 
 		{

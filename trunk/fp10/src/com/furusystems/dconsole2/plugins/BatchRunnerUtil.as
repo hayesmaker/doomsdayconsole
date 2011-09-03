@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
@@ -13,7 +14,7 @@ package com.furusystems.dconsole2.plugins
 	 */
 	public class BatchRunnerUtil implements IDConsolePlugin
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		
 		public function BatchRunnerUtil() 
 		{

@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.core.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.dconsole2.plugins.ScreenshotUtil;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -136,7 +137,7 @@ package com.furusystems.dconsole2.core.plugins
 			}
 			return null;
 		}
-		public function get console():DConsole {
+		public function get console():IConsole {
 			return _console;
 		}
 		public function get scopeManager():ScopeManager {

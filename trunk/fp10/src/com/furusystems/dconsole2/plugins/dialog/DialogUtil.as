@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.dialog 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.logging.slf4as.ILogger;
 	import com.furusystems.logging.slf4as.Logging;
 	import com.furusystems.messaging.pimp.IMessageReceiver;
@@ -21,7 +22,7 @@ package com.furusystems.dconsole2.plugins.dialog
 	{
 		static private const L:ILogger = Logging.getLogger(DialogUtil);
 		private var _currentDialog:DialogSequence;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		public function DialogUtil() 
 		{
 			
