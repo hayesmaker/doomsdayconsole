@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.measurebracket 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.BlendMode;
@@ -38,7 +39,7 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		private var _fmt:TextFormat;
 		private var _currentlyChecking:Sprite;
 		private var _increment:Number = -1;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var _previousObj:Object;
 		private var _scopeManager:ScopeManager;
 		private var _selectMode:Boolean = false;
@@ -71,7 +72,7 @@ package com.furusystems.dconsole2.plugins.measurebracket
 				_heightField = new TextField();
 				_xyField = new TextField();
 				_widthField.defaultTextFormat = _heightField.defaultTextFormat = _xyField.defaultTextFormat = _fmt;
-				var center:Point = new Point(_console.stage.stageWidth / 2, _console.stage.stageHeight / 2);
+				var center:Point = new Point(_console.view.stage.stageWidth / 2, _console.view.stage.stageHeight / 2);
 				_rect = new Rectangle(center.x - 20, center.y - 20, 40, 40);
 				
 				_rectSprite = new Sprite();
@@ -115,14 +116,14 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		{
 			_currentlyChecking = e.target as Sprite;
 			if (_currentlyChecking == _rectSprite) clickOffset = new Point(mouseX - _rect.x, mouseY - _rect.y);
-			_console.stage.addEventListener(MouseEvent.MOUSE_MOVE, getValues, false, 0, true);
-			_console.stage.addEventListener(MouseEvent.MOUSE_UP, stopGettingValues, false, 0, true);
+			_console.view.stage.addEventListener(MouseEvent.MOUSE_MOVE, getValues, false, 0, true);
+			_console.view.stage.addEventListener(MouseEvent.MOUSE_UP, stopGettingValues, false, 0, true);
 		}
 		
 		private function stopGettingValues(e:MouseEvent):void 
 		{
-			_console.stage.removeEventListener(MouseEvent.MOUSE_MOVE, getValues);
-			_console.stage.removeEventListener(MouseEvent.MOUSE_UP, stopGettingValues);
+			_console.view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, getValues);
+			_console.view.stage.removeEventListener(MouseEvent.MOUSE_UP, stopGettingValues);
 		}
 		
 		private function setTopLeft(x:Number, y:Number):void {
@@ -159,8 +160,8 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		
 		private function keepOnStage():void
 		{
-			_rect.x = Math.max(0, Math.min(_rect.x,_console.stage.stageWidth-_rect.width));
-			_rect.y = Math.max(0, Math.min(_rect.y,_console.stage.stageHeight-_rect.height));
+			_rect.x = Math.max(0, Math.min(_rect.x,_console.view.stage.stageWidth-_rect.width));
+			_rect.y = Math.max(0, Math.min(_rect.y,_console.view.stage.stageHeight-_rect.height));
 		}
 		
 		private function checkSnap():void
@@ -174,8 +175,8 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		}
 		private function getValues(e:Event = null):void
 		{
-			var mx:Number = Math.max(0, Math.min(_console.stage.mouseX, _console.stage.stageWidth));
-			var my:Number = Math.max(0, Math.min(_console.stage.mouseY, _console.stage.stageHeight));
+			var mx:Number = Math.max(0, Math.min(_console.view.stage.mouseX, _console.view.stage.stageWidth));
+			var my:Number = Math.max(0, Math.min(_console.view.stage.mouseY, _console.view.stage.stageHeight));
 			increment = 1
 			var snap:Boolean = false;
 			if (e is MouseEvent) {
@@ -193,13 +194,13 @@ package com.furusystems.dconsole2.plugins.measurebracket
 			
 			if (snap) {
 				var snapTarget:Rectangle = null;
-				var objects:Array = _console.stage.getObjectsUnderPoint(new Point(mx, my));
+				var objects:Array = _console.view.stage.getObjectsUnderPoint(new Point(mx, my));
 				var dispObj:DisplayObject;
 				for (var i:int = objects.length; i--; ) 
 				{
 					dispObj = objects[i];
 					if (!contains(dispObj)) {
-						snapTarget = dispObj.getRect(_console.stage);
+						snapTarget = dispObj.getRect(_console.view.stage);
 						if(dispObj!=_previousObj){
 							if (_selectMode) {
 								_scopeManager.setScope(dispObj);
@@ -332,7 +333,7 @@ package com.furusystems.dconsole2.plugins.measurebracket
 			if(_scopeManager.currentScope.targetObject is DisplayObject){
 				invoke(selectMode, _scopeManager.currentScope.targetObject as DisplayObject);
 			}else {
-				invoke(selectMode, _console.stage);
+				invoke(selectMode, _console.view.stage);
 			}
 		}
 		

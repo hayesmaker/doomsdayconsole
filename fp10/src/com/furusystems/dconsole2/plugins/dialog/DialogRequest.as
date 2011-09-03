@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.dialog 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	
 	import com.furusystems.dconsole2.core.Notifications;
@@ -13,9 +14,9 @@ package com.furusystems.dconsole2.plugins.dialog
 	{
 		private var _question:String;
 		private var _sequence:DialogSequence;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		
-		public function DialogRequest(console:DConsole, question:String,sequence:DialogSequence) 
+		public function DialogRequest(console:IConsole, question:String,sequence:DialogSequence) 
 		{
 			_console = console;
 			_sequence = sequence;

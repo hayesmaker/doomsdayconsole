@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.text.Font;
 	import com.furusystems.dconsole2.core.plugins.IDConsolePlugin;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
@@ -10,9 +11,9 @@ package com.furusystems.dconsole2.plugins
 	 */
 	public class FontUtil implements IDConsolePlugin
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		
-		private function printFonts(c:DConsole):void {
+		private function printFonts(c:IConsole):void {
 			var fnts:Array = Font.enumerateFonts();
 			if (fnts.length < 1) {
 				c.print("Only system fonts available");

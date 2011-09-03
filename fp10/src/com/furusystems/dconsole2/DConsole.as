@@ -830,7 +830,7 @@
 		public function get isVisible():Boolean {
 			return _isVisible;
 		}
-		public function toggleDisplay(e:Event = null):void
+		public function toggleDisplay():void
 		{
 			// Return if locked 
 			if(lock.locked){

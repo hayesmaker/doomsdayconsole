@@ -1,6 +1,7 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 {
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -29,7 +30,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		private var _splitRatio:Number = 0.5;
 		private var _access:String;
 		private var _objRef:Dictionary = new Dictionary(true);
-		public function PropertyField(console:DConsole, object:Object,property:String,type:String,access:String = "readwrite") 
+		public function PropertyField(console:IConsole, object:Object,property:String,type:String,access:String = "readwrite") 
 		{
 			super(property);
 			_access = access;

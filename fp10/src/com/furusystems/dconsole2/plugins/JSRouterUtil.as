@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
@@ -23,7 +24,7 @@ package com.furusystems.dconsole2.plugins
 		
 		private var _routingToJS:Boolean;
 		private var _alertingErrors:Boolean;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var _logFunction:String;
 		
 		/**

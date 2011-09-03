@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.logging.slf4as.constants.Levels;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
@@ -22,9 +23,10 @@ package com.furusystems.dconsole2.plugins
 	public class ChainsawConnectorUtil implements IDConsolePlugin
 	{
 		private var _socket:Socket;
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var _connected:Boolean;
 		private var _threshold:int = Levels.ALL;
+		private var _pm:PluginManager;
 		
 		public function ChainsawConnectorUtil() 
 		{
@@ -41,6 +43,7 @@ package com.furusystems.dconsole2.plugins
 		public function initialize(pm:PluginManager):void 
 		{
 			_console = pm.console;
+			_pm = pm;
 			pm.console.createCommand("chainsawConnect", connect, "Chainsaw", "Connects to a Chainsaw XMLSocketReceiver at host [x] (default localhost) and port [y] (default 4448)");
 			pm.console.createCommand("chainsawDisconnect", disconnect, "Chainsaw", "Disconnects from Chainsaw");
 			pm.console.createCommand("chainsawPushlog", pushLog, "Chainsaw", "Pushes the entire log to Chainsaw, top to bottom");
@@ -95,7 +98,7 @@ package com.furusystems.dconsole2.plugins
 		//END TEMP
 		private function pushLog():void 
 		{
-			for each(var m:ConsoleMessage in _console.logs.rootLog.messages) {
+			for each(var m:ConsoleMessage in _pm.logManager.rootLog.messages) {
 				pushMessage(m);
 			}
 			//var xml:XML = 
@@ -139,6 +142,7 @@ package com.furusystems.dconsole2.plugins
 			_console.removeCommand("chainsawConnect");
 			_console.removeCommand("chainsawDisconnect");
 			_console = null;
+			_pm = null;
 		}
 		
 				

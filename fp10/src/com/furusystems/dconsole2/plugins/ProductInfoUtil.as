@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins
 {
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.DisplayObject;
 	import flash.display.LoaderInfo;
 	import flash.utils.ByteArray;
@@ -21,7 +22,7 @@ package com.furusystems.dconsole2.plugins
 		private var _root:DisplayObject;
 		private var _isParsed:Boolean = false;
 		private var _tagData:ByteArray;
-		private var _console:DConsole;
+		private var _console:IConsole;
 				
 				
 		public function ProductInfoUtil()
@@ -132,7 +133,7 @@ package com.furusystems.dconsole2.plugins
 		
 		public function getProductInfo():void
 		{
-			root = _console.root;
+			root = _console.view.root;
 			_console.print("Product info:", ConsoleMessageTypes.SYSTEM);
 			if (available) {
 				_console.print(" ProductID : " + productID);

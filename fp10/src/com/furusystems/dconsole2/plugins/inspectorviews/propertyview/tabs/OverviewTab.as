@@ -1,6 +1,7 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 {
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.DisplayObject;
 	import flash.utils.getQualifiedClassName;
 	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
@@ -12,7 +13,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.tabs
 	public class OverviewTab extends PropertyTab
 	{
 		
-		public function OverviewTab(console:DConsole, scope:IntrospectionScope) 
+		public function OverviewTab(console:IConsole, scope:IntrospectionScope) 
 		{
 			var className:String = getQualifiedClassName(scope.targetObject);
 			super(className.split("::").pop(), true);

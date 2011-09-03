@@ -1,5 +1,6 @@
 package com.furusystems.dconsole2.plugins.inspectorviews.treeview 
 {
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
@@ -27,7 +28,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 	 */
 	public class TreeViewUtil extends AbstractInspectorView implements IRenderable,IThemeable
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		private var _pm:PluginManager;
 		
 		protected var _root:DisplayObjectContainer;

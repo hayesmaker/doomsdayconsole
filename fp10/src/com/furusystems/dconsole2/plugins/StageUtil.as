@@ -1,6 +1,7 @@
 package com.furusystems.dconsole2.plugins 
 {
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.IConsole;
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
@@ -13,7 +14,7 @@ package com.furusystems.dconsole2.plugins
 	 */
 	public class StageUtil implements IDConsolePlugin
 	{
-		private var _console:DConsole;
+		private var _console:IConsole;
 		
 		public function StageUtil() 
 		{
@@ -37,22 +38,22 @@ package com.furusystems.dconsole2.plugins
 		}
 		private function setFramerate(rate:int = 60):void
 		{
-			_console.stage.frameRate = rate;
-			_console.print("Framerate set to " + _console.stage.frameRate, ConsoleMessageTypes.SYSTEM);
+			_console.view.stage.frameRate = rate;
+			_console.print("Framerate set to " + _console.view.stage.frameRate, ConsoleMessageTypes.SYSTEM);
 		}
 		private function alignStage():void
 		{
-			_console.stage.align = StageAlign.TOP_LEFT;
-			_console.stage.scaleMode = StageScaleMode.NO_SCALE;
+			_console.view.stage.align = StageAlign.TOP_LEFT;
+			_console.view.stage.scaleMode = StageScaleMode.NO_SCALE;
 			_console.print("StageAlign set to TOP_LEFT, StageScaleMode set to NO_SCALE", ConsoleMessageTypes.SYSTEM);
 		}
 		private function toggleFullscreen():void {
-			switch(_console.stage.displayState) {
+			switch(_console.view.stage.displayState) {
 				case StageDisplayState.FULL_SCREEN:
-				_console.stage.displayState = StageDisplayState.NORMAL;
+				_console.view.stage.displayState = StageDisplayState.NORMAL;
 				break;
 				case StageDisplayState.NORMAL:
-				_console.stage.displayState = StageDisplayState.FULL_SCREEN;
+				_console.view.stage.displayState = StageDisplayState.FULL_SCREEN;
 				break;
 			}
 		}
