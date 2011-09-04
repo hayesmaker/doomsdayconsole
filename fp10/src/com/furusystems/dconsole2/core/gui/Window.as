@@ -315,7 +315,7 @@
 			}*/
 			viewRect.x = x;
 			viewRect.y = y;
-			e.updateAfterEvent();
+			//e.updateAfterEvent();
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 		public function setContents(d:DisplayObject,autoScale:Boolean = false):void {

@@ -91,13 +91,13 @@
 				console.print("Console safe mode active, access prohibited", ConsoleMessageTypes.ERROR);
 				return;
 			}
-			if(currentScope.targetObject===o){
-				if (force&&printResults) {
-					printScope();
-					printDownPath();
-				}
-				return;
-			}
+			//if(currentScope.targetObject===o){
+				//if (force&&printResults) {
+					//printScope();
+					//printDownPath();
+				//}
+				//return;
+			//}
 			PimpCentral.send(Notifications.SCOPE_CHANGE_BEGUN, _currentScope, this);
 			try {
 				createScope(o);
