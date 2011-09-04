@@ -19,7 +19,7 @@
 	 */
 	public class Controller extends Window
 	{
-		private var targetObj:*; 
+		public var targetObj:*; 
 		private var paramsField:TextField = new TextField();
 		private var controlFields:Vector.<ControlField> = new Vector.<ControlField>();
 		private var clickOffset:Point;
@@ -96,21 +96,20 @@
 			
 		}
 		public function update():void {
-			if(targetObj is DisplayObject){
-				graphics.clear();
-				graphics.lineStyle(0,0,.2);
-				var p:Point = new Point(targetObj.x, targetObj.y);
-				p = DisplayObject(targetObj).parent.localToGlobal(p);
-				p = this.globalToLocal(p);
-				graphics.lineTo(p.x, p.y);
-				graphics.drawCircle(p.x, p.y, 3);
-			}
 			refresh();
+			if (targetObj is DisplayObject) {
+				var rect:Rectangle = DisplayObject(targetObj).transform.pixelBounds;
+				manager.graphics.moveTo(x, y);
+				manager.graphics.lineTo(rect.x, rect.y);
+				manager.graphics.drawCircle(rect.x, rect.y, 3);
+			}
 		}
 		
 		public function destroy():void 
 		{
-			
+			targetObj = null;
+			manager = null;
+			graphics.clear();
 		}
 		
 	}

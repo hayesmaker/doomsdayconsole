@@ -3,7 +3,9 @@ package com.furusystems.dconsole2.plugins.controller
 	import com.furusystems.dconsole2.core.introspection.ScopeManager;
 	import com.furusystems.dconsole2.core.plugins.IUpdatingDConsolePlugin;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.geom.Rectangle;
 	/**
 	 * ...
 	 * @author Andreas Roenning
@@ -15,8 +17,8 @@ package com.furusystems.dconsole2.plugins.controller
 		
 		internal function addController(object:*, properties:Array,x:Number = 0,y:Number = 0):void {
 			var c:Controller = new Controller(object, properties, this);
-			c.x = x;
-			c.y = y;
+			c.x = Math.max(0, Math.min(x, stage.stageWidth - c.width));
+			c.y = Math.max(0, Math.min(y, stage.stageHeight - c.height));
 			_controllers.push(addChild(c) as Controller);
 		}
 		internal function removeController(c:Controller):void {
@@ -33,7 +35,14 @@ package com.furusystems.dconsole2.plugins.controller
 		
 		private function createController(...properties:Array):void
 		{
-			addController(_scopeManager.currentScope.targetObject, properties, 0, 0);
+			var x:Number = 0;
+			var y:Number = 0;
+			if (_scopeManager.currentScope.targetObject is DisplayObject) {
+				var r:Rectangle = DisplayObject(_scopeManager.currentScope.targetObject).transform.pixelBounds;
+				x = r.x + r.width;
+				y = r.y + r.height;
+			}
+			addController(_scopeManager.currentScope.targetObject, properties, x, y);
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
@@ -54,6 +63,8 @@ package com.furusystems.dconsole2.plugins.controller
 		
 		public function update(pm:PluginManager):void
 		{
+			graphics.clear();
+			graphics.lineStyle(0, 0x808080);
 			for each(var c:Controller in _controllers) {
 				c.update();
 			}

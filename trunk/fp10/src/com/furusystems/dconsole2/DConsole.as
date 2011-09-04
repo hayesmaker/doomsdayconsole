@@ -107,7 +107,7 @@
 		private var _mainConsoleView:ConsoleView;
 		private var _debugDraw:DebugDraw;
 		
-		private var _trigger:uint = Keyboard.SPACE;
+		private var _trigger:uint = Keyboard.TAB;
 		
 		private var _helpManager:HelpManager;
 		
@@ -180,8 +180,8 @@
 			var basicHelp:String = "";
 			basicHelp += "\tKeyboard commands\n";
 			basicHelp += "\t\tControl+Shift+Enter (default) -> Show/hide console\n";
-			basicHelp += "\t\tShift+Space -> (When out of focus) Set the keyboard focus to the input field\n";
-			basicHelp += "\t\tSpace -> (While caret is on an unknown term) Context sensitive search\n";
+			basicHelp += "\t\tMaster key (Default TAB) -> (When out of focus) Set the keyboard focus to the input field\n";
+			basicHelp += "\t\tMaster key (Default TAB) -> (While caret is on an unknown term) Context sensitive search\n";
 			basicHelp += "\t\tEnter -> Execute line\n";
 			basicHelp += "\t\tPage up/Page down -> Vertical scroll by page\n";
 			basicHelp += "\t\tArrow up -> Recall the previous executed line\n";
@@ -292,7 +292,7 @@
 			createCommand("minimizeConsole", minimize, "System", "Sets console height to 1");
 			createCommand("setRepeatFilter", setRepeatFilter, "System", "Sets the repeat message filter; 0 - Stack, 1 - Ignore, 2 - Passthrough");
 			createCommand("repeat", repeatCommand, "System", "Repeats command string X Y times");
-			addCommand(new FunctionCallCommand("reset", resetConsole, "System", "Resets and clears the console"), false);
+			addCommand(new FunctionCallCommand("resetConsole", resetConsole, "System", "Resets and clears the console"), false);
 
 			if (Capabilities.isDebugger) {
 				print("	Debugplayer commands added", ConsoleMessageTypes.SYSTEM);
@@ -349,7 +349,7 @@
 			//}
 		//}
 		
-		private function setDockVerbose(mode:String):void 
+		private function setDockVerbose(mode:String = "top"):void 
 		{
 			mode = mode.toLowerCase();
 			switch(mode) {
@@ -684,8 +684,8 @@
 				print("Warning: stage.scaleMode is not set to NO_SCALE; This might cause scaling issues",ConsoleMessageTypes.ERROR);
 			}
 			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, int.MAX_VALUE);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp, false, int.MAX_VALUE);
 			stage.addEventListener(Event.RESIZE, onStageResize);
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_scopeManager.selectBaseScope();
@@ -934,6 +934,7 @@
 		private function onKeyDown(e:KeyboardEvent):void 
 		{
 			if (!visible) return; //Ignore if invisible
+			var stopEvent:Boolean = false;
 			var trigger1:Boolean = e.keyCode == _trigger;
 			//var trigger2:Boolean = e.keyCode == _trigger && (!e.shiftKey);
 			
@@ -959,15 +960,18 @@
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
 				PimpCentral.send(Notifications.ESCAPE_KEY, null, this);
+				stopEvent = true;
 				return;
 			}
 			if (e.shiftKey) {
 				switch(e.keyCode) {
 					case Keyboard.UP:
 					output.scroll(1);
+					stopEvent = true;
 					return
 					case Keyboard.DOWN:
 					output.scroll(-1);
+					stopEvent = true;
 					return;
 					case Keyboard.LEFT:
 					//TODO: previous tab
@@ -977,9 +981,9 @@
 					break;
 				}
 			}
-			if (e.keyCode == Keyboard.ENTER) {
+			if (e.keyCode == Keyboard.ENTER && stage.focus == input.inputTextField) {
 				if (input.text.length < 1) {
-					input.focus();
+					//input.focus();
 					return;
 				}
 				var success:Boolean = false;
@@ -1020,14 +1024,25 @@
 				output.scrollToBottom();
 				input.clear();
 				updateAssistantText();
+				stopEvent = true;
 			}else if (e.keyCode == Keyboard.PAGE_DOWN) {
 				output.scroll(-output.numLines);
+				stopEvent = true;
 			}else if (e.keyCode == Keyboard.PAGE_UP) {
 				output.scroll(output.numLines);
+				stopEvent = true;
 			}else if (e.keyCode == Keyboard.HOME) {
 				output.scrollIndex = 0;
+				stopEvent = true;
 			}else if (e.keyCode == Keyboard.END) {
 				output.scrollIndex = output.maxScroll;
+				stopEvent = true;
+			}else if (e.keyCode == Keyboard.SPACE) {
+				stopEvent = true;
+			}
+			if (stopEvent) {
+				e.stopImmediatePropagation();
+				e.stopPropagation();
 			}
 		}
 		
