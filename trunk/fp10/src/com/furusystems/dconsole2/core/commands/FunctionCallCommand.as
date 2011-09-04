@@ -1,7 +1,7 @@
 ﻿package com.furusystems.dconsole2.core.commands{
 	import flash.utils.Dictionary;
 	/**
-	 * ...
+	 * Concrete command for calling a function
 	 * @author Andreas Roenning
 	 */
 	public class FunctionCallCommand extends ConsoleCommand

@@ -1,7 +1,6 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
 	import flash.geom.Rectangle;
-	import com.furusystems.dconsole2.core.gui.ScaleHandle;
 	/**
 	 * ...
 	 * @author Andreas Roenning

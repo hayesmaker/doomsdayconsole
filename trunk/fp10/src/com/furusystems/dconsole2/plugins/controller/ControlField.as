@@ -1,5 +1,7 @@
 ﻿package com.furusystems.dconsole2.plugins.controller 
 {
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
@@ -23,8 +25,10 @@
 		{
 			targetProperty = property;
 			tf = new TextField();
-			tf.defaultTextFormat = TextFormats.windowDefaultFormat;
-			tf.height = 20;
+			tf.defaultTextFormat = TextFormats.consoleTitleFormat;
+			tf.embedFonts = true;
+			tf.textColor = Colors.HEADER_FG;
+			tf.height = GUIUnits.SQUARE_UNIT;
 			tf.autoSize = TextFieldAutoSize.LEFT;
 			tf.selectable = true;
 			tf.type = TextFieldType.INPUT;

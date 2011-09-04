@@ -1,13 +1,13 @@
 ﻿package com.furusystems.dconsole2.core.references 
 {
 	import com.furusystems.dconsole2.core.introspection.IntrospectionScope;
+	import com.furusystems.dconsole2.core.introspection.ScopeManager;
 	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.utils.Dictionary;
-	import com.furusystems.dconsole2.core.introspection.ScopeManager;
-	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
-	import com.furusystems.dconsole2.DConsole;
 	/**
 	 * ...
 	 * @author Andreas Roenning

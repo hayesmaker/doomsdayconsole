@@ -1,10 +1,10 @@
 ﻿package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.style.Colors;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import com.furusystems.dconsole2.core.style.Colors;
 	/**
 	 * ...
 	 * @author Andreas Roenning

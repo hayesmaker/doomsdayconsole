@@ -1,12 +1,11 @@
 package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.BaseColors;
 	import com.furusystems.messaging.pimp.IMessageReceiver;
-	import com.furusystems.messaging.pimp.Message;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Shape;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.style.BaseColors;
 	
 	/**
 	 * ...

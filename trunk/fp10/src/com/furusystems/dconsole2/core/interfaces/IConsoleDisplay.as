@@ -1,8 +1,8 @@
 package com.furusystems.dconsole2.core.interfaces 
 {
+	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
-	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	
 	/**
 	 * ...

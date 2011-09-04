@@ -1,7 +1,7 @@
 ﻿package com.furusystems.dconsole2.core.style 
 {
-	import flash.text.TextFormat;
 	import com.furusystems.dconsole2.core.style.fonts.Fonts;
+	import flash.text.TextFormat;
 	/**
 	 * ...
 	 * @author Andreas Roenning

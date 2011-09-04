@@ -7,12 +7,10 @@ package com.furusystems.dconsole2.core.gui.debugdraw
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
 	import flash.display.Shape;
-	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	/**
-	 * ...
+	 * Utility class for drawing superimposed symbols on display objects
 	 * @author Andreas Ronning
 	 */
 	public class DebugDraw 

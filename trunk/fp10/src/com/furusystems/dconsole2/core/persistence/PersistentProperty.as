@@ -1,7 +1,7 @@
 package com.furusystems.dconsole2.core.persistence 
 {
-	import flash.net.SharedObject;
 	import com.furusystems.dconsole2.core.utils.Property;
+	import flash.net.SharedObject;
 	/**
 	 * ...
 	 * @author Andreas Ronning

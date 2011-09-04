@@ -2,7 +2,7 @@
 {
 	import com.furusystems.dconsole2.core.errors.ErrorStrings;
 	/**
-	 * ...
+	 * Utility for splitting strings into argument objects
 	 * @author Andreas Roenning
 	 */
 	public class ArgumentSplitterUtil

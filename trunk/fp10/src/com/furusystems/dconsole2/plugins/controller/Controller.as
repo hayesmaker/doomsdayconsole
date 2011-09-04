@@ -1,5 +1,9 @@
 ﻿package com.furusystems.dconsole2.plugins.controller 
 {
+	import com.furusystems.dconsole2.core.gui.Window;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -9,8 +13,6 @@
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import com.furusystems.dconsole2.core.gui.Window;
-	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Roenning
@@ -30,16 +32,17 @@
 		{
 			//cacheAsBitmap = true;
 			
-			var dragBarHeight:int = 10;
+			var dragBarHeight:int = GUIUnits.SQUARE_UNIT;
 			this.manager = manager;
 			
 			targetObj = o;
 			paramsField.defaultTextFormat = TextFormats.windowDefaultFormat;
-			//paramsField.y = 0;
 			contents.addChild(paramsField);
 			paramsField.multiline = true;
 			paramsField.selectable = false;
 			paramsField.mouseEnabled = false;
+			paramsField.embedFonts = true;
+			paramsField.textColor = Colors.HEADER_FG;
 			paramsField.autoSize = TextFieldAutoSize.LEFT;
 			paramsField.text = o.toString();
 			for (var i:int = 0; i < params.length; i++) 
@@ -53,7 +56,7 @@
 				cf.value = o[params[i]];
 				paramsField.appendText("\n" + params[i]);
 			}
-			super("Controller: " + o.name, new Rectangle(0, 0, contents.width, contents.height), contents);
+			super("" + o.name, new Rectangle(0, 0, contents.width, contents.height), contents);
 		}
 		
 		
@@ -87,7 +90,7 @@
 				if (controlFields[i].hasFocus) continue;
 				controlFields[i].value = targetObj[controlFields[i].targetProperty];
 				if (controlFields[i].targetProperty == "name") {
-					setTitle("Controller: "+targetObj[controlFields[i].targetProperty]);
+					setTitle(""+targetObj[controlFields[i].targetProperty]);
 				}
 			}
 			
@@ -103,6 +106,11 @@
 				graphics.drawCircle(p.x, p.y, 3);
 			}
 			refresh();
+		}
+		
+		public function destroy():void 
+		{
+			
 		}
 		
 	}

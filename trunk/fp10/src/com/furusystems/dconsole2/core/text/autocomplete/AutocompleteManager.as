@@ -1,10 +1,10 @@
 ﻿package com.furusystems.dconsole2.core.text.autocomplete
 {
+	import com.furusystems.dconsole2.core.text.TextUtils;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
-	import com.furusystems.dconsole2.core.text.TextUtils;
 	
 	/**
 	 * ...

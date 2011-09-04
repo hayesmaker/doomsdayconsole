@@ -1,13 +1,13 @@
 package com.furusystems.dconsole2.core.gui
 {
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Roenning

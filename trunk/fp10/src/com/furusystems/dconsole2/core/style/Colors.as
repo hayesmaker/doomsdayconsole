@@ -70,6 +70,8 @@ package com.furusystems.dconsole2.core.style
 		public static var INSPECTOR_PROPERTY_CONTROL_FIELD_FG:uint =  BaseColors.WHITE;
 		public static var BUTTON_BORDER:uint =  BaseColors.GRAY;
 		
+		
+		
 		public static function update(sm:StyleManager):void {
 			CORE = sm.theme.data.core.back;
 			ENABLED = sm.theme.data.labels.enabled;

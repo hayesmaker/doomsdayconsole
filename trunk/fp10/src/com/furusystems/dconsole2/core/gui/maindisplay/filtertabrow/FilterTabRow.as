@@ -1,12 +1,5 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow 
 {
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	
 	import com.furusystems.dconsole2.core.DSprite;
 	import com.furusystems.dconsole2.core.gui.layout.IContainable;
 	import com.furusystems.dconsole2.core.interfaces.IThemeable;
@@ -14,8 +7,14 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	
 	/**
-	 * ...
+	 * A row of buttons letting you select the currently focused tag
 	 * @author Andreas Roenning
 	 */
 	public class FilterTabRow extends Sprite implements IContainable,IThemeable

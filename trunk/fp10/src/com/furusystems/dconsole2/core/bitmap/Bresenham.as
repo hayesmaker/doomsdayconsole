@@ -4,7 +4,7 @@
 	import flash.geom.Point;
 	
 	/**
-	 * ...
+	 * An implementation of bresenham's algorithm used with some drawing calls
 	 * @author Andreas Roenning
 	 */
 	

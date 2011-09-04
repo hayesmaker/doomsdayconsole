@@ -1,6 +1,11 @@
 package com.furusystems.dconsole2.core.gui 
 {
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.effects.Filters;
+	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -8,12 +13,6 @@ package com.furusystems.dconsole2.core.gui
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
-	import com.furusystems.dconsole2.core.effects.Filters;
-	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
-	import com.furusystems.dconsole2.core.interfaces.IThemeable;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Roenning

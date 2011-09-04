@@ -1,10 +1,5 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.geom.Rectangle;
-	
 	import com.furusystems.dconsole2.core.gui.maindisplay.assistant.Assistant;
 	import com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow.FilterTabRow;
 	import com.furusystems.dconsole2.core.gui.maindisplay.input.InputField;
@@ -12,6 +7,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.geom.Rectangle;
+	
 	/**
 	 * ...
 	 * @author Andreas Roenning

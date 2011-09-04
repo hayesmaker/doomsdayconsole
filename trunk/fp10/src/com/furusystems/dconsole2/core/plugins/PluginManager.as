@@ -1,17 +1,16 @@
 package com.furusystems.dconsole2.core.plugins 
 {
-	import com.furusystems.dconsole2.IConsole;
-	import com.furusystems.dconsole2.plugins.ScreenshotUtil;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Sprite;
-	import flash.utils.describeType;
-	import flash.utils.Dictionary;
 	import com.furusystems.dconsole2.core.introspection.ScopeManager;
 	import com.furusystems.dconsole2.core.logmanager.DLogManager;
 	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	import com.furusystems.dconsole2.core.references.ReferenceManager;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
+	import flash.utils.describeType;
+	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author Andreas Roenning

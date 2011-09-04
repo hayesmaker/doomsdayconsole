@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.animation
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	/**
-	 * ...
+	 * A linearly interpolating tween
 	 * @author Andreas Roenning
 	 */
 	public class LinearTween implements IConsoleTweenProcess

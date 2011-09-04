@@ -1,13 +1,13 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
+	import com.furusystems.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.strings.Strings;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import com.furusystems.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.strings.Strings;
 	/**
 	 * ...
 	 * @author Andreas Roenning

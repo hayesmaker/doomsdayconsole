@@ -1,6 +1,13 @@
 package com.furusystems.dconsole2.core.inspector 
 {
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.inspector.buttons.ModeSelector;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
+	import com.furusystems.dconsole2.core.style.Alphas;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.BlendMode;
@@ -11,14 +18,6 @@ package com.furusystems.dconsole2.core.inspector
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import com.furusystems.dconsole2.core.gui.layout.IContainable;
-	import com.furusystems.dconsole2.core.inspector.buttons.ModeSelector;
-	import com.furusystems.dconsole2.core.interfaces.IThemeable;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
-	import com.furusystems.dconsole2.core.style.Alphas;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Ronning 

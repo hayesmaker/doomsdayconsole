@@ -1,7 +1,10 @@
 ﻿package com.furusystems.dconsole2.core.introspection 
 {
+	import com.furusystems.dconsole2.core.introspection.descriptions.*;
+	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteManager;
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.DisplayObject;
@@ -12,10 +15,6 @@
 	import flash.utils.describeType;
 	import flash.utils.getQualifiedClassName;
 	
-	import com.furusystems.dconsole2.core.introspection.descriptions.*;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.text.autocomplete.AutocompleteManager;
-	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...

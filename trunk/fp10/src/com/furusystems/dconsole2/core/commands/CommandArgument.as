@@ -3,6 +3,9 @@
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	import com.furusystems.dconsole2.core.references.ReferenceManager;
 	
+	/**
+	 * Constructs and encapsulates an interpreted argument
+	 */
 	public class CommandArgument
 	{
 		public var data:*;

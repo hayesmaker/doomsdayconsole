@@ -1,9 +1,9 @@
 package com.furusystems.dconsole2.logging 
 {
-	import com.furusystems.logging.slf4as.bindings.ILogBinding;
-	import com.furusystems.logging.slf4as.constants.Levels;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
 	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.logging.slf4as.bindings.ILogBinding;
+	import com.furusystems.logging.slf4as.constants.Levels;
 	import com.furusystems.logging.slf4as.Logging;
 	/**
 	 * ...

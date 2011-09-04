@@ -1,16 +1,14 @@
 package com.furusystems.dconsole2.core.inspector 
 {
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.ui.Mouse;
-	import flash.ui.MouseCursor;
 	import com.furusystems.dconsole2.core.errors.NotImplementedError;
 	import com.furusystems.dconsole2.core.inspector.IInspectorView;
 	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	/**
 	 * ...
 	 * @author Andreas Roenning

@@ -3,7 +3,7 @@ package com.furusystems.dconsole2.core.gui.layout
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 	/**
-	 * ...
+	 * A cell containing two cells along a horizontal split
 	 * @author Andreas Roenning
 	 */
 	public class HorizontalSplit extends Cell

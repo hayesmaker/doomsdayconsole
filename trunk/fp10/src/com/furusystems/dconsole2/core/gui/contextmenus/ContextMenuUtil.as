@@ -1,9 +1,11 @@
 ﻿package com.furusystems.dconsole2.core.gui.contextmenus
 {
 	/**
-	 * ...
+	 * Utility for binding flash player context menus to console ops
 	 * @author Andreas Roenning
 	 */
+	
+	//TODO: Implement as plugin
 	public class ContextMenuUtil
 	{
 		/*private static var console:DConsole;

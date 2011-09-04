@@ -1,21 +1,19 @@
 ﻿package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
 	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.strings.Strings;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	
-	import com.furusystems.dconsole2.core.gui.layout.IContainable;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.strings.Strings;
-	import com.furusystems.dconsole2.core.style.Alphas;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
 	 * ...
 	 * @author Andreas Roenning

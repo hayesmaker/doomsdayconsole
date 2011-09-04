@@ -9,7 +9,7 @@
 	import com.furusystems.dconsole2.core.text.TextUtils;
 	import com.furusystems.dconsole2.DConsole;
 	/**
-	 * ...
+	 * Manages command definitions and executions
 	 * @author Andreas Roenning
 	 */
 	public final class CommandManager

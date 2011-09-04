@@ -5,7 +5,6 @@
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.core.style.TextFormats;
-	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.dconsole2.IConsole;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
