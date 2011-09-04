@@ -1,6 +1,12 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.assistant 
 {
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.strings.Strings;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Bitmap;
@@ -11,15 +17,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 	import flash.text.TextField;
 	import flash.utils.getTimer;
 	
-	import com.furusystems.dconsole2.core.gui.layout.IContainable;
-	import com.furusystems.dconsole2.core.interfaces.IThemeable;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.strings.Strings;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
-	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
-	 * ...
+	 * The assistant is a line of text following the input field. It displays any relevant tooltips.
 	 * @author Andreas Roenning
 	 */
 	public class Assistant extends Sprite implements IContainable,IThemeable

@@ -1,9 +1,9 @@
 ﻿package com.furusystems.dconsole2.core.persistence 
 {
-	import flash.geom.Rectangle;
-	import flash.net.SharedObject;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.DConsole;
+	import flash.geom.Rectangle;
+	import flash.net.SharedObject;
 	/**
 	 * ...
 	 * @author Andreas Roenning

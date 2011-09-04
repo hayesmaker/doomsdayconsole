@@ -1,17 +1,17 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow 
 {
+	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
-	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
-	 * ...
+	 * A button used along the filter tab row
 	 * @author Andreas Ronning 
 	 */
 	public class FilterTabButton extends Sprite

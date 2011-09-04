@@ -1,13 +1,12 @@
 package com.furusystems.dconsole2.core.gui 
 {
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.StyleManager;
 	import com.furusystems.messaging.pimp.MessageData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import com.furusystems.dconsole2.core.interfaces.IThemeable;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.StyleManager;
 	/**
 	 * ...
 	 * @author Andreas Roenning

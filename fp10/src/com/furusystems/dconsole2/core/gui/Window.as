@@ -1,8 +1,9 @@
 ﻿package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
-	import flash.display.GradientType;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -12,8 +13,6 @@
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
-	import com.furusystems.dconsole2.core.style.BaseColors;
-	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Roenning
@@ -48,7 +47,7 @@
 			_scrollBarBottom.addEventListener(Event.CHANGE, onScroll);
 			_scrollBarRight.addEventListener(Event.CHANGE, onScroll);
 			
-			_closeButton.graphics.beginFill(BaseColors.WHITE);
+			_closeButton.graphics.beginFill(Colors.BUTTON_INACTIVE_BG);
 			_closeButton.graphics.lineStyle(0, 0);
 			_closeButton.graphics.drawRect(0, 0, BAR_HEIGHT - 3, BAR_HEIGHT - 3);
 			_closeButton.buttonMode = true;
@@ -66,15 +65,17 @@
 			_titleField.height = BAR_HEIGHT+3;
 			_titleField.selectable = false;
 			_titleField.defaultTextFormat = TextFormats.consoleTitleFormat;
+			_titleField.embedFonts = true;
+			_titleField.textColor = Colors.HEADER_FG;
 			_titleField.text = title;
 			_titleField.y -= 2;
 			_titleField.mouseEnabled = false;
 			
 			_resizeHandle.graphics.clear();
-			_resizeHandle.graphics.beginFill(BaseColors.RED, 0);
+			_resizeHandle.graphics.beginFill(Colors.CORE, 0);
 			_resizeHandle.graphics.drawRect(0, 0, SCALE_HANDLE_SIZE, SCALE_HANDLE_SIZE);
 			_resizeHandle.graphics.endFill();
-			_resizeHandle.graphics.lineStyle(0, BaseColors.GRAY);
+			_resizeHandle.graphics.lineStyle(0, Colors.CORE);
 			_resizeHandle.graphics.moveTo(SCALE_HANDLE_SIZE, 0);
 			_resizeHandle.graphics.lineTo(0, SCALE_HANDLE_SIZE);
 			_resizeHandle.graphics.moveTo(SCALE_HANDLE_SIZE, 5);
@@ -214,15 +215,19 @@
 			_scrollBarBottom.outValue = 0;
 			_scrollBarRight.outValue = 0;
 		}
+		public function updateAppearance():void {
+			//TODO: Update theme
+		}
 		protected function redraw(rect:Rectangle):void {
-			GRADIENT_MATRIX.createGradientBox(rect.width * 3, rect.height * 3);
+			//GRADIENT_MATRIX.createGradientBox(rect.width * 3, rect.height * 3);
 			
 			_background.graphics.clear();	
-			_background.graphics.beginGradientFill(GradientType.RADIAL, [BaseColors.GRAY, BaseColors.BLACK], [1, 1], [0, 255], GRADIENT_MATRIX);
+			_background.graphics.beginFill(Colors.ASSISTANT_BG);
+			//_background.graphics.beginGradientFill(GradientType.RADIAL, [Colors.CORE, Colors.DROPDOWN_BG_INACTIVE], [1, 1], [0, 255], GRADIENT_MATRIX);
 			_background.graphics.drawRect(0, 0, rect.width, rect.height);
 			
 			_header.graphics.clear();
-			_header.graphics.beginFill(BaseColors.BLACK);
+			_header.graphics.beginFill(Colors.HEADER_BG);
 			_header.graphics.drawRect(0, 0, rect.width, BAR_HEIGHT);
 			_header.graphics.endFill();
 			
@@ -304,10 +309,10 @@
 		{
 			x = stage.mouseX - _clickOffset.x;
 			y = stage.mouseY - _clickOffset.y;
-			if (_constrainToStage) {
+			/*if (_constrainToStage) {
 				x = Math.max(0, Math.min(x, stage.stageWidth - width));
 				y = Math.max(0, Math.min(y, stage.stageHeight - height));
-			}
+			}*/
 			viewRect.x = x;
 			viewRect.y = y;
 			e.updateAfterEvent();

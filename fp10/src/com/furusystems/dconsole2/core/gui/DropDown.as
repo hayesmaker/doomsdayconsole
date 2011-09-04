@@ -1,17 +1,14 @@
 ﻿package com.furusystems.dconsole2.core.gui 
 {
+	import com.furusystems.dconsole2.core.gui.events.DropDownEvent;
+	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
-	import flash.display.BlendMode;
-	import flash.display.Shape;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import com.furusystems.dconsole2.core.gui.events.DropDownEvent;
-	import com.furusystems.dconsole2.core.style.BaseColors;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Roenning

@@ -2,7 +2,7 @@ package com.furusystems.dconsole2.core.animation
 {
 	import flash.utils.Dictionary;
 	/**
-	 * ...
+	 * Minimalistic tweener for handling some minor transitions
 	 * @author Andreas Roenning
 	 */
 	public class ConsoleTweener

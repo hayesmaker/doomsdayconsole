@@ -1,16 +1,16 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.assistant 
 {
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.strings.Strings;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.strings.Strings;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
 	/**
-	 * ...
+	 * The scaling handle shown in the lower right corner when the console is in windowed mode
 	 * @author Andreas Roenning
 	 */
 	public class CornerScaleHandle extends Sprite

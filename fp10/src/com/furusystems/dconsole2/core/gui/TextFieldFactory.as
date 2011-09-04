@@ -1,8 +1,8 @@
 package com.furusystems.dconsole2.core.gui 
 {
-	import flash.text.TextField;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.core.style.TextFormats;
+	import flash.text.TextField;
 	/**
 	 * ...
 	 * @author Andreas Roenning

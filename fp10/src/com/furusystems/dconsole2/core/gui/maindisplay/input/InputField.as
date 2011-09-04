@@ -1,6 +1,12 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.input 
 {
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.gui.layout.IContainable;
+	import com.furusystems.dconsole2.core.interfaces.IThemeable;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
+	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.core.text.TextUtils;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -9,16 +15,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	
-	import com.furusystems.dconsole2.core.gui.layout.IContainable;
-	import com.furusystems.dconsole2.core.interfaces.IThemeable;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.style.Colors;
-	import com.furusystems.dconsole2.core.style.GUIUnits;
-	import com.furusystems.dconsole2.core.style.TextFormats;
-	import com.furusystems.dconsole2.core.text.TextUtils;
-	import com.furusystems.dconsole2.core.utils.ColorUtils;
 	/**
-	 * ...
+	 * The main input field
 	 * @author Andreas Roenning
 	 */
 	public class InputField extends Sprite implements IContainable,IThemeable

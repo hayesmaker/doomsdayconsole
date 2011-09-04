@@ -1,8 +1,8 @@
 ﻿package com.furusystems.dconsole2.core.introspection 
 {
+	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
-	import com.furusystems.dconsole2.core.introspection.descriptions.ChildScopeDesc;
 	/**
 	 * ...
 	 * @author Andreas Roenning

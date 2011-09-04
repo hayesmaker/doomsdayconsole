@@ -1,10 +1,10 @@
 ﻿package com.furusystems.dconsole2.core.gui.events 
 {
-	import flash.events.Event;
 	import com.furusystems.dconsole2.core.gui.DropDownOption;
+	import flash.events.Event;
 	
 	/**
-	 * ...
+	 * Event used with dropdown menus
 	 * @author Andreas Roenning
 	 */
 	public class DropDownEvent extends Event 

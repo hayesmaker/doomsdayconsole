@@ -4,7 +4,7 @@ package com.furusystems.dconsole2.core.animation
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	/**
-	 * ...
+	 * A sinusoidally (whooee) easing tween
 	 * @author Andreas Roenning
 	 */
 	public class EasingTween implements IConsoleTweenProcess

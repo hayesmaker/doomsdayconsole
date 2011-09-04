@@ -1,10 +1,10 @@
 package com.furusystems.dconsole2.core.gui.layout
 {
+	import com.furusystems.dconsole2.core.DSprite;
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
-	import com.furusystems.dconsole2.core.DSprite;
 	/**
-	 * ...
+	 * Layout cell, describing a rectangle that may contain cells of its own
 	 * @author Andreas Roenning
 	 */
 	public class Cell extends DSprite implements ILayoutContainer

@@ -1,21 +1,17 @@
 package com.furusystems.dconsole2.core.inspector.buttons 
 {
+	import com.furusystems.dconsole2.core.DSprite;
 	import com.furusystems.dconsole2.core.gui.DropDown;
 	import com.furusystems.dconsole2.core.gui.DropDownOption;
 	import com.furusystems.dconsole2.core.gui.events.DropDownEvent;
-	import com.furusystems.messaging.pimp.Message;
-	import com.furusystems.messaging.pimp.MessageData;
-	import com.furusystems.messaging.pimp.PimpCentral;
-	import flash.display.BitmapData;
-	import flash.events.MouseEvent;
-	import flash.utils.Dictionary;
-	
-	import com.furusystems.dconsole2.core.DSprite;
-	import com.furusystems.dconsole2.core.gui.AbstractButton;
 	import com.furusystems.dconsole2.core.inspector.AbstractInspectorView;
 	import com.furusystems.dconsole2.core.interfaces.IThemeable;
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
+	import com.furusystems.messaging.pimp.MessageData;
+	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.utils.Dictionary;
+	
 	/**
 	 * ...
 	 * @author Andreas Roenning

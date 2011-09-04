@@ -1,7 +1,7 @@
 package com.furusystems.dconsole2.core.errors 
 {
 	/**
-	 * ...
+	 * Constant class of strings used in errors
 	 * @author Andreas Roenning
 	 */
 	public class ErrorStrings

@@ -1,7 +1,7 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
-	import flash.geom.Rectangle;
 	import com.furusystems.dconsole2.core.inspector.Inspector;
+	import flash.geom.Rectangle;
 	/**
 	 * ...
 	 * @author Andreas Roenning

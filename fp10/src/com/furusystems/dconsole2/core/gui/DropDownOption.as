@@ -2,12 +2,10 @@
 {
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
-	import com.furusystems.dconsole2.core.style.TextColors;
+	import com.furusystems.dconsole2.core.style.TextFormats;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-	import com.furusystems.dconsole2.core.style.TextFormats;
 	/**
 	 * ...
 	 * @author Andreas Roenning

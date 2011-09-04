@@ -1,6 +1,8 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.toolbar 
 {
-	import com.furusystems.messaging.pimp.Message;
+	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
+	import com.furusystems.dconsole2.core.Notifications;
+	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -8,9 +10,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
-	import com.furusystems.dconsole2.core.gui.TextFieldFactory;
-	import com.furusystems.dconsole2.core.Notifications;
-	import com.furusystems.dconsole2.core.style.Colors;
 	/**
 	 * ...
 	 * @author Andreas Roenning
