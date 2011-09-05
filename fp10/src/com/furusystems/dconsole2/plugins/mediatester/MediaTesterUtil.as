@@ -63,7 +63,7 @@ package com.furusystems.dconsole2.plugins.mediatester
 				
 		public function get dependencies():Vector.<Class> 
 		{
-			return new Vector.<Class>();
+			return null;
 		}
 		
 	}

@@ -67,7 +67,7 @@ package com.furusystems.dconsole2.plugins
 				
 		public function get dependencies():Vector.<Class> 
 		{
-			return new Vector.<Class>();
+			return null;
 		}
 		
 	}
