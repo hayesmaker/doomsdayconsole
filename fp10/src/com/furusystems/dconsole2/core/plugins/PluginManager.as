@@ -4,6 +4,7 @@ package com.furusystems.dconsole2.core.plugins
 	import com.furusystems.dconsole2.core.logmanager.DLogManager;
 	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
+	import com.furusystems.dconsole2.core.persistence.PersistenceManager;
 	import com.furusystems.dconsole2.core.references.ReferenceManager;
 	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.dconsole2.IConsole;
@@ -135,6 +136,9 @@ package com.furusystems.dconsole2.core.plugins
 				return _pluginMap[type] as IDConsolePlugin;
 			}
 			return null;
+		}
+		public function get persistence():PersistenceManager {
+			return _console.persistence;
 		}
 		public function get console():IConsole {
 			return _console;
