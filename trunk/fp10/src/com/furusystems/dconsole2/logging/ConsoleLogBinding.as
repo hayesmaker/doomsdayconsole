@@ -5,6 +5,7 @@ package com.furusystems.dconsole2.logging
 	import com.furusystems.logging.slf4as.bindings.ILogBinding;
 	import com.furusystems.logging.slf4as.constants.Levels;
 	import com.furusystems.logging.slf4as.Logging;
+	import com.furusystems.logging.slf4as.utils.LevelInfo;
 	/**
 	 * ...
 	 * @author Andreas Roenning
@@ -20,13 +21,13 @@ package com.furusystems.dconsole2.logging
 		
 		private function getLoggingLevel():void 
 		{
-			DConsole.addSystemMessage("Current logging level is '" + Levels.getName(Logging.getLevel()) + "'");
+			DConsole.addSystemMessage("Current logging level is '" + LevelInfo.getName(Logging.getLevel()) + "'");
 		}
 		
 		private function setLoggingLevel(level:String = "ALL"):void 
 		{
 			
-			Logging.setLevel(Levels.getID(level));
+			Logging.setLevel(LevelInfo.getID(level));
 			getLoggingLevel();
 		}
 		
@@ -36,7 +37,7 @@ package com.furusystems.dconsole2.logging
 		{
 			if (String(owner) == "Logging") owner = DConsole.TAG;
 			var l:String = ConsoleMessageTypes.DEBUG;
-			switch(Levels.getID(level)) {
+			switch(LevelInfo.getID(level)) {
 				case Levels.ERROR:
 				l = ConsoleMessageTypes.ERROR;
 				break;
