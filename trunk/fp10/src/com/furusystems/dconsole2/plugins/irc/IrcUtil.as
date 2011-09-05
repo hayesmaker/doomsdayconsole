@@ -34,12 +34,12 @@ package com.furusystems.dconsole2.plugins.irc
 		
 		public function get descriptionText():String 
 		{
-			return "Adds a simple IRC client";
+			return "Adds a simple one-channel IRC client";
 		}
 		
 		public function get dependencies():Vector.<Class> 
 		{
-			return new Vector.<Class>();
+			return null;
 		}
 		
 		public function initialize(pm:PluginManager):void 

@@ -157,7 +157,7 @@
 				
 		public function get dependencies():Vector.<Class> 
 		{
-			return new Vector.<Class>();
+			return null;
 		}
 		
 	}

@@ -29,7 +29,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.notepad
 				
 		public function get dependencies():Vector.<Class> 
 		{
-			return new Vector.<Class>();
+			return null;
 		}
 		
 		
