@@ -1340,7 +1340,8 @@
 		}
 		
 		/**
-		 * Add a message with error color coding
+		 * Add a message with ridiculous random color coding. 
+		 * For the love of god and all that is holy, use sparingly if at all!
 		 * @param	msg
 		 * @param	tag
 		 * The string tag for identifying the source or topic of this message
@@ -1363,13 +1364,13 @@
 		 * The trigger word for the command
 		 * @param	func
 		 * The function to call
-		 * @param	commandGroup
+		 * @param	category
 		 * Optional: The group name you want the command sorted under
 		 * @param	helpText
 		 * Optional: Any text you want displayed in the assistant when this command is being typed
 		 */
-		public static function createCommand(triggerPhrase:String, func:Function, commandGroup:String = "Application", helpText:String = ""):void {
-			console.createCommand(triggerPhrase, func, commandGroup, helpText);
+		public static function createCommand(triggerPhrase:String, func:Function, category:String = "Application", helpText:String = ""):void {
+			console.createCommand(triggerPhrase, func, category, helpText);
 		}
 		/**
 		 * Removes a command keyed by its trigger phrase
