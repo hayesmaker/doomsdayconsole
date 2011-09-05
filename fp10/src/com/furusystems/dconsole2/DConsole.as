@@ -937,26 +937,32 @@
 			var stopEvent:Boolean = false;
 			var trigger1:Boolean = e.keyCode == _trigger;
 			//var trigger2:Boolean = e.keyCode == _trigger && (!e.shiftKey);
-			
-			if(!e.shiftKey&&trigger1){
-				if (doComplete()) {
-					if (shouldCancel(e.keyCode)) {
-						cancelKey(e);
+			if(stage.focus==input.inputTextField){
+				if(!e.shiftKey&&trigger1){
+					if (doComplete()) {
+						if (shouldCancel(e.keyCode)) {
+							cancelKey(e);
+						}
 					}
+					return;
+					//if (trigger1) {
+						//if (doComplete()) {
+							//cancelKey(e);
+						//}
+						//return;
+					//}else if (trigger2) {
+						//if (visible && stage.focus != input && stage.focus != input.inputTextField) {
+							//input.focus();
+							//cancelKey(e);
+						//}
+						//return;
+					//}
 				}
-				return;
-				//if (trigger1) {
-					//if (doComplete()) {
-						//cancelKey(e);
-					//}
-					//return;
-				//}else if (trigger2) {
-					//if (visible && stage.focus != input && stage.focus != input.inputTextField) {
-						//input.focus();
-						//cancelKey(e);
-					//}
-					//return;
-				//}
+			}else {
+				if (trigger1) {
+					input.focus();
+					return;
+				}
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
 				PimpCentral.send(Notifications.ESCAPE_KEY, null, this);
