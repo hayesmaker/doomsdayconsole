@@ -11,10 +11,10 @@ package com.furusystems.dconsole2.core.helpmanager
 	public class HelpManager 
 	{
 		private var topics:Dictionary = new Dictionary();
-		public function HelpManager() 
+		public function HelpManager(messaging:PimpCentral) 
 		{
-			PimpCentral.addCallback(Notifications.HELP_TOPIC_ADD_REQUEST, onHelpAddRequest);
-			PimpCentral.addCallback(Notifications.HELP_TOPIC_REMOVE_REQUEST, onHelpRemoveRequest);
+			messaging.addCallback(Notifications.HELP_TOPIC_ADD_REQUEST, onHelpAddRequest);
+			messaging.addCallback(Notifications.HELP_TOPIC_REMOVE_REQUEST, onHelpRemoveRequest);
 		}
 		
 		private function onHelpRemoveRequest(md:MessageData):void 

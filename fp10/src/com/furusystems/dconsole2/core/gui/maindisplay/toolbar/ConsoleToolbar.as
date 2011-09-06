@@ -6,6 +6,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -21,8 +22,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 		
 		private var _titleField:TextField = new TextField();
 		private var _rect:Rectangle;
-		public function ConsoleToolbar() 
+		private var _console:IConsole;
+		public function ConsoleToolbar(console:IConsole) 
 		{
+			_console = console;
 			_titleField.height = GUIUnits.SQUARE_UNIT;
 			_titleField.selectable = _titleField.mouseEnabled = false;
 			_titleField.defaultTextFormat = TextFormats.consoleTitleFormat;
@@ -31,7 +34,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 			_titleField.text = "Doomsday Console II";
 			_titleField.x = _titleField.y = 1;
 			addChild(_titleField);
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			_console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			
 		}
 		public function setTitle(text:String):void {

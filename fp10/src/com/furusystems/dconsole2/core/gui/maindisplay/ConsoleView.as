@@ -63,7 +63,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		private var _bg:Sprite = new Sprite();
 		private var _inspectorHidden:Boolean = false;
 		
-		private var _scaleHandle:ScaleHandle = new ScaleHandle();
+		private var _scaleHandle:ScaleHandle;
 		
 		private var _prevRect:Rectangle;
 		
@@ -78,6 +78,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		
 		public function ConsoleView(console:DConsole = null) 
 		{
+			_scaleHandle = new ScaleHandle(console);
 			visible = false;
 			_console = console;
 			
@@ -86,8 +87,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			
 			tabEnabled = tabChildren = false;
 			_mainSection = new MainSection(console);
-			_inspectorSection = new InspectorSection();
-			_headerSection = new HeaderSection();
+			_inspectorSection = new InspectorSection(console);
+			_headerSection = new HeaderSection(console);
 			//_bg.cacheAsBitmap = true;
 			
 			addChild(_bg);
@@ -123,16 +124,16 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			
 			tabEnabled = tabChildren = false;
 			
-			PimpCentral.addCallback(Notifications.INSPECTOR_VIEW_REMOVED, onInspectorViewCountChange);
-			PimpCentral.addCallback(Notifications.INSPECTOR_VIEW_ADDED, onInspectorViewCountChange);
+			_console.messaging.addCallback(Notifications.INSPECTOR_VIEW_REMOVED, onInspectorViewCountChange);
+			_console.messaging.addCallback(Notifications.INSPECTOR_VIEW_ADDED, onInspectorViewCountChange);
 			
-			PimpCentral.addCallback(Notifications.TOOLBAR_DRAG_START, onToolbarDrag);
-			PimpCentral.addCallback(Notifications.TOOLBAR_DRAG_STOP, onToolbarDrag);
-			PimpCentral.addCallback(Notifications.TOOLBAR_DRAG_UPDATE, onToolbarDrag);
+			_console.messaging.addCallback(Notifications.TOOLBAR_DRAG_START, onToolbarDrag);
+			_console.messaging.addCallback(Notifications.TOOLBAR_DRAG_STOP, onToolbarDrag);
+			_console.messaging.addCallback(Notifications.TOOLBAR_DRAG_UPDATE, onToolbarDrag);
 			
-			PimpCentral.addCallback(Notifications.CORNER_DRAG_START, onCornerScale);
-			PimpCentral.addCallback(Notifications.CORNER_DRAG_STOP, onCornerScale);
-			PimpCentral.addCallback(Notifications.CORNER_DRAG_UPDATE, onCornerScale);
+			_console.messaging.addCallback(Notifications.CORNER_DRAG_START, onCornerScale);
+			_console.messaging.addCallback(Notifications.CORNER_DRAG_STOP, onCornerScale);
+			_console.messaging.addCallback(Notifications.CORNER_DRAG_UPDATE, onCornerScale);
 			
 			
 		}
@@ -199,7 +200,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 					break;
 				case Notifications.TOOLBAR_DRAG_STOP:
 					Mouse.cursor = MouseCursor.AUTO;
-						PimpCentral.send(Notifications.HIDE_DOCKING_GUIDE, null, this);
+						_console.messaging.send(Notifications.HIDE_DOCKING_GUIDE, null, this);
 						updateDocking();
 					break;
 				case Notifications.TOOLBAR_DRAG_UPDATE:
@@ -210,15 +211,15 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 						
 						scaleHandle.visible = true;
 						if (y <= 2) {
-							PimpCentral.send(Notifications.SHOW_DOCKING_GUIDE, DockingGuides.TOP, this);
+							_console.messaging.send(Notifications.SHOW_DOCKING_GUIDE, DockingGuides.TOP, this);
 							_console.persistence.dockState.value = DConsole.DOCK_TOP;
 							_scaleHandle.y = _rect.height;
 						}else if (y >= stage.stageHeight - _rect.height-2) {
-							PimpCentral.send(Notifications.SHOW_DOCKING_GUIDE, DockingGuides.BOT, this);
+							_console.messaging.send(Notifications.SHOW_DOCKING_GUIDE, DockingGuides.BOT, this);
 							_console.persistence.dockState.value = DConsole.DOCK_BOT;
 							_scaleHandle.y = -scaleHandle.height;
 						}else {
-							PimpCentral.send(Notifications.HIDE_DOCKING_GUIDE, null, this);
+							_console.messaging.send(Notifications.HIDE_DOCKING_GUIDE, null, this);
 							_console.persistence.dockState.value = DConsole.DOCK_WINDOWED;
 							scaleHandle.visible = false;
 						}
@@ -469,7 +470,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		
 		private function onShown():void
 		{
-			PimpCentral.send(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE, true);
+			_console.messaging.send(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE, true);
 		}
 		public function hide():void {
 			
@@ -540,7 +541,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		private function onHidden():void
 		{
 			visible = false;
-			PimpCentral.send(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE,false);
+			_console.messaging.send(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE,false);
 		}
 		
 		

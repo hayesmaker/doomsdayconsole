@@ -65,9 +65,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			_textOutput.mouseWheelEnabled = false;
 			_textOutput.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
-			PimpCentral.addCallback(Notifications.CURRENT_LOG_CHANGED, onCurrentLogChange);
-			PimpCentral.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
+			console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			console.messaging.addCallback(Notifications.CURRENT_LOG_CHANGED, onCurrentLogChange);
+			console.messaging.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
 			
 			if(TRUNCATE) _textOutput.addEventListener(MouseEvent.CLICK, onTextClick);
 		}

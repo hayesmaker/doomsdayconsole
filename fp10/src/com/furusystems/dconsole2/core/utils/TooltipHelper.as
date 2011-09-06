@@ -23,12 +23,12 @@ package com.furusystems.dconsole2.core.utils
 		
 		static private function onMouseOut(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.TOOLTIP_HIDE_REQUEST);
+			messaging.send(Notifications.TOOLTIP_HIDE_REQUEST);
 		}
 		
 		static private function onMouseOver(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.TOOLTIP_SHOW_REQUEST, helpmap[e.currentTarget]);
+			messaging.send(Notifications.TOOLTIP_SHOW_REQUEST, helpmap[e.currentTarget]);
 		}
 		
 	}

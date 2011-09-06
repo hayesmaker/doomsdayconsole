@@ -6,6 +6,7 @@ package com.furusystems.dconsole2.core.gui
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -20,9 +21,11 @@ package com.furusystems.dconsole2.core.gui
 	public class ToolTip extends Sprite implements IThemeable
 	{
 		private var labelField:TextField;
+		private var _console:IConsole;
 		
-		public function ToolTip() 
+		public function ToolTip(console:IConsole) 
 		{
+			_console = console;
 			mouseEnabled = mouseChildren = false;
 			labelField = TextFieldFactory.getLabel("Help");
 			labelField.autoSize = TextFieldAutoSize.LEFT;
@@ -33,9 +36,9 @@ package com.furusystems.dconsole2.core.gui
 			filters = [Filters.CONSOLE_DROPSHADOW];
 			labelField.background = true;
 			addChild(labelField).y = -GUIUnits.SQUARE_UNIT*1.5;
-			PimpCentral.addCallback(Notifications.TOOLTIP_SHOW_REQUEST, onTooltipShowRequest);
-			PimpCentral.addCallback(Notifications.TOOLTIP_HIDE_REQUEST, onTooltipHideRequest);
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			_console.messaging.addCallback(Notifications.TOOLTIP_SHOW_REQUEST, onTooltipShowRequest);
+			_console.messaging.addCallback(Notifications.TOOLTIP_HIDE_REQUEST, onTooltipHideRequest);
+			_console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			visible = false;
 		}
 		

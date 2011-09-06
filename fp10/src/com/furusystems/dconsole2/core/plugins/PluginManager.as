@@ -8,6 +8,7 @@ package com.furusystems.dconsole2.core.plugins
 	import com.furusystems.dconsole2.core.references.ReferenceManager;
 	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.dconsole2.IConsole;
+	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.utils.describeType;
@@ -64,9 +65,11 @@ package com.furusystems.dconsole2.core.plugins
 			if (obj is IDConsolePlugin) {
 				var plugInstance:IDConsolePlugin = obj as IDConsolePlugin;
 				if (_pluginMap[plug] == null) {
-					if (plugInstance.dependencies.length > 0) {
-						for each(var c:Class in plugInstance.dependencies) {
-							registerPlugin(c);
+					if(plugInstance.dependencies!=null){
+						if (plugInstance.dependencies.length > 0) {
+							for each(var c:Class in plugInstance.dependencies) {
+								registerPlugin(c);
+							}
 						}
 					}
 					plugInstance.initialize(this);
@@ -159,6 +162,10 @@ package com.furusystems.dconsole2.core.plugins
 			return _consoleBgLayer;
 		}		
 		public function get logManager():DLogManager { return _logManager }
+		
+		public function get messaging():PimpCentral {
+			return _console.messaging;
+		}
 	}
 
 }

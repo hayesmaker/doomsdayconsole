@@ -3,6 +3,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 	import com.furusystems.dconsole2.core.gui.maindisplay.toolbar.ConsoleToolbar;
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.strings.Strings;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
@@ -18,9 +19,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 		public var toolBar:ConsoleToolbar;
 		private var _delta:Point = new Point();
 		private var _prevDragPos:Point = new Point();
-		public function HeaderSection() 
+		private var _console:IConsole;
+		public function HeaderSection(console:IConsole) 
 		{
-			toolBar = new ConsoleToolbar();
+			_console = console;
+			toolBar = new ConsoleToolbar(console);
 			addChild(toolBar);
 			buttonMode = true;
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
@@ -30,12 +33,12 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 		
 		private function onMouseOut(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.ASSISTANT_CLEAR_REQUEST);
+			_console.messaging.send(Notifications.ASSISTANT_CLEAR_REQUEST);
 		}
 		
 		private function onMouseOver(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.ASSISTANT_MESSAGE_REQUEST, Strings.ASSISTANT_STRINGS.get(Strings.ASSISTANT_STRINGS.HEADER_BAR_ID), this);
+			_console.messaging.send(Notifications.ASSISTANT_MESSAGE_REQUEST, Strings.ASSISTANT_STRINGS.get(Strings.ASSISTANT_STRINGS.HEADER_BAR_ID), this);
 		}
 		
 		private function onMouseDown(e:MouseEvent):void 
@@ -44,7 +47,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_prevDragPos.x = stage.mouseX;
 			_prevDragPos.y = stage.mouseY;
-			PimpCentral.send(Notifications.TOOLBAR_DRAG_START, _prevDragPos, this);
+			_console.messaging.send(Notifications.TOOLBAR_DRAG_START, _prevDragPos, this);
 		}
 		
 		private function onMouseMove(e:MouseEvent):void 
@@ -53,7 +56,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 			_delta.y = stage.mouseY - _prevDragPos.y;
 			_prevDragPos.x = stage.mouseX;
 			_prevDragPos.y = stage.mouseY;
-			PimpCentral.send(Notifications.TOOLBAR_DRAG_UPDATE, _delta, this);
+			_console.messaging.send(Notifications.TOOLBAR_DRAG_UPDATE, _delta, this);
 		}
 		
 		private function onMouseUp(e:MouseEvent):void 
@@ -64,7 +67,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 			_prevDragPos.y = stage.mouseY;
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			PimpCentral.send(Notifications.TOOLBAR_DRAG_STOP, _delta, this);
+			_console.messaging.send(Notifications.TOOLBAR_DRAG_STOP, _delta, this);
 		}
 		override public function onParentUpdate(allotedRect:Rectangle):void 
 		{

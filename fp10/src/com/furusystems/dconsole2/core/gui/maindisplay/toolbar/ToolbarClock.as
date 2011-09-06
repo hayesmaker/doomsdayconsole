@@ -27,7 +27,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 			
 			_tf.mouseEnabled = false;
 			addChild(_tf);
-			PimpCentral.addCallback(Notifications.FRAME_UPDATE, updateClock);
+			messaging.addCallback(Notifications.FRAME_UPDATE, updateClock);
 			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}

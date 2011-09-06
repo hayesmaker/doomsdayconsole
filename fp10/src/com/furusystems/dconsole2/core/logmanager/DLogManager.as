@@ -2,6 +2,7 @@ package com.furusystems.dconsole2.core.logmanager
 {
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.output.ConsoleMessage;
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.utils.Dictionary;
@@ -18,11 +19,13 @@ package com.furusystems.dconsole2.core.logmanager
 		private var _rootLog:DConsoleLog;
 		private var _filtersActive:int = 0;
 		private var _logsActive:int = 0;
+		private var _messaging:PimpCentral;
 		private static const TAG:String = "DConsole";
-		public function DLogManager() 
+		public function DLogManager(console:DConsole) 
 		{
+			_messaging = console.messaging;
 			_rootLog = _currentLog = addLog(TAG);
-			PimpCentral.addCallback(Notifications.LOG_BUTTON_CLICKED, onLogButtonClick);
+			_messaging.addCallback(Notifications.LOG_BUTTON_CLICKED, onLogButtonClick);
 		}
 		
 		private function onLogButtonClick(md:MessageData):void
@@ -54,7 +57,7 @@ package com.furusystems.dconsole2.core.logmanager
 			var log:DConsoleLog = new DConsoleLog(name, this);
 			_logMap[name.toLowerCase()] = log;
 			_logsActive++;
-			PimpCentral.send(Notifications.NEW_LOG_CREATED, log, this);
+			_messaging.send(Notifications.NEW_LOG_CREATED, log, this);
 			return log;
 		}
 		public function removeLog(name:String):DConsoleLog {
@@ -63,7 +66,7 @@ package com.furusystems.dconsole2.core.logmanager
 				log.destroy();
 				delete(_logMap[name.toLowerCase()]);
 				_logsActive--;
-				PimpCentral.send(Notifications.LOG_DESTROYED, log, this);
+				_messaging.send(Notifications.LOG_DESTROYED, log, this);
 				return log;
 			}
 			throw new ArgumentError("No such log: " + name);
@@ -72,7 +75,7 @@ package com.furusystems.dconsole2.core.logmanager
 			if (_logMap[name.toLowerCase()] != null) {
 				_currentLog = _logMap[name.toLowerCase()];
 			}
-			PimpCentral.send(Notifications.CURRENT_LOG_CHANGED, _currentLog, this);
+			_messaging.send(Notifications.CURRENT_LOG_CHANGED, _currentLog, this);
 			return _currentLog;
 		}
 		
@@ -100,7 +103,7 @@ package com.furusystems.dconsole2.core.logmanager
 				for each(var m:ConsoleMessage in log.messages) {
 					validateFilters(m);
 				}
-				PimpCentral.send(Notifications.LOG_CHANGED, log, this);
+				_messaging.send(Notifications.LOG_CHANGED, log, this);
 			}
 		}
 		private function validateFilters(msg:ConsoleMessage):void {

@@ -24,7 +24,7 @@ package com.furusystems.dconsole2.plugins.dialog
 		}
 		public function execute():void {
 			_console.print(_question, ConsoleMessageTypes.SYSTEM);
-			PimpCentral.send(Notifications.ASSISTANT_MESSAGE_REQUEST, _question + " (Type your response and hit enter)");
+			_console.messaging.send(Notifications.ASSISTANT_MESSAGE_REQUEST, _question + " (Type your response and hit enter)");
 			_console.setOverrideCallback(handleResponse);
 		}
 		
@@ -41,7 +41,7 @@ package com.furusystems.dconsole2.plugins.dialog
 				parsed = response;
 			}
 			_sequence.addResult(parsed);
-			PimpCentral.send(Notifications.ASSISTANT_CLEAR_REQUEST);
+			_console.messaging.send(Notifications.ASSISTANT_CLEAR_REQUEST);
 			_console.clearOverrideCallback();
 			_sequence.next();
 		}

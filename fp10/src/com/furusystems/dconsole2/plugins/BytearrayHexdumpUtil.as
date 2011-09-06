@@ -132,7 +132,7 @@ package  com.furusystems.dconsole2.plugins
 		{
 			_scopeManager = pm.scopeManager;
 			pm.console.createCommand("hexDump", hexDump, "HexUtil", "(if the current scope is a byte array) outputs the scope in paged hexadecimal view ");
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
+			pm.messaging.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
 		}
 		
 		private function onScopeChange(md:MessageData):void 
@@ -142,7 +142,7 @@ package  com.furusystems.dconsole2.plugins
 		
 		public function shutdown(pm:PluginManager):void
 		{
-			PimpCentral.removeCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
+			pm.messaging.removeCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
 			_scopeManager = null;
 			pm.console.removeCommand("hexDump");
 		}

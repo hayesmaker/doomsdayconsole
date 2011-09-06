@@ -47,7 +47,7 @@ package com.furusystems.dconsole2.plugins
 			pm.console.createCommand("chainsawConnect", connect, "Chainsaw", "Connects to a Chainsaw XMLSocketReceiver at host [x] (default localhost) and port [y] (default 4448)");
 			pm.console.createCommand("chainsawDisconnect", disconnect, "Chainsaw", "Disconnects from Chainsaw");
 			pm.console.createCommand("chainsawPushlog", pushLog, "Chainsaw", "Pushes the entire log to Chainsaw, top to bottom");
-			PimpCentral.addCallback(Notifications.NEW_CONSOLE_OUTPUT, onNewMessage);
+			pm.messaging.addCallback(Notifications.NEW_CONSOLE_OUTPUT, onNewMessage);
 		}
 		
 		private function onNewMessage(md:MessageData):void 

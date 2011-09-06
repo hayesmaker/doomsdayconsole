@@ -36,7 +36,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		
 		public function InputMonitorUtil() 
 		{
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			scrollXEnabled = scrollYEnabled = false;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			output = new TextField();
@@ -69,6 +68,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		public override function shutdown(pm:PluginManager):void 
 		{
 			super.shutdown(pm);
+			pm.messaging.removeCallback(Notifications.THEME_CHANGED, onThemeChange);
 			this.pm = null;
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -101,6 +101,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.inputmonitor
 		public override function initialize(pm:PluginManager):void 
 		{
 			super.initialize(pm);
+			
+			pm.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			this.pm = pm;
 		}
 		override public function populate(object:Object):void 

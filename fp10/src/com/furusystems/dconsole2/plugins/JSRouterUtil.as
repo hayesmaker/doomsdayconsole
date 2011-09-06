@@ -76,8 +76,8 @@ package com.furusystems.dconsole2.plugins
 		public function initialize(pm:PluginManager):void
 		{
 			_console = pm.console;
-			PimpCentral.addCallback(Notifications.NEW_CONSOLE_OUTPUT, onNewMessage);
-			PimpCentral.addCallback(Notifications.ERROR, onError);
+			pm.messaging.addCallback(Notifications.NEW_CONSOLE_OUTPUT, onNewMessage);
+			pm.messaging.addCallback(Notifications.ERROR, onError);
 			_console.createCommand("routeToJS", routeToJS, "JavaScript", "Toggles routing of all messages to a given js function X (default 'console.log')");
 			_console.createCommand("alertErrors", alertErrors, "JavaScript", "Toggles js-alerting of errors caught by the console");
 			if (ExternalInterface.available) {
@@ -94,8 +94,8 @@ package com.furusystems.dconsole2.plugins
 		{
 			_console.removeCommand("routeToJS");
 			_console.removeCommand("alertErrors");
-			PimpCentral.removeCallback(Notifications.NEW_CONSOLE_OUTPUT, onNewMessage);
-			PimpCentral.removeCallback(Notifications.ERROR, onError);
+			pm.messaging.removeCallback(Notifications.NEW_CONSOLE_OUTPUT, onNewMessage);
+			pm.messaging.removeCallback(Notifications.ERROR, onError);
 			_console = null;
 		}
 		

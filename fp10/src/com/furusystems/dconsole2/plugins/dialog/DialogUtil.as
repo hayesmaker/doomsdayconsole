@@ -33,7 +33,7 @@ package com.furusystems.dconsole2.plugins.dialog
 			_currentDialog = null;
 			_console.print("Dialog aborted", ConsoleMessageTypes.SYSTEM);
 			_console.clearOverrideCallback();
-			PimpCentral.send(DialogNotifications.ABORT_DIALOG, null, this);
+			_console.messaging.send(DialogNotifications.ABORT_DIALOG, null, this);
 			PimpCentral.removeReceiver(this, Notifications.ESCAPE_KEY);
 		}
 		
@@ -55,14 +55,14 @@ package com.furusystems.dconsole2.plugins.dialog
 		
 		public function initialize(pm:PluginManager):void 
 		{
-			PimpCentral.addReceiver(this, DialogNotifications.START_DIALOG);
+			pm.messaging.addReceiver(this, DialogNotifications.START_DIALOG);
 			_console = pm.console;
 		}
 		
 		public function shutdown(pm:PluginManager):void 
 		{
-			PimpCentral.removeReceiver(this, DialogNotifications.START_DIALOG);
-			PimpCentral.removeReceiver(this, Notifications.ESCAPE_KEY);
+			pm.messaging.removeReceiver(this, DialogNotifications.START_DIALOG);
+			pm.messaging.removeReceiver(this, Notifications.ESCAPE_KEY);
 		}
 		
 		/* INTERFACE com.furusystems.messaging.pimp.IMessageReceiver */

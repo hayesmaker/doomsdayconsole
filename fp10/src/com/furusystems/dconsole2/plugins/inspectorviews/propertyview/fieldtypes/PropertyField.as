@@ -30,9 +30,11 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		private var _splitRatio:Number = 0.5;
 		private var _access:String;
 		private var _objRef:Dictionary = new Dictionary(true);
+		private var _console:IConsole;
 		public function PropertyField(console:IConsole, object:Object,property:String,type:String,access:String = "readwrite") 
 		{
 			super(property);
+			_console = console;
 			_access = access;
 			_objRef[0] = object;
 			nameField = TextFieldFactory.getLabel(property);
@@ -103,7 +105,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 		
 		private function onMouseOut(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.TOOLTIP_HIDE_REQUEST, null, this);
+			_console.messaging.send(Notifications.TOOLTIP_HIDE_REQUEST, null, this);
 		}
 		
 		private function onMouseOver(e:MouseEvent):void 
@@ -117,7 +119,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview.fieldtypes
 				t = nameField.text;
 				break;
 			}
-			PimpCentral.send(Notifications.TOOLTIP_SHOW_REQUEST, t, this);
+			_console.messaging.send(Notifications.TOOLTIP_SHOW_REQUEST, t, this);
 		}
 		override public function set width(value:Number):void 
 		{
