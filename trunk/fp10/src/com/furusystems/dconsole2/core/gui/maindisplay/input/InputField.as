@@ -7,6 +7,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.core.style.TextFormats;
 	import com.furusystems.dconsole2.core.text.TextUtils;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -22,9 +23,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 	public class InputField extends Sprite implements IContainable,IThemeable
 	{
 		private var _inputTextField:TextField;
+		private var _console:IConsole;
 		
-		public function InputField() 
+		public function InputField(console:IConsole) 
 		{	
+			_console = console;
 			tabEnabled = tabChildren = false;
 			_inputTextField = new TextField();
 			_inputTextField.border = true;
@@ -41,8 +44,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 			_inputTextField.text = "Input";
 			_inputTextField.addEventListener(Event.CHANGE, onInputChange);
 			addChild(_inputTextField);
-			PimpCentral.addCallback(Notifications.CONSOLE_INPUT_LINE_CHANGE_REQUEST, onInputlineChangeRequest);
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			_console.messaging.addCallback(Notifications.CONSOLE_INPUT_LINE_CHANGE_REQUEST, onInputlineChangeRequest);
+			_console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 		}
 		
 		private function onInputlineChangeRequest(md:MessageData):void

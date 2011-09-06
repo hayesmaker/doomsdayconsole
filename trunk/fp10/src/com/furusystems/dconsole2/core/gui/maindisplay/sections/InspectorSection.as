@@ -1,6 +1,7 @@
 package com.furusystems.dconsole2.core.gui.maindisplay.sections 
 {
 	import com.furusystems.dconsole2.core.inspector.Inspector;
+	import com.furusystems.dconsole2.IConsole;
 	import flash.geom.Rectangle;
 	/**
 	 * ...
@@ -10,9 +11,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 	{
 		
 		public var inspector:Inspector;
-		public function InspectorSection() 
+		public function InspectorSection(console:IConsole) 
 		{
-			inspector = new Inspector(new Rectangle(0, 0, 50, 50));
+			inspector = new Inspector(console, new Rectangle(0, 0, 50, 50));
 			addChild(inspector);
 		}
 		override public function onParentUpdate(allotedRect:Rectangle):void 

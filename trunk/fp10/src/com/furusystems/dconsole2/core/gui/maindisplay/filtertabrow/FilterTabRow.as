@@ -7,6 +7,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -28,12 +29,14 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 		private var _clickOffsetX:Number = 0;
 		private var _scrolling:Boolean = false;
 		private var _buttons:Array;
-		public function FilterTabRow() 
+		private var _console:IConsole;
+		public function FilterTabRow(console:IConsole) 
 		{
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
-			PimpCentral.addCallback(Notifications.NEW_LOG_CREATED, onLogCreated);
-			PimpCentral.addCallback(Notifications.LOG_DESTROYED, onLogDestroyed);
-			PimpCentral.addCallback(Notifications.CURRENT_LOG_CHANGED, onCurrentLogChange);
+			_console = console;
+			_console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			_console.messaging.addCallback(Notifications.NEW_LOG_CREATED, onLogCreated);
+			_console.messaging.addCallback(Notifications.LOG_DESTROYED, onLogDestroyed);
+			_console.messaging.addCallback(Notifications.CURRENT_LOG_CHANGED, onCurrentLogChange);
 			addChild(_buttonContainer);
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
@@ -103,7 +106,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 			_buttons = [];
 			for (var i:int = 0; i < btnNames.length; i++) 
 			{
-				var btn:FilterTabButton = new FilterTabButton(btnNames[i]);
+				var btn:FilterTabButton = new FilterTabButton(_console, btnNames[i]);
 				if (btn.logName.toLowerCase() == _logManager.currentLog.name.toLowerCase()) {
 					btn.active = true;
 				}

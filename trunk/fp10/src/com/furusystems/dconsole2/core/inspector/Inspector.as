@@ -8,6 +8,8 @@ package com.furusystems.dconsole2.core.inspector
 	import com.furusystems.dconsole2.core.style.Alphas;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.BlendMode;
@@ -34,14 +36,16 @@ package com.furusystems.dconsole2.core.inspector
 		private var _viewContainer:Sprite = new Sprite;
 		private var _enabled:Boolean = true;
 		private var _views:Vector.<AbstractInspectorView> = new Vector.<AbstractInspectorView>();
-		public function Inspector(dims:Rectangle) 
+		private var _messaging:PimpCentral;
+		public function Inspector(console:IConsole, dims:Rectangle) 
 		{
+			_messaging = console.messaging;
 			_dims = dims;
 			graphics.clear();
 			graphics.beginFill(Colors.INSPECTOR_BG);
 			graphics.drawRect(0, 0, dims.width, dims.height);
 			
-			_modeSelector = new ModeSelector();
+			_modeSelector = new ModeSelector(console);
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
 			
@@ -55,8 +59,8 @@ package com.furusystems.dconsole2.core.inspector
 			addChild(_modeSelector);
 			addChild(vScrollBar);
 			addChild(hScrollBar);
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
-			PimpCentral.addCallback(Notifications.INSPECTOR_MODE_CHANGE, onModeChanged);
+			_messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			_messaging.addCallback(Notifications.INSPECTOR_MODE_CHANGE, onModeChanged);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		public function addView(v:IDConsoleInspectorPlugin):void {
@@ -66,7 +70,7 @@ package com.furusystems.dconsole2.core.inspector
 			_views.push(v.view);
 			setCurrentView(v.view);
 			v.view.resize();
-			PimpCentral.send(Notifications.INSPECTOR_VIEW_ADDED, v, this);
+			_messaging.send(Notifications.INSPECTOR_VIEW_ADDED, v, this);
 		}
 		
 		public function setCurrentView(v:AbstractInspectorView):void
@@ -82,7 +86,7 @@ package com.furusystems.dconsole2.core.inspector
 					if(viewsAdded) setCurrentView(_views[0]);
 				}
 			}
-			PimpCentral.send(Notifications.INSPECTOR_VIEW_REMOVED, v, this);
+			_messaging.send(Notifications.INSPECTOR_VIEW_REMOVED, v, this);
 			//TODO: Test. This will cause SOME damn issue.
 		}
 		private function onAddedToStage(e:Event):void 

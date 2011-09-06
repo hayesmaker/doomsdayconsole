@@ -6,6 +6,7 @@
 	import com.furusystems.dconsole2.core.strings.Strings;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
@@ -23,8 +24,10 @@
 		
 		private var _dragging:Boolean = false;
 		private var allotedRect:Rectangle;
-		public function ScaleHandle() 
+		private var console:DConsole;
+		public function ScaleHandle(console:DConsole) 
 		{
+			this.console = console;
 			//buttonMode = true;
 			doubleClickEnabled = true;
 			tabEnabled = false;
@@ -34,17 +37,17 @@
 			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			alpha = 0;
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 		}
 		
 		private function onMouseOut(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.ASSISTANT_CLEAR_REQUEST);
+			console.messaging.send(Notifications.ASSISTANT_CLEAR_REQUEST);
 		}
 		
 		private function onMouseOver(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.ASSISTANT_MESSAGE_REQUEST, Strings.ASSISTANT_STRINGS.get(Strings.ASSISTANT_STRINGS.SCALE_HANDLE_ID), this);
+			console.messaging.send(Notifications.ASSISTANT_MESSAGE_REQUEST, Strings.ASSISTANT_STRINGS.get(Strings.ASSISTANT_STRINGS.SCALE_HANDLE_ID), this);
 		}
 		
 		private function onRollOut(e:MouseEvent):void 

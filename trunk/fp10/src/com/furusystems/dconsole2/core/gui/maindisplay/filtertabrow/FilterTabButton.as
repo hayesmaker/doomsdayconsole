@@ -4,6 +4,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -19,9 +21,11 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 		private var _name:String;
 		private var label:TextField;
 		private var _active:Boolean;
+		private var _messaging:PimpCentral;
 		
-		public function FilterTabButton(name:String) 
+		public function FilterTabButton(console:IConsole, name:String) 
 		{
+			_messaging = console.messaging;
 			buttonMode = true;
 			_name = name;
 			label = TextFieldFactory.getLabel(name);
@@ -39,7 +43,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.filtertabrow
 		
 		private function onClick(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.LOG_BUTTON_CLICKED, _name, this);
+			_messaging.send(Notifications.LOG_BUTTON_CLICKED, _name, this);
 		}
 		public function set active(b:Boolean):void {
 			_active = b;

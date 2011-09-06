@@ -4,6 +4,8 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 	import com.furusystems.dconsole2.core.strings.Strings;
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -18,8 +20,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 		
 		private var _delta:Point = new Point();
 		private var _prevDragPos:Point = new Point();
-		public function CornerScaleHandle() 
+		private var _messaging:PimpCentral;
+		public function CornerScaleHandle(console:IConsole) 
 		{
+			_messaging = console.messaging;
 			//TODO: Tie into theming
 			alpha = 0.8;
 			graphics.beginFill(0, 0);
@@ -36,12 +40,12 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 		
 		private function onMouseOut(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.ASSISTANT_CLEAR_REQUEST);
+			_messaging.send(Notifications.ASSISTANT_CLEAR_REQUEST);
 		}
 		
 		private function onMouseOver(e:MouseEvent):void 
 		{
-			PimpCentral.send(Notifications.ASSISTANT_MESSAGE_REQUEST, Strings.ASSISTANT_STRINGS.get(Strings.ASSISTANT_STRINGS.CORNER_HANDLE_ID), this);
+			_messaging.send(Notifications.ASSISTANT_MESSAGE_REQUEST, Strings.ASSISTANT_STRINGS.get(Strings.ASSISTANT_STRINGS.CORNER_HANDLE_ID), this);
 		}
 		
 		private function onMouseDown(e:MouseEvent):void 
@@ -51,7 +55,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_prevDragPos.x = stage.mouseX;
 			_prevDragPos.y = stage.mouseY;
-			PimpCentral.send(Notifications.CORNER_DRAG_START, _prevDragPos, this);
+			_messaging.send(Notifications.CORNER_DRAG_START, _prevDragPos, this);
 		}
 		
 		private function onMouseMove(e:MouseEvent):void 
@@ -60,7 +64,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 			_delta.y = stage.mouseY - _prevDragPos.y;
 			_prevDragPos.x = stage.mouseX;
 			_prevDragPos.y = stage.mouseY;
-			PimpCentral.send(Notifications.CORNER_DRAG_UPDATE, _delta, this);
+			_messaging.send(Notifications.CORNER_DRAG_UPDATE, _delta, this);
 		}
 		
 		private function onMouseUp(e:MouseEvent):void 
@@ -72,7 +76,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 			_prevDragPos.y = stage.mouseY;
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			PimpCentral.send(Notifications.CORNER_DRAG_STOP, _delta, this);
+			_messaging.send(Notifications.CORNER_DRAG_STOP, _delta, this);
 		}
 		
 	}

@@ -23,8 +23,8 @@ package com.furusystems.dconsole2.plugins
 			_pm = pm;
 			pm.console.createCommand("back", stepBack, "Introspection", "Steps back to the previously selected scope");
 			_stack = [];
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_BEGUN, onScopeChangeBegun);
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
+			pm.messaging.addCallback(Notifications.SCOPE_CHANGE_BEGUN, onScopeChangeBegun);
+			pm.messaging.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
 		}
 		
 		private function onScopeChangeComplete():void 
@@ -57,6 +57,8 @@ package com.furusystems.dconsole2.plugins
 		{
 			_stack = [];
 			pm.console.removeCommand("back");
+			pm.messaging.removeCallback(Notifications.SCOPE_CHANGE_BEGUN, onScopeChangeBegun);
+			pm.messaging.removeCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
 			_pm = null;
 		}
 		

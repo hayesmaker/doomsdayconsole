@@ -26,7 +26,7 @@
 		{
 			this.scopeManager = scopeManager;
 			this.console = console;
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChanged);
+			console.messaging.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChanged);
 		}
 		
 		private function onScopeChanged(md:MessageData):void 

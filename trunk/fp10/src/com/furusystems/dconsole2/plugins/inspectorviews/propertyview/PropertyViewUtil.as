@@ -37,8 +37,6 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 			_tabs = new TabCollection();
 			_tabs.addEventListener(Event.CHANGE, onTabLayoutChange,false,0,true);
 			_scrollableContent.addChild(_tabs);
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			scrollXEnabled = false;
 		}
@@ -52,10 +50,19 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 				
 			}
 		}
+		public override function shutdown(pm:PluginManager):void 
+		{
+			super.shutdown(pm);
+			
+			pm.messaging.removeCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
+			pm.messaging.removeCallback(Notifications.THEME_CHANGED, onThemeChange);
+		}
 		override public function initialize(pm:PluginManager):void 
 		{
 			super.initialize(pm);
 			_console = pm.console;
+			pm.messaging.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChange);
+			pm.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			populate(pm.scopeManager.currentScope);
 		}
 		override public function onFrameUpdate(e:Event = null):void 
@@ -92,7 +99,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.propertyview
 				for (i = 0; i < scope.methods.length; i++) 
 				{
 					var md:MethodDesc = scope.methods[i];
-					t.addField(new MethodField(md));
+					t.addField(new MethodField(_console.messaging,md));
 				}
 				t.sortFields();
 				_tabs.add(t);

@@ -8,6 +8,8 @@ package com.furusystems.dconsole2.core.inspector.buttons
 	import com.furusystems.dconsole2.core.interfaces.IThemeable;
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.plugins.IDConsoleInspectorPlugin;
+	import com.furusystems.dconsole2.DConsole;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.utils.Dictionary;
@@ -21,9 +23,11 @@ package com.furusystems.dconsole2.core.inspector.buttons
 		private var modeMap:Dictionary = new Dictionary();
 		//private var _buttons:Array = [];
 		private var dropdown:DropDown;
-		public function ModeSelector() 
+		private var _messaging:PimpCentral;
+		public function ModeSelector(console:IConsole) 
 		{
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			_messaging = console.messaging;
+			_messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			dropdown = new DropDown("Inspectors");
 			addChild(dropdown);
 			dropdown.addEventListener(DropDownEvent.SELECTION, onSelection,false,0,true);
@@ -75,7 +79,7 @@ package com.furusystems.dconsole2.core.inspector.buttons
 				//}
 			//}
 			dropdown.setCurrentSelection(v.title);
-			PimpCentral.send(Notifications.INSPECTOR_MODE_CHANGE, v, this);
+			_messaging.send(Notifications.INSPECTOR_MODE_CHANGE, v, this);
 		}
 	}
 

@@ -37,11 +37,9 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		protected var _mouseSelectButton:EyeDropperButton;
 		public function TreeViewUtil() 
 		{
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 			_mouseSelectButton = new EyeDropperButton();
 			//addChild(_mouseSelectButton).y = 2; //TODO: Show button when functionality implemented
 			_mouseSelectButton.addEventListener(MouseEvent.MOUSE_DOWN, activateMouseSelect);
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
 		}
 		
 		private function onScopeChangeComplete():void 
@@ -166,7 +164,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		
 		public function onDisplayObjectSelected(displayObject:DisplayObject):void
 		{
-			PimpCentral.send(Notifications.SCOPE_CHANGE_REQUEST, displayObject, this);
+			_pm.messaging.send(Notifications.SCOPE_CHANGE_REQUEST, displayObject, this);
 		}
 		override public function populate(object:Object):void {
 			if (object is DisplayObjectContainer) {
@@ -195,6 +193,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		override public function initialize(pm:PluginManager):void 
 		{
 			_pm = pm;
+			pm.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			pm.messaging.addCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
 			_console = pm.console;
 			consolidateSelection();
 			_console.createCommand("searchDlByName", searchDisplayListByName, "Display", "Searches the display list for a named display object");
@@ -206,7 +206,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 			for each(var dl:ListNode in ListNode.table) {
 				if (dl.displayObject != null&&dl.displayObject.name!=null) {
 					if (dl.displayObject.name.toLowerCase() == name.toLowerCase()) {
-						PimpCentral.send(Notifications.SCOPE_CHANGE_REQUEST, dl.displayObject);
+						_pm.messaging.send(Notifications.SCOPE_CHANGE_REQUEST, dl.displayObject);
 						return;
 					}
 				}
@@ -215,6 +215,8 @@ package com.furusystems.dconsole2.plugins.inspectorviews.treeview
 		public override function shutdown(pm:PluginManager):void 
 		{
 			_console.removeCommand("searchDlByName");
+			pm.messaging.removeCallback(Notifications.THEME_CHANGED, onThemeChange);
+			pm.messaging.removeCallback(Notifications.SCOPE_CHANGE_COMPLETE, onScopeChangeComplete);
 			_pm = null;
 			_console = null;
 			super.shutdown(pm);

@@ -7,6 +7,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 	import com.furusystems.dconsole2.core.style.Colors;
 	import com.furusystems.dconsole2.core.style.GUIUnits;
 	import com.furusystems.dconsole2.core.style.TextFormats;
+	import com.furusystems.dconsole2.IConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
 	import flash.display.Bitmap;
@@ -29,9 +30,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 		private var _snapshotDisplay:Bitmap = new Bitmap();
 		private var _time:Number = 0;
 		private var _prevTimeUpdate:Number = 0;
-		private var _cornerHandle:CornerScaleHandle = new CornerScaleHandle();
-		public function Assistant() 
+		private var _cornerHandle:CornerScaleHandle
+		public function Assistant(console:IConsole) 
 		{
+			_cornerHandle = new CornerScaleHandle(console);
 			_infoField = new TextField();
 			_infoField.background = true;
 			_infoField.tabEnabled = false;
@@ -45,10 +47,10 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 			//_snapshotDisplay.y--;
 			_snapshotDisplay.visible = false;
 			//addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown); //TODO: Reenable later maybe? Seems really superfluous
-			PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
-			PimpCentral.addCallback(Notifications.ASSISTANT_MESSAGE_REQUEST, onMessageRequest);
-			PimpCentral.addCallback(Notifications.ASSISTANT_CLEAR_REQUEST, onClearRequest);
-			PimpCentral.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
+			console.messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			console.messaging.addCallback(Notifications.ASSISTANT_MESSAGE_REQUEST, onMessageRequest);
+			console.messaging.addCallback(Notifications.ASSISTANT_CLEAR_REQUEST, onClearRequest);
+			console.messaging.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
 			_infoField.text = "Assistant";
 			
 			addChild(_cornerHandle).visible = false;

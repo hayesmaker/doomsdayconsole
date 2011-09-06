@@ -26,7 +26,7 @@
 		public static const SEARCH_ACCESSORS:int = 1;
 		public static const SEARCH_CHILDREN:int = 2;
 		
-		private var _currentScope:IntrospectionScope = createScope( { } );
+		private var _currentScope:IntrospectionScope;
 		private var _previousScope:IntrospectionScope;
 		
 		private var console:DConsole;
@@ -35,11 +35,13 @@
 		{
 			this.console = console;
 			this.autoCompleteManager = autoCompleteManager;
-			PimpCentral.addCallback(Notifications.REQUEST_PROPERTY_CHANGE_ON_SCOPE, onPropertyChangeRequest);
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_REQUEST_FROM_PROPERTY, onPropertyScopeChangeRequest);
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_REQUEST_FROM_CHILD_NAME, onChildNameScopeChangeRequest);
+			console.messaging.addCallback(Notifications.REQUEST_PROPERTY_CHANGE_ON_SCOPE, onPropertyChangeRequest);
+			console.messaging.addCallback(Notifications.SCOPE_CHANGE_REQUEST_FROM_PROPERTY, onPropertyScopeChangeRequest);
+			console.messaging.addCallback(Notifications.SCOPE_CHANGE_REQUEST_FROM_CHILD_NAME, onChildNameScopeChangeRequest);
 		}
-		
+		public function initialize():void {
+			_currentScope = createScope( { } );
+		}
 		private function onChildNameScopeChangeRequest(md:MessageData):void
 		{
 			try{
@@ -61,7 +63,7 @@
 		private function onPropertyChangeRequest(md:MessageData):void
 		{
 			_currentScope.targetObject[md.data.name] = md.data.newValue;
-			PimpCentral.send(Notifications.PROPERTY_CHANGE_ON_SCOPE, _currentScope, this);
+			console.messaging.send(Notifications.PROPERTY_CHANGE_ON_SCOPE, _currentScope, this);
 		}
 		public function createScope(o:*,justReturn:Boolean = false):IntrospectionScope {
 			if (!o) throw new ArgumentError("Invalid scope");
@@ -79,7 +81,7 @@
 			if (justReturn) return c;
 			c.autoCompleteDict = InspectionUtils.getAutoCompleteDictionary(o);
 			_currentScope = c;
-			PimpCentral.send(Notifications.SCOPE_CREATED, _currentScope, this);
+			console.messaging.send(Notifications.SCOPE_CREATED, _currentScope, this);
 			return _currentScope;
 		}
 		public function setScope(o:*, force:Boolean = false, printResults:Boolean = true):void {
@@ -98,7 +100,7 @@
 				//}
 				//return;
 			//}
-			PimpCentral.send(Notifications.SCOPE_CHANGE_BEGUN, _currentScope, this);
+			console.messaging.send(Notifications.SCOPE_CHANGE_BEGUN, _currentScope, this);
 			try {
 				createScope(o);
 				autoCompleteManager.scopeDict = currentScope.autoCompleteDict;
@@ -109,7 +111,7 @@
 				printScope();
 				printDownPath();
 			}
-			PimpCentral.send(Notifications.SCOPE_CHANGE_COMPLETE, _currentScope, this);
+			console.messaging.send(Notifications.SCOPE_CHANGE_COMPLETE, _currentScope, this);
 		}
 		
 		public function getScopeByName(str:String):*{

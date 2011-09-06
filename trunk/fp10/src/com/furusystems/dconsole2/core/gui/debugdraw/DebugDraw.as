@@ -27,10 +27,10 @@ package com.furusystems.dconsole2.core.gui.debugdraw
 		private var drawInstructions:LLNode = new LLNode(null);
 		private var prevDrawInstructions:LLNode = null;
 		
-		public function DebugDraw() 
+		public function DebugDraw(messaging:PimpCentral) 
 		{
 			_g = _shape.graphics;
-			PimpCentral.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
+			messaging.addCallback(Notifications.FRAME_UPDATE, onFrameUpdate);
 		}
 		
 		private function onFrameUpdate():void 

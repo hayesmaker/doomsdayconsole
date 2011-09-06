@@ -343,7 +343,7 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		{
 			_console = pm.console;
 			_scopeManager = pm.scopeManager;
-			PimpCentral.addCallback(Notifications.CONSOLE_SHOW, onVisible);
+			pm.messaging.addCallback(Notifications.CONSOLE_SHOW, onVisible);
 			_console.createCommand("measure", startMeasure, "Measurements", "Toggles a scalable measurement bracket and selection widget. If X is true, bracketing an object sets it as scope.");
 			pm.botLayer.addChild(this);
 		}
@@ -353,7 +353,7 @@ package com.furusystems.dconsole2.plugins.measurebracket
 		{
 			pm.botLayer.removeChild(this);
 			_console.removeCommand("measure");
-			PimpCentral.removeCallback(Notifications.CONSOLE_SHOW, onVisible);
+			pm.messaging.removeCallback(Notifications.CONSOLE_SHOW, onVisible);
 			_console = null;
 			_scopeManager = null;
 		}

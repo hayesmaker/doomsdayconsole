@@ -15,8 +15,10 @@ package com.furusystems.dconsole2.plugins.dialog
 		static private const L:ILogger = Logging.getLogger(DialogSequence);
 		private var _requests:Vector.<DialogRequest> = new Vector.<DialogRequest>();
 		private var _results:DialogResult = new DialogResult();
+		private var _messaging:PimpCentral;
 		public function DialogSequence(console:IConsole, desc:DialogDesc) 
 		{
+			_messaging = console.messaging;
 			for each(var question:String in desc.requests) {
 				var request:DialogRequest = new DialogRequest(console, question, this);
 				addRequest(request);
@@ -29,7 +31,7 @@ package com.furusystems.dconsole2.plugins.dialog
 			if(_requests.length>0){
 				_requests.shift().execute();
 			}else {
-				PimpCentral.send(DialogNotifications.DIALOG_COMPLETE, _results, this);
+				_messaging.send(DialogNotifications.DIALOG_COMPLETE, _results, this);
 			}
 		}
 		

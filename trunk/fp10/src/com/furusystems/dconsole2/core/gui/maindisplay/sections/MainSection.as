@@ -28,15 +28,15 @@ package com.furusystems.dconsole2.core.gui.maindisplay.sections
 		public function MainSection(console:DConsole) 
 		{
 			_console = console;
-			filterTabs = new FilterTabRow();
+			filterTabs = new FilterTabRow(console);
 			output = new OutputField(console);
-			input = new InputField();
-			assistant = new Assistant();
+			input = new InputField(console);
+			assistant = new Assistant(console);
 			addChild(filterTabs);
 			addChild(output);
 			addChild(assistant);
 			addChild(input);
-			PimpCentral.addCallback(Notifications.NEW_LOG_CREATED, onLogCountChange, Notifications.LOG_DESTROYED);
+			_console.messaging.addCallback(Notifications.NEW_LOG_CREATED, onLogCountChange, Notifications.LOG_DESTROYED);
 		}
 		
 		private function onLogCountChange(md:MessageData):void

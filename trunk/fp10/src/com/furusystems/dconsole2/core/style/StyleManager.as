@@ -31,8 +31,10 @@ package com.furusystems.dconsole2.core.style
 		private var _colorLoader:URLLoader;
 		private var _loadTally:int = 0;
 		private var _loadTallyTarget:int = 0;
-		public function StyleManager() 
+		private var _messaging:PimpCentral;
+		public function StyleManager(console:DConsole) 
 		{
+			_messaging = console.messaging;
 			theme = new ConsoleTheme(this);
 			_themeLoader = new URLLoader();
 			_themeLoader.addEventListener(Event.COMPLETE, onThemeLoaded);
@@ -102,7 +104,7 @@ package com.furusystems.dconsole2.core.style
 				DConsole.print("Custom color scheme loaded");
 			}
 			colors.populate(input);
-			PimpCentral.send(Notifications.COLOR_SCHEME_CHANGED, null, this);
+			_messaging.send(Notifications.COLOR_SCHEME_CHANGED, null, this);
 		}
 		private function setTheme(input:XML = null):void {
 			_themeLoaded = true;
@@ -121,7 +123,7 @@ package com.furusystems.dconsole2.core.style
 		{
 			trace("Consolidate styles");
 			TextFormats.refresh();
-			PimpCentral.send(Notifications.THEME_CHANGED, null, this);
+			_messaging.send(Notifications.THEME_CHANGED, null, this);
 		}
 		
 		public function get themeXML():XML {

@@ -31,7 +31,7 @@ package com.furusystems.dconsole2.core.gui
 			this.orientation = orientation;
 			buttonMode = true;
 			addEventListener(MouseEvent.MOUSE_DOWN, startDragging);
-			//PimpCentral.addCallback(Notifications.THEME_CHANGED, onThemeChange);
+			//messaging.addCallback(Notifications.THEME_CHANGED, onThemeChange);
 		}
 		
 		private function startDragging(e:MouseEvent):void 

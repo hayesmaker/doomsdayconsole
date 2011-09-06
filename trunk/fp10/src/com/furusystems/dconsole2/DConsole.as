@@ -74,10 +74,11 @@
 		
 		//{ members
 		public var ignoreBlankLines:Boolean = true;
+		
 		private var _initialized:Boolean = false;
 		private var _autoCompleteManager:AutocompleteManager;
 		private var _globalDictionary:AutocompleteDictionary = new AutocompleteDictionary();
-		private var _styleManager:StyleManager = new StyleManager();
+		private var _styleManager:StyleManager;
 		private var _referenceManager:ReferenceManager;
 		private var _scopeManager:ScopeManager;
 		private var _commandManager:CommandManager;
@@ -107,6 +108,10 @@
 		private var _mainConsoleView:ConsoleView;
 		private var _debugDraw:DebugDraw;
 		
+		
+		private var _consoleContainer:Sprite;
+		private var _messaging:PimpCentral = new PimpCentral();
+		
 		private var _trigger:uint = Keyboard.TAB;
 		
 		private var _helpManager:HelpManager;
@@ -127,13 +132,13 @@
 		public function DConsole() 
 		{		
 			//Prepare logging
-			
+			_styleManager = new StyleManager(this);
 			_persistence = new PersistenceManager(this);
 			
-			_logManager = new DLogManager();
+			_logManager = new DLogManager(this);
 			_mainConsoleView = new ConsoleView(this);
 			
-			_helpManager = new HelpManager();
+			_helpManager = new HelpManager(_messaging);
 			
 			output.currentLog = _logManager.currentLog;
 			
@@ -141,7 +146,7 @@
 			
 			tabChildren = tabEnabled = false;
 			
-			_debugDraw = new DebugDraw();
+			_debugDraw = new DebugDraw(_messaging);
 			
 			_autoCompleteManager = new AutocompleteManager(input.inputTextField);
 			_scopeManager = new ScopeManager(this, _autoCompleteManager);
@@ -159,16 +164,16 @@
 			_consoleContainer.addChild(_topLayer);
 			_dockingGuides = new DockingGuides();
 			_consoleContainer.addChild(_dockingGuides);
-			_toolTip = new ToolTip();
+			_toolTip = new ToolTip(this);
 			_consoleContainer.addChild(_toolTip);
 			
 			
 			input.addEventListener(Event.CHANGE, updateAssistantText);
 			scaleHandle.addEventListener(Event.CHANGE, onScaleHandleDrag, false, 0, true);
 			
-			PimpCentral.addCallback(Notifications.SCOPE_CHANGE_REQUEST, onScopeChangeRequest);
-			PimpCentral.addCallback(Notifications.EXECUTE_STATEMENT, onExecuteStatementNotification);
-			PimpCentral.addCallback(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE, onConsoleViewTransitionComplete);
+			messaging.addCallback(Notifications.SCOPE_CHANGE_REQUEST, onScopeChangeRequest);
+			messaging.addCallback(Notifications.EXECUTE_STATEMENT, onExecuteStatementNotification);
+			messaging.addCallback(Notifications.CONSOLE_VIEW_TRANSITION_COMPLETE, onConsoleViewTransitionComplete);
 			
 			KeyboardManager.instance.addKeyboardShortcut(_keystroke, _modifier, toggleDisplay); //  [CTRL+SHIFT, ENTER]); //default keystroke
 			
@@ -257,7 +262,7 @@
 		{
 			_plugManager.update();
 			view.inspector.onFrameUpdate(e);
-			PimpCentral.send(Notifications.FRAME_UPDATE, null, this);
+			messaging.send(Notifications.FRAME_UPDATE, null, this);
 		}
 		
 		/**
@@ -652,7 +657,7 @@
 					}else {
 						evt = Notifications.NEW_CONSOLE_OUTPUT;
 					}
-					PimpCentral.send(evt, msg, this);
+					messaging.send(evt, msg, this);
 				}
 				_rootLog.addMessage(msg);
 				if (_tagLog) _tagLog.addMessage(msg);
@@ -851,10 +856,10 @@
 				input.text = "";
 				updateAssistantText();
 				beginFrameUpdates();
-				PimpCentral.send(Notifications.CONSOLE_SHOW, null, this);
+				messaging.send(Notifications.CONSOLE_SHOW, null, this);
 			}else {
 				ceaseFrameUpdates();
-				PimpCentral.send(Notifications.CONSOLE_HIDE, null, this);
+				messaging.send(Notifications.CONSOLE_HIDE, null, this);
 			}
 		}
 		
@@ -965,7 +970,7 @@
 				}
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
-				PimpCentral.send(Notifications.ESCAPE_KEY, null, this);
+				messaging.send(Notifications.ESCAPE_KEY, null, this);
 				stopEvent = true;
 				return;
 			}
@@ -1263,8 +1268,6 @@
 			DConsole(console).ignoreBlankLines = b;
 		}
 		
-		private var _consoleContainer:Sprite;
-		
 		/**
 		 * Returns the object currently selected as the console scope
 		 * @return An object
@@ -1545,6 +1548,10 @@
 		public static function setMasterKey(key:uint):void 
 		{
 			DConsole(console).setMasterKey(key);
+		}
+		
+		public function get messaging():PimpCentral {
+			return _messaging;
 		}
 	}
 	
