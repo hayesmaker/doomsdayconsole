@@ -1522,9 +1522,12 @@
 			console.view.dockingMode = mode;
 		}
 		
-		public function setStyle(colors:XML,theme:XML):void 
+		public function setTheme(colors:XML,theme:XML):void 
 		{
 			_styleManager.setThemeXML(colors, theme);
+		}
+		public function getTheme():Array {
+			return[_styleManager.colorXML, _styleManager.themeXML];
 		}
 		
 		/**

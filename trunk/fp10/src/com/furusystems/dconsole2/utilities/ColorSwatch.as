@@ -2,18 +2,19 @@ package com.furusystems.dconsole2.utilities
 {
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	/**
 	 * ...
 	 * @author Andreas Rønning
 	 */
 	public class ColorSwatch extends Sprite
 	{
-		public var color:uint;
+		public var color:ColorDef;
 		public static const RADIUS:int = 10;
 		private var bg:Shape;
 		private var c:Shape;
 		private var _selected:Boolean;
-		public function ColorSwatch(color:uint = 0xFFFFFF) 
+		public function ColorSwatch(colorDef:ColorDef) 
 		{
 			buttonMode = true;
 			bg = new Shape();
@@ -21,7 +22,8 @@ package com.furusystems.dconsole2.utilities
 			addChild(bg);
 			selected = false;
 			addChild(c);
-			setColor(color);
+			this.color = colorDef;
+			setColor(color.color);
 		}
 		public function set selected(b:Boolean):void {
 			_selected = b;
@@ -33,10 +35,14 @@ package com.furusystems.dconsole2.utilities
 			return _selected;
 		}
 		public function setColor(color:uint):void {
-			this.color = color;
+			this.color.color = color;
 			c.graphics.clear();
 			c.graphics.beginFill(color);
-			c.graphics.drawCircle(RADIUS, RADIUS, RADIUS-2);
+			c.graphics.drawCircle(RADIUS, RADIUS, RADIUS - 2);
+			dispatchEvent(new Event(Event.CHANGE));
+		}
+		public function setName(name:String):void {
+			this.color.name = name;
 		}
 		
 	}
