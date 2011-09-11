@@ -40,28 +40,24 @@
 		}
 		public function set consoleX(n:Number):void {
 			_x.value = n;
-			//trace(_x);
 		}
 		public function get consoleY():Number {
 			return _y.value;
 		}
 		public function set consoleY(n:Number):void {
 			_y.value = n;
-			//trace(_y);
 		}
 		public function get consoleWidth():Number {
 			return _width.value;
 		}
 		public function set consoleWidth(n:Number):void {
 			_width.value = n;
-			//trace(_width);
 		}
 		public function get consoleHeight():Number {
 			return _height.value;
 		}
 		public function set consoleHeight(n:Number):void {
 			_height.value = n;
-			//trace(_height);
 		}
 		
 		public function get rect():Rectangle 
@@ -75,7 +71,7 @@
 			verticalSplitRatio = new PersistentProperty(_persistenceDataSO, "verticalSplitRatio", .25);
 			dockState = new PersistentProperty(_persistenceDataSO, "dockState", 0);
 			previousCommands = new PersistentProperty(_persistenceDataSO, "previousCommands", []);
-			_width = new PersistentProperty(_persistenceDataSO, "width", 400);
+			_width = new PersistentProperty(_persistenceDataSO, "width", 800);
 			_height = new PersistentProperty(_persistenceDataSO, "height", 13 * GUIUnits.SQUARE_UNIT);
 			_x = new PersistentProperty(_persistenceDataSO, "xPosition", 0);
 			_y = new PersistentProperty(_persistenceDataSO, "yPosition", 0);

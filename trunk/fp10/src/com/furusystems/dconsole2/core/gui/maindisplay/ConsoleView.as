@@ -552,9 +552,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		
 		public function set rect(r:Rectangle):void
 		{
-			if (_rect) {
-				if (_rect.equals(r)) return;
-			}
+			//if (_rect) {
+				//if (_rect.equals(r)) return;
+			//} //TODO: why does this shit break everything? haha. God we need a rewrite.
 			_rect = r;
 			_rect.x = _rect.y = 0;
 			_rect.height = Math.floor(Math.max(minHeight, _rect.height) / GUIUnits.SQUARE_UNIT) * GUIUnits.SQUARE_UNIT;
