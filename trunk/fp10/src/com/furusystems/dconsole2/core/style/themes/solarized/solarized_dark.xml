@@ -2,7 +2,7 @@
 <theme>
 	<core>
 		<back>BASE03</back>
-		<alpha>1</alpha>
+		<alpha>0.98</alpha>
 	</core>
 	<labels> <!-- Colors used for tinting of objects and textfields -->
 		<enabled>GREEN</enabled>

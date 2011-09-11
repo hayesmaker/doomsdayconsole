@@ -50,12 +50,18 @@ package com.furusystems.dconsole2.plugins.irc
 			nc = new Socket();
 			nc.addEventListener(Event.CONNECT, onConnect);
 			nc.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
+			nc.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			
 			//pm.console.defaultInputCallback = tellChannel;
-			pm.console.createCommand("send", send, "IRC", "Sends a message to the current IRC channel.");
-			pm.console.createCommand("join", join,"IRC","Joins an IRC channel.");
-			pm.console.createCommand("part", part,"IRC","Parts the designated IRC channel.");
-			pm.console.createCommand("connect", connect, "IRC", "Initializes the IRC client and connects to the given server");
+			pm.console.createCommand("ircsend", send, "IRC", "Sends a message to the current IRC channel.");
+			pm.console.createCommand("ircjoin", join,"IRC","Joins an IRC channel.");
+			pm.console.createCommand("ircpart", part,"IRC","Parts the designated IRC channel.");
+			pm.console.createCommand("ircconnect", connect, "IRC", "Initializes the IRC client and connects to the given server");
+		}
+		
+		private function onIOError(e:IOErrorEvent):void 
+		{
+			_pm.console.print("IRC couldn't connect", ConsoleMessageTypes.ERROR, "IRC");
 		}
 		
 		public function shutdown(pm:PluginManager):void 
