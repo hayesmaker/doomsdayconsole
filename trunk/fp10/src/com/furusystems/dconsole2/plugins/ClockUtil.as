@@ -30,6 +30,13 @@ package com.furusystems.dconsole2.plugins
 			
 		}
 		
+		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
+		
+		public function get dependencies():Vector.<Class> 
+		{
+			return null;
+		}
+		
 	}
 
 }

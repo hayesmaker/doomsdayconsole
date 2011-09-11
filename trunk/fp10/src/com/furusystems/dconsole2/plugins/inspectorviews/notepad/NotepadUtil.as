@@ -27,7 +27,7 @@ package com.furusystems.dconsole2.plugins.inspectorviews.notepad
 			return "Notepad";
 		}
 				
-		public function get dependencies():Vector.<Class> 
+		override public function get dependencies():Vector.<Class> 
 		{
 			return null;
 		}

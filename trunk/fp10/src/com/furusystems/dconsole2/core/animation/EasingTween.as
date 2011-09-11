@@ -9,7 +9,7 @@ package com.furusystems.dconsole2.core.animation
 	 */
 	public class EasingTween implements IConsoleTweenProcess
 	{
-		private var frameSource:Shape = new Shape();
+		private static var frameSource:Shape = new Shape();
 		private var _object:Object;
 		private var _property:String;
 		private var _targetValue:Number;
@@ -23,8 +23,8 @@ package com.furusystems.dconsole2.core.animation
 			_tweenTime = tweenTime;
 			_targetValue = targetValue;
 			_property = property;
-			this._object = object;
-			_origValue = this._object[_property];
+			_object = object;
+			_origValue = _object[_property];
 			_startTime = getTimer();
 			frameSource.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
@@ -33,7 +33,7 @@ package com.furusystems.dconsole2.core.animation
 		{
 			var elapsed:Number = (getTimer() - _startTime) * 0.001;
 			var t:Number = elapsed / _tweenTime;
-			_object[_property] = _origValue + (_targetValue-_origValue) * Math.sin(t*1.55);
+			_object[_property] = _origValue + (_targetValue-_origValue) * Math.sin(t * 1.55);
 			if (elapsed >= _tweenTime) {
 				stop();
 				_object[_property] = _targetValue;

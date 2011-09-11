@@ -33,6 +33,11 @@
 				}catch (e:Error) {
 					
 				}
+				try {
+					tmp = pluginManager.scopeManager.getPropertyValueOnObject(tmp);
+				}catch (e:Error) {
+					
+				}
 			}
 			this.data = tmp;
 		}

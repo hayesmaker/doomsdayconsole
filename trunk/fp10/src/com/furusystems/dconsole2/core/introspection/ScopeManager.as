@@ -281,6 +281,9 @@
 		public function getPropertyOnObject(propertyName:String):String{
 			return currentScope.targetObject[propertyName].toString();
 		}
+		public function getPropertyValueOnObject(propertyName:String):*{
+			return currentScope.targetObject[propertyName];
+		}
 		public function selectBaseScope():void {
 			setScope(console.parent);
 		}
