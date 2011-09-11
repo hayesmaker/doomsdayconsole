@@ -61,11 +61,12 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		private var _prevSplitPos:int = -1;
 		private var _texture:BitmapData;
 		private var _bg:Sprite = new Sprite();
-		private var _inspectorHidden:Boolean = false;
+		private var _inspectorVisible:Boolean = false;
 		
 		private var _scaleHandle:ScaleHandle;
 		
 		private var _prevRect:Rectangle;
+		private var _firstRun:Boolean;
 		
 		public function get input():InputField { return _mainSection.input; };
 		public function get output():OutputField { return _mainSection.output; };
@@ -117,10 +118,6 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			scaleHandle.addEventListener(MouseEvent.MOUSE_DOWN, beginScaleDrag);
 			scaleHandle.addEventListener(MouseEvent.DOUBLE_CLICK, onScaleDoubleclick);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
-			//_rect = new Rectangle(0, 0, 800, 400);
-			//
-			//onParentUpdate(_rect);
 			
 			tabEnabled = tabChildren = false;
 			
@@ -229,13 +226,14 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		}
 		
 		private function onInspectorViewCountChange(md:MessageData):void
-		{			
-			_mainSplit.splitRatio = DConsole(DConsole.console).persistence.verticalSplitRatio.value;
+		{	
+			_mainSplit.splitRatio = _console.persistence.verticalSplitRatio.value;
 			doLayout();
 		}
 		
 		private function onAddedToStage(e:Event):void 
 		{
+			_firstRun = true;
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			initFromPersistence();
 			switch(dockingMode) {
@@ -247,6 +245,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 				break;
 			}
 			onParentUpdate(_rect);
+			_firstRun = false;
 		}
 		
 		private function initFromPersistence():void 
@@ -318,16 +317,16 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 					}
 			}
 		}
-		public function showInspector():void {
-			if (_inspectorHidden) {
+		private function showInspector():void {
+			if (!_inspectorVisible || _firstRun) { 
 				_mainSplit.setSplitPos(_prevSplitPos);
-				_inspectorHidden = false;
+				_inspectorVisible = true;
 				inspector.enabled = _prevSplitPos > 0;
 			}
 		}
-		public function hideInspector():void {
-			if (!_inspectorHidden) {
-				_inspectorHidden = !(inspector.enabled = false);
+		private function hideInspector():void {
+			if (_inspectorVisible || _firstRun) { 
+				_inspectorVisible = inspector.enabled = false;
 				_prevSplitPos = _mainSplit.getSplitPos();
 				_mainSplit.setSplitPos(0);
 			}
@@ -352,9 +351,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			_mainSplitDragBar.graphics.clear();
 			if (rect.height < 128 || !inspector.viewsAdded) { 
 				hideInspector();
-				if (!inspector.viewsAdded) {
-					_mainSplit.setSplitPos(0);
-				}
+				_mainSplit.setSplitPos(0);
 			}else {
 				showInspector();
 				_mainSplitDragBar.graphics.beginFill(0,0.1);
@@ -395,12 +392,12 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		private function toggleMainSplit(e:MouseEvent):void 
 		{
 			if (_mainSplit.getSplitPos() > 30) {
-				_inspectorHidden = false;
+				_inspectorVisible = false;
 				_prevSplitPos = _mainSplit.getSplitPos();
 				_mainSplit.setSplitPos(0);
 				hideInspector();
 			}else {
-				_inspectorHidden = true;
+				_inspectorVisible = true;
 				_mainSplit.setSplitPos(_prevSplitPos = 300);
 				showInspector();
 			}
@@ -555,6 +552,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 		
 		public function set rect(r:Rectangle):void
 		{
+			if (_rect) {
+				if (_rect.equals(r)) return;
+			}
 			_rect = r;
 			_rect.x = _rect.y = 0;
 			_rect.height = Math.floor(Math.max(minHeight, _rect.height) / GUIUnits.SQUARE_UNIT) * GUIUnits.SQUARE_UNIT;

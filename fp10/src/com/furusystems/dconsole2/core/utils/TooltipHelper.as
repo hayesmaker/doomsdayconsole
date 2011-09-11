@@ -13,7 +13,7 @@ package com.furusystems.dconsole2.core.utils
 	 */
 	public class TooltipHelper
 	{
-		
+		public static var messaging:PimpCentral;
 		private static var helpmap:Dictionary = new Dictionary();
 		public static function map(object:InteractiveObject, text:String):void {
 			helpmap[object] = text;

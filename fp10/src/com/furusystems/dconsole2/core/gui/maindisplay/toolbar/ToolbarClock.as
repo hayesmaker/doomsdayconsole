@@ -19,7 +19,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.toolbar
 		private var _tf:TextField;
 		private var _mouseOver:Boolean;
 		
-		public function ToolbarClock() 
+		public function ToolbarClock(messaging:PimpCentral) 
 		{
 			_tf = TextFieldFactory.getLabel("test");
 			_tf.autoSize = TextFieldAutoSize.LEFT;

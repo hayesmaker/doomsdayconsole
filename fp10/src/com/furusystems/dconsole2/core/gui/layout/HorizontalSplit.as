@@ -36,6 +36,7 @@ package com.furusystems.dconsole2.core.gui.layout
 			var leftRect:Rectangle = new Rectangle(0, 0, leftWidth, rect.height);
 			var rightRect:Rectangle = new Rectangle(leftWidth, 0, rightWidth, rect.height);
 			
+			
 			leftCell.onParentUpdate(leftRect);
 			rightCell.onParentUpdate(rightRect);
 		}

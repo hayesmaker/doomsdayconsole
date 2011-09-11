@@ -705,7 +705,14 @@
 			_mainConsoleView.consolidateView();
 			_dockingGuides.resize();
 		}
-		
+		public function stackTrace():void {
+			var e:Error = new Error();
+			var s:String = e.getStackTrace();
+			var split:Array = s.split("\n");
+			split.shift();
+			s = "Stack trace: \n\t"+split.join("\n\t");
+			print(s, ConsoleMessageTypes.INFO);
+		}
 		private function doSearch(searchString:String,includeAccessors:Boolean = false, includeCommands:Boolean = true,includeScopeMethods:Boolean = false):Vector.<String>
 		{
 			var outResult:Vector.<String> = new Vector.<String>();
@@ -1235,6 +1242,10 @@
 		 * Need to examine this further.
 		 */
 		public static var STAGE_SAFE_MODE:Boolean = true;
+		
+		public static function stackTrace():void {
+			console.stackTrace();
+		}
 		
 		/**
 		 * Removes the default input callback
