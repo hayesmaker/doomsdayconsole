@@ -104,8 +104,16 @@
 						args[i] = referenceDict[key];
 					}
 				}else {
-					try {
-						args[i] = scopeManager.getScopeByName(key);
+					try {						
+						var force:Boolean = false;
+						if(key.charAt(0)=="@"){
+							key = key.slice(1, key.length);
+							force = true;
+						}
+						var tmp:* = scopeManager.getScopeByName(key);
+						if (tmp is Function || force) {
+							args[i] = tmp;
+						}
 					}catch (e:Error) {
 						//args[i] = null;
 					}

@@ -29,7 +29,8 @@
 					tmp = true;
 				}
 				try {
-					if(!treatAsIntrospection) tmp = referenceManager.parseForReferences([tmp])[0];
+					//if(!treatAsIntrospection) tmp = referenceManager.parseForReferences([tmp])[0];
+					tmp = referenceManager.parseForReferences([tmp])[0];
 				}catch (e:Error) {
 					
 				}
