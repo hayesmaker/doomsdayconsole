@@ -9,14 +9,14 @@
 	public class CommandArgument
 	{
 		public var data:*;
-		public function CommandArgument(data:String,commandManager:CommandManager,referenceManager:ReferenceManager,pluginManager:PluginManager) 
+		public function CommandArgument(data:String,commandManager:CommandManager,referenceManager:ReferenceManager,pluginManager:PluginManager,treatAsIntrospection:Boolean) 
 		{
 			var tmp:* = data;
 			tmp = pluginManager.runParsers(tmp);
 			switch(data.charAt(0)) {
 				case "(":
 				tmp = tmp.slice(1, tmp.length - 1);
-				tmp = commandManager.tryCommand(tmp, true);
+				tmp = commandManager.tryCommand(tmp, null, true);
 				break;
 				case "<":
 				tmp = new XML(tmp);
@@ -28,8 +28,8 @@
 				}else if (tmp == "true") {
 					tmp = true;
 				}
-				try{
-					tmp = referenceManager.parseForReferences([tmp])[0];
+				try {
+					if(!treatAsIntrospection) tmp = referenceManager.parseForReferences([tmp])[0];
 				}catch (e:Error) {
 					
 				}

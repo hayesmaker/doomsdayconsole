@@ -59,7 +59,7 @@ package com.furusystems.dconsole2.plugins.errorcodeutil
 		
 		private function onNewConsoleOutput(md:MessageData):void 
 		{
-			trace(md.data);
+			//trace(md.data);
 			if (!_autoDescribe) return;
 			//if (String(md.data).indexOf("Error #") > -1) {
 				//

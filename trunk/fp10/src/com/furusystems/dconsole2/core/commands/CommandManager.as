@@ -53,42 +53,72 @@
 			if (a.grouping == b.grouping) return -1;
 			return 1;
 		}
-		public function tryCommand(input:String, sub:Boolean = false ):*
+		public function tryCommand(input:String, overrideFunc:Function = null, sub:Boolean = false ):*
 		{
+			//trace("Try command", input);
 			var cmdStr:String = TextUtils.stripWhitespace(input);
 			var args:Array;
-			try{
+			try {
+				//trace("splitting string into args");
 				args = ArgumentSplitterUtil.slice(cmdStr);
 			}catch (e:Error) {
+				//trace("couldn't split things right");
 				//_console.print(e.getStackTrace(), ConsoleMessageTypes.ERROR);
 				throw e;
 				return;
 			}
-			var str:String = args.shift().toLowerCase();
-			
+			var str:String = args.shift().toLowerCase(); //get the first word in the statement; This is our command
+			var val:*;
+			var commandObject:ConsoleCommand = null;
+			for (var i:int = _commands.length; i--; ) {
+				if (_commands[i].trigger.toLowerCase() == str) {
+					commandObject = _commands[i];
+					break;
+				}
+			}
+			if (commandObject != null) {
+				var commandArgs:Vector.<CommandArgument> = getArgs(args,commandObject is IntrospectionCommand);
+				try {
+					val = doCommand(commandObject, commandArgs, sub);
+					if (!sub) {
+						if (commandObject.includeInHistory) _persistence.addtoHistory(input);
+					}
+				}catch (e:Error) {
+					throw(e);
+					return;
+				}
+				if(!sub && val!=null && val!=undefined) _console.print(val);
+				return val;
+			}
+			throw new CommandError("'"+str+"' is not a command.");
+		}
+		
+		private function traceVector(commandArgs:Vector.<CommandArgument>):String 
+		{
+			var out:String = "";
+			for each(var c:CommandArgument in commandArgs) {
+				out += c.data + ", ";
+			}
+			return out;
+		}
+		public function getArgs(args:Array,treatAsIntrospectionCmd:Boolean = false):Vector.<CommandArgument> {
 			var commandArgs:Vector.<CommandArgument> = new Vector.<CommandArgument>();
 			for (var i:int = 0; i < args.length; i++) 
 			{
-				commandArgs.push(new CommandArgument(args[i], this, _referenceManager, _pluginManager));
+				commandArgs.push(new CommandArgument(args[i], this, _referenceManager, _pluginManager,treatAsIntrospectionCmd&&i==0));
 			}
-			
-			for (i = 0; i < _commands.length; i++) 
-			{
-				if (_commands[i].trigger.toLowerCase() == str) {
-					try {
-						var val:* = doCommand(_commands[i], commandArgs, sub);
-						if (!sub) {
-							if (_commands[i].includeInHistory) _persistence.addtoHistory(input);
-						}
-					}catch (e:Error) {
-						throw(e);
-						return;
-					}
-					if(!sub && val!=null && val!=undefined) _console.print(val);
-					return val;
-				}
+			return commandArgs;
+		}
+		public function callMethodWithArgs(func:Function, args:Array):*{
+			var c:FunctionCallCommand = new FunctionCallCommand("", func);
+			var args2:Vector.<CommandArgument> = new Vector.<CommandArgument>();
+			for (var i:int = 0; i < args.length; i++) {
+				var arg:CommandArgument = new CommandArgument("", this, _referenceManager, _pluginManager, false);
+				arg.data = args[i];
+				args2.push(arg);
 			}
-			throw new CommandError("'"+str+"' is not a command.");
+			//var args2:Vector.<CommandArgument> = getArgs(args);
+			return doCommand(c, args2, true);
 		}
 		public function doCommand(command:ConsoleCommand,commandArgs:Vector.<CommandArgument> = null,sub:Boolean = false):*
 		{
@@ -102,7 +132,6 @@
 			if (command is FunctionCallCommand) {
 				var func:FunctionCallCommand = (command as FunctionCallCommand);
 				try {
-					//trace("try once");
 					val = func.callback.apply(this, args);
 					return val;
 				}catch (e:ArgumentError) {
