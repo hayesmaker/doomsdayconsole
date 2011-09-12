@@ -1,8 +1,10 @@
 package com.furusystems.dconsole2.plugins.controller 
 {
+	import com.furusystems.dconsole2.core.commands.UnparsedCommand;
 	import com.furusystems.dconsole2.core.introspection.ScopeManager;
 	import com.furusystems.dconsole2.core.plugins.IUpdatingDConsolePlugin;
 	import com.furusystems.dconsole2.core.plugins.PluginManager;
+	import com.furusystems.dconsole2.DConsole;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
@@ -50,7 +52,8 @@ package com.furusystems.dconsole2.plugins.controller
 		public function initialize(pm:PluginManager):void
 		{
 			pm.topLayer.addChild(this);
-			pm.console.createCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)");
+			var cmd:UnparsedCommand = new UnparsedCommand("createController", createController, "Controller", "Create a widget for changing properties on the current scope (createController width height for instance)");
+			DConsole(pm.console).addCommand(cmd);
 			_scopeManager = pm.scopeManager;
 		}
 		

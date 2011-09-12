@@ -77,7 +77,13 @@
 				}
 			}
 			if (commandObject != null) {
-				var commandArgs:Vector.<CommandArgument> = getArgs(args,commandObject is IntrospectionCommand);
+				var commandArgs:Vector.<CommandArgument>;
+				if (commandObject is UnparsedCommand) {
+					commandArgs = getUnparsedArgs(args);
+				}else {
+					commandArgs = getArgs(args,commandObject is IntrospectionCommand);
+				}
+				
 				try {
 					val = doCommand(commandObject, commandArgs, sub);
 					if (!sub) {
@@ -100,6 +106,16 @@
 				out += c.data + ", ";
 			}
 			return out;
+		}
+		public function getUnparsedArgs(args:Array):Vector.<CommandArgument> {
+			var commandArgs:Vector.<CommandArgument> = new Vector.<CommandArgument>();
+			for (var i:int = 0; i < args.length; i++) 
+			{
+				var c:CommandArgument = new CommandArgument("", this, _referenceManager, _pluginManager, false);
+				c.data = args[i];
+				commandArgs.push(c);
+			}
+			return commandArgs;
 		}
 		public function getArgs(args:Array,treatAsIntrospectionCmd:Boolean = false):Vector.<CommandArgument> {
 			var commandArgs:Vector.<CommandArgument> = new Vector.<CommandArgument>();
