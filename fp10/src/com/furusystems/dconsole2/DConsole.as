@@ -4,6 +4,7 @@
 	import com.furusystems.dconsole2.core.commands.CommandManager;
 	import com.furusystems.dconsole2.core.commands.ConsoleCommand;
 	import com.furusystems.dconsole2.core.commands.FunctionCallCommand;
+	import com.furusystems.dconsole2.core.commands.IntrospectionCommand;
 	import com.furusystems.dconsole2.core.DSprite;
 	import com.furusystems.dconsole2.core.errors.CommandError;
 	import com.furusystems.dconsole2.core.errors.ConsoleAuthError;
@@ -144,6 +145,7 @@
 			
 			input.inputTextField.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
 			
+			
 			tabChildren = tabEnabled = false;
 			
 			_debugDraw = new DebugDraw(_messaging);
@@ -154,6 +156,7 @@
 			_referenceManager = new ReferenceManager(this, _scopeManager);
 			_plugManager = new PluginManager(_scopeManager, _referenceManager, this, _topLayer, _bgLayer, _consoleBackground, _logManager);
 			_commandManager = new CommandManager(this, _persistence, _referenceManager, _plugManager);
+			_scopeManager.setCommandMgr(_commandManager);
 			
 			_consoleContainer = new Sprite();
 			addChild(_consoleContainer);
@@ -178,9 +181,9 @@
 			KeyboardManager.instance.addKeyboardShortcut(_keystroke, _modifier, toggleDisplay); //  [CTRL+SHIFT, ENTER]); //default keystroke
 			
 			_callCommand = new FunctionCallCommand("call", _scopeManager.callMethodOnScope, "Introspection", "Calls a method with args within the current introspection scope");
-			_setCommand = new FunctionCallCommand("set", _scopeManager.setPropertyOnObject, "Introspection", "Sets a variable within the current introspection scope");
-			_getCommand = new FunctionCallCommand("get", _scopeManager.getPropertyOnObject, "Introspection", "Prints a variable within the current introspection scope");
-			_selectCommand = new FunctionCallCommand("select", select, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
+			_setCommand = new IntrospectionCommand("set", _scopeManager.setPropertyOnObject, "Introspection", "Sets a variable within the current introspection scope");
+			_getCommand = new IntrospectionCommand("get", _scopeManager.getPropertyOnObject, "Introspection", "Prints a variable within the current introspection scope");
+			_selectCommand = new IntrospectionCommand("select", select, "Introspection", "Selects the specified object or reference by identifier as the current introspection scope");
 			
 			var basicHelp:String = "";
 			basicHelp += "\tKeyboard commands\n";

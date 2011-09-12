@@ -93,23 +93,21 @@
 			}
 		}
 		public function parseForReferences(args:Array):Array {
+			//return args;
 			for (var i:int = 0; i < args.length; i++) 
 			{
-				if (args[i].indexOf("@") > -1) {
-					var s:Array = args[i].split("@");
-					var key:String = s[1];
-					if (referenceDict[key] != null) {
-						if (referenceDict[key] is Function) {
-							args[i] = referenceDict[key]();
-						}else {
-							args[i] = referenceDict[key];
-						}
+				var key:String = args[i];
+				if (referenceDict[key] != null) {
+					if (referenceDict[key] is Function) {
+						args[i] = referenceDict[key]();
 					}else {
-						try {
-							args[i] = scopeManager.getScopeByName(key);
-						}catch (e:Error) {
-							args[i] = null;
-						}
+						args[i] = referenceDict[key];
+					}
+				}else {
+					try {
+						args[i] = scopeManager.getScopeByName(key);
+					}catch (e:Error) {
+						//args[i] = null;
 					}
 				}
 			}

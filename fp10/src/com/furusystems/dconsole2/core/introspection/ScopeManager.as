@@ -1,5 +1,6 @@
 ﻿package com.furusystems.dconsole2.core.introspection 
 {
+	import com.furusystems.dconsole2.core.commands.CommandManager;
 	import com.furusystems.dconsole2.core.introspection.descriptions.*;
 	import com.furusystems.dconsole2.core.Notifications;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
@@ -31,6 +32,7 @@
 		
 		private var console:DConsole;
 		private var autoCompleteManager:AutocompleteManager;
+		private var commandManager:CommandManager;
 		public function ScopeManager(console:DConsole,autoCompleteManager:AutocompleteManager) 
 		{
 			this.console = console;
@@ -115,12 +117,18 @@
 		}
 		
 		public function getScopeByName(str:String):*{
+			//trace("Get scope by name", str);
 			try{
-				if (currentScope.targetObject[str]) return currentScope.targetObject[str];
+				if (currentScope.targetObject[str]) {
+					return currentScope.targetObject[str];
+				}
 				else throw new Error();
-			}catch(e:Error){
+			}catch (e:Error) {
 				try {
-					return(currentScope.targetObject.getChildByName(str));
+					if (currentScope.targetObject is DisplayObjectContainer) {
+						var tmp:DisplayObject = currentScope.targetObject.getChildByName(str);
+						if (tmp != null) return tmp;
+					}
 				}catch (e:Error) {
 				}
 			}
@@ -262,6 +270,7 @@
 		
 		public function setPropertyOnObject(propertyName:String, arg:*):*
 		{
+			//trace("set property on object", propertyName, arg);
 			if (arg == "true") {
 				arg = true;
 			}else if (arg == "false") {
@@ -288,9 +297,8 @@
 			setScope(console.parent);
 		}
 		public function callMethodOnScope(...args:Array):* {
-			var cmd:String = args.shift();
-			var func:Function = currentScope.targetObject[cmd];
-			return func.apply(currentScope.targetObject, args);
+			var cmd:Function = args.shift();
+			return commandManager.callMethodWithArgs(cmd, args);
 		}
 		public function updateScope():void
 		{
@@ -341,6 +349,11 @@
 		}
 		public function describeObject(o:Object):IntrospectionScope {
 			return createScope(o, true);
+		}
+		
+		public function setCommandMgr(commandManager:CommandManager):void 
+		{
+			this.commandManager = commandManager;
 		}
 		
 	}

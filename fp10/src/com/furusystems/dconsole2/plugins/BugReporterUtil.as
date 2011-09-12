@@ -44,7 +44,7 @@ package com.furusystems.dconsole2.plugins
 			var dateString:String = "";
 			var d:Date = new Date();
 			var zipFileName:String = "BugReport_" + d.toDateString() + ".zip";
-			trace(zipFileName);
+			//trace(zipFileName);
 			
 			var fileData:ByteArray = new ByteArray();
 			fileData.writeUTF(log);

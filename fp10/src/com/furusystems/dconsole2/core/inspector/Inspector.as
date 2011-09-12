@@ -194,6 +194,7 @@ package com.furusystems.dconsole2.core.inspector
 		{
 			if (!_currentView) return;
 			posClicked = new Point(mouseX, mouseY);
+			if (posClicked.y <= GUIUnits.SQUARE_UNIT) return;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			prevPos.x = mouseX;
