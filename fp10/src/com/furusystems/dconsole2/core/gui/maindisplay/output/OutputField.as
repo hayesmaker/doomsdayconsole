@@ -52,7 +52,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 			_console = console;
 			_textOutput = new TextField();
 			_textOutput.defaultTextFormat = TextFormats.outputTformatOld;
-			_textOutput.embedFonts = TextFormats.INPUT_FONT.charAt(0) != "_";
+			_textOutput.embedFonts = TextFormats.OUTPUT_FONT.charAt(0) != "_";
 			
 			_textOutput.text = "#";
 			_lineMetrics = _textOutput.getLineMetrics(0);

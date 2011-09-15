@@ -37,7 +37,7 @@ package com.furusystems.dconsole2.core.gui.maindisplay.assistant
 			_infoField = new TextField();
 			_infoField.background = true;
 			_infoField.tabEnabled = false;
-			_infoField.embedFonts = TextFormats.OUTPUT_FONT.charAt(0) != "_";
+			_infoField.embedFonts = TextFormats.INPUT_FONT.charAt(0) != "_";
 			_infoField.mouseEnabled = false;
 			_infoField.selectable = true;
 			//_infoField.y--;
