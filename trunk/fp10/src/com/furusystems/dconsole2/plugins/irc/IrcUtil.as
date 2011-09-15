@@ -52,7 +52,7 @@ package com.furusystems.dconsole2.plugins.irc
 			nc.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
 			nc.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			
-			//pm.console.defaultInputCallback = tellChannel;
+			pm.console.defaultInputCallback = tellChannel;
 			pm.console.createCommand("ircsend", send, "IRC", "Sends a message to the current IRC channel.");
 			pm.console.createCommand("ircjoin", join,"IRC","Joins an IRC channel.");
 			pm.console.createCommand("ircpart", part,"IRC","Parts the designated IRC channel.");
@@ -61,7 +61,7 @@ package com.furusystems.dconsole2.plugins.irc
 		
 		private function onIOError(e:IOErrorEvent):void 
 		{
-			_pm.console.print("IRC couldn't connect", ConsoleMessageTypes.ERROR, "IRC");
+			_pm.console.print("IRC couldn't connect: "+e.text, ConsoleMessageTypes.ERROR, "IRC");
 		}
 		
 		public function shutdown(pm:PluginManager):void 
@@ -79,9 +79,11 @@ package com.furusystems.dconsole2.plugins.irc
 			
 			_pm = null;
 		}
-		private function connect(nick:String, host:String = "irc.homelien.no"):void {
+		private function connect(nick:String, host:String = "irc.homelien.no", port:int = 6669):void {
 			HOST = host;
 			NICK = nick;
+			PORT = port;
+			_pm.console.print("Connecting to " + host + ":" + port);
 			nc.connect(host, PORT);
 		}
 		private function send(str:String):void {
@@ -106,10 +108,12 @@ package com.furusystems.dconsole2.plugins.irc
 			// :Lost!lost@isplink.org PRIVMSG #actionscript :
 			var out:String = "";
 			var split:Array;
+			var message:String = nc.readUTFBytes(nc.bytesAvailable);
+			ircOutput(message);
+			return;
 			if (nc.bytesAvailable&&nc.bytesAvailable>20) {
 				var message:String = nc.readUTFBytes(nc.bytesAvailable);
-				if (message.indexOf("PONG") > -1) return; //we ignore ping returns
-				
+				if (message.indexOf("PONG") > -1) return; //we ignore ping returns				
 				if (message.indexOf("PRIVMSG") > -1) {
 					split = message.split(":");
 					out += split[1].split("!").shift();

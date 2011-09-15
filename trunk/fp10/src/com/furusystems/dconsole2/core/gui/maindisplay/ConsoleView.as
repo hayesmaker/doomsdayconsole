@@ -23,13 +23,22 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 	import com.furusystems.dconsole2.DConsole;
 	import com.furusystems.messaging.pimp.MessageData;
 	import com.furusystems.messaging.pimp.PimpCentral;
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
+	import flash.display.GradientType;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.BlurFilter;
+	import flash.filters.DisplacementMapFilter;
+	import flash.filters.DisplacementMapFilterMode;
+	import flash.geom.ColorTransform;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -132,7 +141,24 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			_console.messaging.addCallback(Notifications.CORNER_DRAG_STOP, onCornerScale);
 			_console.messaging.addCallback(Notifications.CORNER_DRAG_UPDATE, onCornerScale);
 			
-			
+			setupBloom();
+			//addChild(bloom);
+		}
+		
+		private function setupBloom():void 
+		{
+			addEventListener(Event.ENTER_FRAME, updateBloom);
+			scanlinePattern.setPixel32(0, 0, 0xFF808080);
+			scanlinePattern.setPixel32(0, 1, 0xFFeeeeee);
+					}
+		
+		public function toggleBloom():void 
+		{
+			bloomEnabled = !bloomEnabled;
+			if (!bloomEnabled) {
+				if (contains(bloom)) 	removeChild(bloom);
+				if (contains(scanlines)) removeChild(scanlines);
+			}
 		}
 		private function onCornerScale(md:MessageData):void
 		{
@@ -620,6 +646,44 @@ package com.furusystems.dconsole2.core.gui.maindisplay
 			assistant.cornerHandle.visible = !scaleHandle.visible;
 		}
 		
+		
+		private var bloomBmp:BitmapData;
+		private var bloom:Bitmap = new Bitmap();
+		private var scanlines:Shape = new Shape();
+		private var scanlinePattern:BitmapData = new BitmapData(1, 3, true, 0);
+		private var bloomEnabled:Boolean = false;
+		private function updateBloom(e:Event = null):void 
+		{
+			if (!bloomEnabled) return;
+			scanlines.graphics.clear();
+			scanlines.graphics.beginBitmapFill(scanlinePattern, null, true, false);
+			scanlines.graphics.drawRect(0, 0, output.width, output.height);
+			scanlines.graphics.endFill();
+			scanlines.blendMode = BlendMode.MULTIPLY;
+			if (bloomBmp) {
+				bloomBmp.dispose();
+			}
+			if (contains(bloom)) 	removeChild(bloom);
+			if (contains(scanlines)) removeChild(scanlines);
+			bloom.blendMode = BlendMode.ADD;
+			bloomBmp = new BitmapData(output.width, output.height, true, 0);
+			bloomBmp.lock();
+			bloomBmp.draw(output);
+			
+			bloomBmp.applyFilter(bloomBmp, bloomBmp.rect, new Point(), new BlurFilter(16, 16, 1));
+			bloomBmp.applyFilter(bloomBmp, bloomBmp.rect, new Point(), new BlurFilter(16, 16, 1));
+			bloomBmp.colorTransform(bloomBmp.rect, new ColorTransform(1, 2, 1));
+			bloomBmp.unlock();
+			bloom.bitmapData = bloomBmp;
+			
+			addChild(bloom);
+			addChild(scanlines);
+			
+			var p:Point = new Point(output.x, output.y);
+			p = output.parent.localToGlobal(p);
+			bloom.x = scanlines.x = p.x - x;
+			bloom.y = scanlines.y = p.y - y
+		}
 	}
 
 }

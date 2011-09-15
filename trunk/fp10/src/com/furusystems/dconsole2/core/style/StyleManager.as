@@ -15,12 +15,10 @@ package com.furusystems.dconsole2.core.style
 	public class StyleManager
 	{
 		//[Embed(source='themes/default.xml',mimeType='application/octet-stream')]
-		[Embed(source='themes/solarized/solarized_dark.xml',mimeType='application/octet-stream')]
-		//[Embed(source='themes/greenman/greenman.xml',mimeType='application/octet-stream')]
+		[Embed(source='themes/black/black.xml',mimeType='application/octet-stream')]
 		private var DEFAULT_THEME_XML:Class;
 		//[Embed(source='themes/default_colors.xml',mimeType='application/octet-stream')]
-		[Embed(source='themes/solarized/solarized_colors.xml',mimeType='application/octet-stream')]
-		//[Embed(source='themes/greenman/greenman_colors.xml',mimeType='application/octet-stream')]
+		[Embed(source='themes/black/black_colors.xml',mimeType='application/octet-stream')]
 		private var DEFAULT_COLOR_DESC_XML:Class;
 		
 		private var _colorsLoaded:Boolean;
