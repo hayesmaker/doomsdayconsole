@@ -72,10 +72,10 @@ package com.furusystems.dconsole2.plugins.irc
 			nc = null;
 			
 			pm.console.defaultInputCallback = null;
-			pm.console.removeCommand("send");
-			pm.console.removeCommand("join");
-			pm.console.removeCommand("part");
-			pm.console.removeCommand("connect");
+			pm.console.removeCommand("ircsend");
+			pm.console.removeCommand("ircjoin");
+			pm.console.removeCommand("ircpart");
+			pm.console.removeCommand("ircconnect");
 			
 			_pm = null;
 		}
