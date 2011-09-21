@@ -4,7 +4,7 @@
 ==Whosawhat now?==
 DConsole is a box of utilities for interacting with your application at runtime, primarily taking the form of an output textfield and an input textfield. The output field doubles as a trace window, and is your source of feedback. The input field is how you primarily interact. You type in commands, built-in or custom, and watch the effects take place. 
 
-It works by sitting on top of the rest of your application, crawling your ActionScript objects to target onscreen displayobjects, their properties and children, and letting you change their variable values, call methods and so forth.
+It works by sitting on top of the rest of your application, crawling your ActionScript objects, their properties and children, and letting you change their variable values, call methods and so forth.
 
 ==How do i implement it?==
 A singleton utility, DConsole, lets you access and write to the console from anywhere in your application, as well as link methods to custom console commands for testing with various arguments. To get started, simply {{{addChild(DConsole.view)}}} at your root, and you're off. 
