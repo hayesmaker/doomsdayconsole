@@ -304,11 +304,11 @@
 
 			if (Capabilities.isDebugger) {
 				print("	Debugplayer commands added", ConsoleMessageTypes.SYSTEM);
-				createCommand("gc", System.gc, "System", "Forces a garbage collection cycle");
+				createCommand("gc", System.gc, "Debugplayer", "Forces a garbage collection cycle");
 			}
 			if (Capabilities.playerType == "StandAlone" || Capabilities.playerType == "External") {
-				print("	Standalone commands added", ConsoleMessageTypes.SYSTEM);
-				createCommand("quitapp", quitCommand, "System", "Quit the application");
+				print("	Projector commands added", ConsoleMessageTypes.SYSTEM);
+				createCommand("quitapp", quitCommand, "Projector", "Quit the application");
 			}			
 			createCommand("plugins", _plugManager.printPluginInfo, "Plugins", "Lists enabled plugin information");
 			
@@ -980,6 +980,9 @@
 				}
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
+				if (_overrideCallback != null) {
+					clearOverrideCallback();
+				}
 				messaging.send(Notifications.ESCAPE_KEY, null, this);
 				stopEvent = true;
 				return;
@@ -1225,11 +1228,13 @@
 		
 		public function setOverrideCallback(callback:Function):void 
 		{
+			addSystemMessage("Override callback active, hit ESC to resume normal ops");
 			_overrideCallback = callback;
 		}
 		
 		public function clearOverrideCallback():void 
 		{
+			addSystemMessage("Override callback cleared");
 			_overrideCallback = null;
 		}
 		//}
