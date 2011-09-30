@@ -423,11 +423,8 @@
 		{
 			addSystemMessage("Doomsday Console II");
 			addSystemMessage("\t\tversion " + Version.Major + "." + Version.Minor + " revision " + Version.Revision);
+			addSystemMessage("\t\thttp://doomsdayconsole.googlecode.com");
 			addSystemMessage("\t\tconcept and development by www.doomsday.no & www.furusystems.com");
-			addSystemMessage("\t\t\t\tAndreas Ronning, Cristobal Dabed, Richard Oiestad");
-			addSystemMessage("\t\t\tSpecial thanks to");
-			addSystemMessage("\t\t\t\tJim Cheng, Oyvind Nordhagen, Miha Lunar, Kieran Foster");
-			addSystemMessage("\t\t\t\tJohn Davies, and all of IRC EFNet #actionscript");
 		}
 		
 		private function addSearch(term:String):void
@@ -913,6 +910,7 @@
 		
 		private function onKeyUp(e:KeyboardEvent):void 
 		{
+			KeyboardManager.instance.handleKeyUp(e);
 			if (visible) {
 				var cmd:String = "";
 				var _testCmd:Boolean = false;
@@ -946,12 +944,9 @@
 				}
 			}
 		}
-		private function onKeyDown(e:KeyboardEvent):void 
-		{
-			if (!visible) return; //Ignore if invisible
+		private function keyHandler(e:KeyboardEvent):Boolean {
 			var stopEvent:Boolean = false;
 			var trigger1:Boolean = e.keyCode == _trigger;
-			//var trigger2:Boolean = e.keyCode == _trigger && (!e.shiftKey);
 			if(stage.focus==input.inputTextField){
 				if(!e.shiftKey&&trigger1){
 					if (doComplete()) {
@@ -959,24 +954,13 @@
 							cancelKey(e);
 						}
 					}
-					return;
-					//if (trigger1) {
-						//if (doComplete()) {
-							//cancelKey(e);
-						//}
-						//return;
-					//}else if (trigger2) {
-						//if (visible && stage.focus != input && stage.focus != input.inputTextField) {
-							//input.focus();
-							//cancelKey(e);
-						//}
-						//return;
-					//}
+					return true;
 				}
 			}else {
 				if (trigger1) {
 					input.focus();
-					return;
+					stopEvent = true;
+					return stopEvent;
 				}
 			}
 			if (e.keyCode == Keyboard.ESCAPE) {
@@ -985,18 +969,18 @@
 				}
 				messaging.send(Notifications.ESCAPE_KEY, null, this);
 				stopEvent = true;
-				return;
+				return stopEvent;
 			}
 			if (e.shiftKey) {
 				switch(e.keyCode) {
 					case Keyboard.UP:
 					output.scroll(1);
 					stopEvent = true;
-					return
+					return true;
 					case Keyboard.DOWN:
 					output.scroll(-1);
 					stopEvent = true;
-					return;
+					return true;
 					case Keyboard.LEFT:
 					//TODO: previous tab
 					break;
@@ -1006,9 +990,10 @@
 				}
 			}
 			if (e.keyCode == Keyboard.ENTER && stage.focus == input.inputTextField) {
+				stopEvent = true;
 				if (input.text.length < 1) {
 					//input.focus();
-					return;
+					return true;
 				}
 				var success:Boolean = false;
 				var passToDefault:Boolean = false;
@@ -1064,9 +1049,16 @@
 			}else if (e.keyCode == Keyboard.SPACE) {
 				stopEvent = true;
 			}
-			if (stopEvent) {
+			return stopEvent;
+		}
+		private function onKeyDown(e:KeyboardEvent):void 
+		{
+			KeyboardManager.instance.handleKeyDown(e);
+			if (!visible) return; //Ignore if invisible
+			if (keyHandler(e)) {
 				e.stopImmediatePropagation();
 				e.stopPropagation();
+				e.preventDefault();
 			}
 		}
 		

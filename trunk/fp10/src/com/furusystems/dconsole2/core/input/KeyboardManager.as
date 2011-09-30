@@ -39,11 +39,11 @@
 		 */
 		public function setup(eventSource:InteractiveObject):void {
 			try {
-				shutdown();
+				//shutdown();
 			} catch (e:Error) { }
-			eventSource.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown,false,Number.POSITIVE_INFINITY,true);
-			eventSource.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp, false, Number.POSITIVE_INFINITY, true);
-			keyboardSource = eventSource;
+			//eventSource.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown,false,Number.POSITIVE_INFINITY,true);
+			//eventSource.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp, false, Number.POSITIVE_INFINITY, true);
+			//keyboardSource = eventSource;
 		}
 		
 		
@@ -51,9 +51,9 @@
 		 * Stop tracking keyboard events
 		 */
 		public function shutdown():void {
-			keyboardSource.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
-			keyboardSource.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
-			keyboardSource = null;
+			//keyboardSource.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+			//keyboardSource.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+			//keyboardSource = null;
 			KeyboardSequences.instance.removeAll();
 			KeyboardShortcuts.instance.removeAll();
 		}
@@ -159,7 +159,7 @@
 		 * 
 		 * @param event	The keyboard event.
 		 */ 
-		private function handleKeyDown(event:KeyboardEvent):void{
+		public function handleKeyDown(event:KeyboardEvent):void {
 			KeyboardSequences.instance.onKeyDown(event);
 			KeyboardShortcuts.instance.onKeyDown(event);
 		}
@@ -169,7 +169,7 @@
 		 * 
 		 * @param event The keyboard event
 		 */ 
-		private function handleKeyUp(event:KeyboardEvent):void {
+		public function handleKeyUp(event:KeyboardEvent):void {
 			KeyboardSequences.instance.onKeyUp(event);
 			KeyboardShortcuts.instance.onKeyUp(event);
 		}
