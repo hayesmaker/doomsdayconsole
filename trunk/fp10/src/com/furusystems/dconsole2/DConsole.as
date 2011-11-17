@@ -815,6 +815,10 @@
 			return _logManager.currentLog.messages;
 		}
 		
+		public static function refresh():void {
+			console.refresh();
+		}
+		
 		public function show():void {
 			if (!stage) return;
 			if(!visible) toggleDisplay();
@@ -1562,6 +1566,13 @@
 		public static function setMasterKey(key:uint):void 
 		{
 			DConsole(console).setMasterKey(key);
+		}
+		
+		/* INTERFACE com.furusystems.dconsole2.IConsole */
+		
+		public function refresh():void 
+		{
+			scopeManager.updateScope();
 		}
 		
 		public function get messaging():PimpCentral {
