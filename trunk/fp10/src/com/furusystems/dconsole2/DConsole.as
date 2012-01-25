@@ -57,11 +57,13 @@
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.ui.Keyboard;
+	import flash.utils.Timer;
 	
 	//}
 	/**
@@ -123,6 +125,12 @@
 		static public const DOCK_BOT:int = 1;
 		static public const DOCK_WINDOWED:int = -1;
 		
+		static private const UPDATE_FROM_ENTER_FRAME:int = 0;
+		static private const UPDATE_FROM_TIMER:int = 1;
+		private var _updateSource:int = UPDATE_FROM_TIMER;
+		
+		private var _updateTimer:Timer = new Timer(33);
+		
 		//} end members
 		//{ Instance
 		/**
@@ -135,6 +143,8 @@
 			//Prepare logging
 			_styleManager = new StyleManager(this);
 			_persistence = new PersistenceManager(this);
+			
+			_updateTimer.addEventListener(TimerEvent.TIMER, frameUpdate);
 			
 			_logManager = new DLogManager(this);
 			_mainConsoleView = new ConsoleView(this);
@@ -206,7 +216,7 @@
 			
 			print("Welcome to Doomsday Console II - www.doomsday.no",ConsoleMessageTypes.SYSTEM);
 			print("Today is " + new Date().toString(),ConsoleMessageTypes.SYSTEM);
-			print("Console version " + Version.Major+"."+Version.Minor+" rev"+Version.Revision, ConsoleMessageTypes.SYSTEM);
+			print("Console version " + Version.Major+"."+Version.Minor, ConsoleMessageTypes.SYSTEM);
 			print("Player version " + Capabilities.version, ConsoleMessageTypes.SYSTEM);
 			
 			setupDefaultCommands();
@@ -253,15 +263,23 @@
 		
 		private function ceaseFrameUpdates():void
 		{
-			removeEventListener(Event.ENTER_FRAME, frameUpdate);
+			if (_updateSource == UPDATE_FROM_ENTER_FRAME) {
+				removeEventListener(Event.ENTER_FRAME, frameUpdate);
+			}else {
+				_updateTimer.stop();
+			}
 		}
 		
 		private function beginFrameUpdates():void
 		{
-			addEventListener(Event.ENTER_FRAME, frameUpdate, false, -1000, false);
+			if (_updateSource == UPDATE_FROM_ENTER_FRAME) {
+				addEventListener(Event.ENTER_FRAME, frameUpdate, false, -1000, false);
+			}else {
+				_updateTimer.start();
+			}
 		}
 		
-		private function frameUpdate(e:Event):void 
+		private function frameUpdate(e:Event = null):void 
 		{
 			_plugManager.update();
 			view.inspector.onFrameUpdate(e);
@@ -422,7 +440,7 @@
 		private function about():void
 		{
 			addSystemMessage("Doomsday Console II");
-			addSystemMessage("\t\tversion " + Version.Major + "." + Version.Minor + " revision " + Version.Revision);
+			addSystemMessage("\t\tversion " + Version.Major + "." + Version.Minor);
 			addSystemMessage("\t\thttp://doomsdayconsole.googlecode.com");
 			addSystemMessage("\t\tconcept and development by www.doomsday.no & www.furusystems.com");
 		}
@@ -695,7 +713,7 @@
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_scopeManager.selectBaseScope();
 			
-			view.setHeaderText("Doomsday Console "+Version.Major + "." + Version.Minor + " revision " + Version.Revision);
+			view.setHeaderText("Doomsday Console "+Version.Major + "." + Version.Minor);
 			
 			onStageResize(e);
 		}
@@ -863,14 +881,30 @@
 				if (parent) {
 					parent.addChild(this);
 				}
+				tabOrderOff();
 				input.focus();
 				input.text = "";
 				updateAssistantText();
 				beginFrameUpdates();
 				messaging.send(Notifications.CONSOLE_SHOW, null, this);
 			}else {
+				tabOrderOn();
 				ceaseFrameUpdates();
 				messaging.send(Notifications.CONSOLE_HIDE, null, this);
+			}
+		}
+		
+		private function tabOrderOn():void 
+		{
+			if (parent) {
+				parent.tabChildren = parent.tabEnabled = true;
+			}
+		}
+		
+		private function tabOrderOff():void 
+		{
+			if (parent) {
+				parent.tabChildren = parent.tabEnabled = false;
 			}
 		}
 		
@@ -952,13 +986,14 @@
 			var stopEvent:Boolean = false;
 			var trigger1:Boolean = e.keyCode == _trigger;
 			if(stage.focus==input.inputTextField){
-				if(!e.shiftKey&&trigger1){
+				if (!e.shiftKey && trigger1) {
+					stopEvent = true;
 					if (doComplete()) {
 						if (shouldCancel(e.keyCode)) {
 							cancelKey(e);
 						}
 					}
-					return true;
+					return stopEvent;
 				}
 			}else {
 				if (trigger1) {
@@ -1059,6 +1094,7 @@
 		{
 			KeyboardManager.instance.handleKeyDown(e);
 			if (!visible) return; //Ignore if invisible
+			if (e.keyCode == Keyboard.TAB) stage.focus = null;
 			if (keyHandler(e)) {
 				e.stopImmediatePropagation();
 				e.stopPropagation();
@@ -1068,7 +1104,7 @@
 		
 		private function shouldCancel(keyCode:uint):Boolean 
 		{
-			return keyCode >= 13 ||  keyCode == Keyboard.SPACE;
+			return keyCode >= 13 ||  keyCode == Keyboard.SPACE || keyCode == _trigger;
 		}
 		
 		private function cancelKey(e:KeyboardEvent):void 
@@ -1103,7 +1139,7 @@
 		{
 			var flag:Boolean = false; 
 			
-			if (input.text.length < 1) return false;
+			if (input.text.length < 1 ||  _overrideCallback!=null) return false;
 			
 			var word:String = input.wordAtCaret;
 			
