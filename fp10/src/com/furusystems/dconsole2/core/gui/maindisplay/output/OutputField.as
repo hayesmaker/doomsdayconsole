@@ -74,7 +74,9 @@ package com.furusystems.dconsole2.core.gui.maindisplay.output
 		
 		private function onFrameUpdate():void 
 		{
-			if (_locked) return;
+			if (_locked) {
+				return;
+			}
 			if (_currentLog.dirty||_dirty) {
 				drawMessages();
 				_currentLog.setClean();

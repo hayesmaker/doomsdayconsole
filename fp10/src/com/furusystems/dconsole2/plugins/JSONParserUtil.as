@@ -24,7 +24,7 @@ package com.furusystems.dconsole2.plugins
 				case "[":
 				case "{":
 					try {
-						var ret:* = JSON.decode(data);
+						var ret:* = com.adobe.serialization.json.JSON.decode(data);
 						return ret;
 					}catch (e:Error) {
 						return null;
