@@ -1,5 +1,7 @@
 package com.furusystems.dconsole2.plugins 
 {
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
 	import flash.net.FileReference;
 	import com.furusystems.dconsole2.core.output.ConsoleMessage;
 	import com.furusystems.dconsole2.core.output.ConsoleMessageTypes;
@@ -13,6 +15,20 @@ package com.furusystems.dconsole2.plugins
 	{
 		private var _pmanager:PluginManager;
 		private var _fileRef:FileReference = new FileReference();
+		public function copyToClipboard(arg:String = "txt"):String {
+			var data:*;
+			switch(arg.toLowerCase()) {
+				case "txt":
+				case "text":
+					data = buildLogTxt();
+				break;
+				case "xml":
+					data = buildLogXML();
+				break;
+			}
+			Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, data, false);
+			return "Copied log to system clipboard";
+		}
 		public function buildLogXML():XML {
 			var messages:Vector.<ConsoleMessage> = _pmanager.logManager.currentLog.messages;
 			var logDoc:XML = <log4j:log xmlns:log4j="http://logging.apache.org/log4j/" />;
@@ -113,7 +129,7 @@ package com.furusystems.dconsole2.plugins
 			//_fileRef.save(out, "ConsoleLog_" + dateStr + ".txt");
 		}
 		
-		private function saveLog(arg:String = "txt"):void
+		private function saveLog(arg:String = "txt"):String
 		{
 			var data:*;
 			var extension:String;
@@ -129,6 +145,7 @@ package com.furusystems.dconsole2.plugins
 				break;
 			}
 			_fileRef.save(data, "ConsoleLog_" + new Date().toString() + extension);
+			return "Saved log";
 		}
 		
 		/* INTERFACE com.furusystems.dconsole2.core.plugins.IDConsolePlugin */
@@ -137,6 +154,7 @@ package com.furusystems.dconsole2.plugins
 		{
 			_pmanager = pm;
 			_pmanager.console.createCommand("saveLog", saveLog, "LogFileUtil", "Save the complete console log for this session to an xml or txt document (txt default)");
+			_pmanager.console.createCommand("logToClipboard", copyToClipboard, "LogFileUtil", "Copy a the console log for this session to the clipboard, xml or txt (txt default)");
 		}
 		
 		public function shutdown(pm:PluginManager):void

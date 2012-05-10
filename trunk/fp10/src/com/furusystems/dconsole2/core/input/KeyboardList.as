@@ -10,8 +10,8 @@ package com.furusystems.dconsole2.core.input
 	 */
 	internal interface KeyboardList
 	{
-		function onKeyUp(event:KeyboardEvent):void;
-		function onKeyDown(event:KeyboardEvent):void;
+		function onKeyUp(event:KeyboardEvent):Boolean;
+		function onKeyDown(event:KeyboardEvent):Boolean;
 		function removeAll():void;
 		function isEmpty():Boolean;
 	}
