@@ -814,10 +814,12 @@
 			if (stage.align != StageAlign.TOP_LEFT)
 			{
 				print("Warning: stage.align is not set to TOP_LEFT; This might cause scaling issues", ConsoleMessageTypes.ERROR);
+				print("Fix: stage.align = StageAlign.TOP_LEFT;", ConsoleMessageTypes.DEBUG);
 			}
 			if (stage.scaleMode != StageScaleMode.NO_SCALE)
 			{
 				print("Warning: stage.scaleMode is not set to NO_SCALE; This might cause scaling issues", ConsoleMessageTypes.ERROR);
+				print("Fix: stage.scaleMode = StageScaleMode.NO_SCALE;", ConsoleMessageTypes.DEBUG);
 			}
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, int.MAX_VALUE);
