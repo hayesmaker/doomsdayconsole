@@ -144,6 +144,36 @@ package com.furusystems.dconsole2.core.gui.maindisplay.input
 		{
 			text = "";
 		}
+		/**
+		 * Insert a string at the current caret index, as though the user typed a word
+		 * @param	string
+		 */
+		public function insertAtCaret(string:String):void 
+		{
+			deleteSelection();
+			var a:String = text.substr(0, caretIndex);
+			var b:String = text.substr(caretIndex);
+			text = a + string + b;
+			moveCaretToIndex(a.length + string.length);
+		}
+		
+		public function deleteSelection():void 
+		{
+			var a:String = text.substr(0, _inputTextField.selectionBeginIndex);
+			var b:String = text.substr(_inputTextField.selectionEndIndex);
+			
+			_inputTextField.text = a + b;
+		}
+		
+		public function get selectionActive():Boolean
+		{
+			return _inputTextField.selectedText != "";
+		}
+		
+		public function get length():int
+		{
+			return _inputTextField.length;
+		}
 		public function get caretIndex():int { return _inputTextField.caretIndex; }
 		public function get inputTextField():TextField { return _inputTextField; }
 		
